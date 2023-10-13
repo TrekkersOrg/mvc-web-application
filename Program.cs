@@ -1,4 +1,4 @@
-﻿// Initial commit random words
+﻿// Initial commit 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
