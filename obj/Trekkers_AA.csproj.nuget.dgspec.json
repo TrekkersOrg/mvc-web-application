@@ -1,26 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "/Users/apoorva/projects/Trekkers_AA/Trekkers_AA/Trekkers_AA.csproj": {}
+    "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\Trekkers_AA.csproj": {}
   },
   "projects": {
-    "/Users/apoorva/projects/Trekkers_AA/Trekkers_AA/Trekkers_AA.csproj": {
+    "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\Trekkers_AA.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/apoorva/projects/Trekkers_AA/Trekkers_AA/Trekkers_AA.csproj",
+        "projectUniqueName": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\Trekkers_AA.csproj",
         "projectName": "Trekkers_AA",
-        "projectPath": "/Users/apoorva/projects/Trekkers_AA/Trekkers_AA/Trekkers_AA.csproj",
-        "packagesPath": "/Users/apoorva/.nuget/packages/",
-        "outputPath": "/Users/apoorva/projects/Trekkers_AA/Trekkers_AA/obj/",
+        "projectPath": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\Trekkers_AA.csproj",
+        "packagesPath": "C:\\Users\\shahd\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/apoorva/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\shahd\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/sdk/7.0.309/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -57,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.309/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
