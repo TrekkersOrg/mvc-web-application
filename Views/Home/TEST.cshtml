@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "TEST";
+}
+
+<script>
+    fetch('https://localhost:7114/api/databasemanagement?email=devenshah2018@gmail.com',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json', // Adjust as needed
+        },
+    })
+    .then(response =>
+    {
+        if (!response.ok)
+        {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data =>
+    {
+            document.getElementById("get").innerHTML = JSON.stringify(data);
+    })
+    .catch(error =>
+    {
+        console.error('There was a problem with the API request:',error);
+    });
+</script>
+<div class="text-center">
+    <h1 class="display-4">TEST API</h1>
+    <h1>Get</h1>
+    <p id="get"></p>
+
+</div>
+
