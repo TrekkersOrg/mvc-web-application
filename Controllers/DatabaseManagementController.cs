@@ -32,5 +32,32 @@ namespace Trekkers_AA.Controllers
             return Ok(model);
         }
 
+        [HttpPut]
+        public ActionResult<IEnumerable<UserModel>> UpdateUserPassword(string email, string newPassword)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(newPassword))
+            {
+                return BadRequest("Email and new password are required.");
+            }
+
+            var collection = _database.GetCollection<UserModel>("UserCredentials");
+
+            var filter = Builders<UserModel>.Filter.Eq(u => u.email, email);
+
+            var update = Builders<UserModel>.Update.Set(u => u.password, newPassword);
+
+            var result = collection.UpdateOne(filter, update);
+
+            if (result.ModifiedCount > 0)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound("User not found or password not updated.");
+            }
+
+        }
+
     }
 }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "2IPe0IOukJOamSKCN4iCsO+UFGd95ygz4Kl7dmrH6HM=",
+  "Hash": "D8Len4kUXroHew7XPEE+KOrcVGZsk0YdoDSz3r8qp8o=",
   "Source": "Trekkers_AA",
   "BasePath": "_content/Trekkers_AA",
   "Mode": "Default",
@@ -49,6 +49,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\Trekkers_AA.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\.DS_Store",
+      "SourceId": "Trekkers_AA",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\",
+      "BasePath": "_content/Trekkers_AA",
+      "RelativePath": ".DS_Store",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\.DS_Store"
     },
     {
       "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\css\\site.css",
@@ -100,6 +117,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
+    },
+    {
+      "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\lib\\.DS_Store",
+      "SourceId": "Trekkers_AA",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\",
+      "BasePath": "_content/Trekkers_AA",
+      "RelativePath": "lib/.DS_Store",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lib\\.DS_Store"
     },
     {
       "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",

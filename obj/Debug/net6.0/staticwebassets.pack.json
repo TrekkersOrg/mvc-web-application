@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\Trekkers_AA.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\.DS_Store",
+      "PackagePath": "staticwebassets\\.DS_Store"
+    },
+    {
       "Id": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
@@ -15,6 +19,10 @@
     {
       "Id": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\lib\\.DS_Store",
+      "PackagePath": "staticwebassets\\lib\\.DS_Store"
     },
     {
       "Id": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\lib\\bootstrap\\LICENSE",

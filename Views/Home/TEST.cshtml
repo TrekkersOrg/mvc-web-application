@@ -1,35 +1,112 @@
 ﻿@{
     ViewData["Title"] = "TEST";
 }
+<style>
+    .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
 
+    .section {
+        margin-top: 20px;
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .result {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+</style>
 <script>
-    fetch('https://localhost:7114/api/databasemanagement?email=devenshah2018@gmail.com',{
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json', // Adjust as needed
-        },
-    })
-    .then(response =>
-    {
-        if (!response.ok)
-        {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data =>
-    {
-            document.getElementById("get").innerHTML = JSON.stringify(data);
-    })
-    .catch(error =>
-    {
-        console.error('There was a problem with the API request:',error);
-    });
+    function getUser(){
+        fetch('https://localhost:7114/api/databasemanagement?email=' + document.getElementById("get-email").value,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response =>
+            {
+                if (!response.ok)
+                {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data =>
+            {
+                document.getElementById("get").innerHTML = JSON.stringify(data);
+            })
+            .catch(error =>
+            {
+                console.error('There was a problem with the API request:',error);
+            });
+    }
+    function updatePassword(){
+        fetch('https://localhost:7114/api/databasemanagement?email=' + document.getElementById("put-email").value + '&newPassword=' + document.getElementById("new-password").value,{
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response =>
+            {
+                if (!response.ok)
+                {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data =>
+            {
+                document.getElementById("put").innerHTML = JSON.stringify(data);
+            })
+            .catch(error =>
+            {
+                console.error('There was a problem with the API request:',error);
+            });
+    }
 </script>
-<div class="text-center">
+<div class="container">
     <h1 class="display-4">TEST API</h1>
-    <h1>Get</h1>
-    <p id="get"></p>
 
+    <section class="section">
+        <h2>Get</h2>
+        <div class="form">
+            <input id="get-email" type="text" placeholder="Enter Email" />
+            <button class="btn" onclick="getUser()">Submit</button>
+        </div>
+        <p id="get" class="result"></p>
+    </section>
+
+    <section class="section">
+        <h2>Update Password</h2>
+        <div class="form">
+            <input id="put-email" type="text" placeholder="Enter Email" />
+            <input id="new-password" type="text" placeholder="Enter Password" />
+            <button class="btn" onclick="updatePassword()">Change Password</button>
+        </div>
+        <p id="put" class="result"></p>
+    </section>
 </div>
+
 
