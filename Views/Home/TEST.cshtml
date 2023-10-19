@@ -86,6 +86,26 @@
             });
     }
 </script>
+<script src="https://smtpjs.com/v3/smtp.js"></script>
+<script type="text/javascript">
+    function sendEmail()
+    {
+        return;
+        Email.send({
+            Host: "smtp.elasticemail.com",
+            Username: "development@trekkers789.onmicrosoft.com",
+            Password: "0C9D3772B31953197AEC1BDD2DA2E524A48B",
+            To: 'devenshah2018@gmail.com',
+            From: "development@trekkers789.onmicrosoft.com",
+            Subject: "Sending Email using javascript",
+            Body: "Well that was easy!!",
+        })
+            .then(function (message)
+            {
+                alert("mail sent successfully")
+            });
+    }
+</script>
 <div class="container">
     <h1 class="display-4">TEST API</h1>
 
@@ -107,6 +127,10 @@
         </div>
         <p id="put" class="result"></p>
     </section>
+    <form method="post">
+        <input type="button" value="Send Email"
+               onclick="sendEmail()" />
+    </form>
 </div>
 
 
