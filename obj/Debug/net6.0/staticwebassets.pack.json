@@ -9,12 +9,20 @@
       "PackagePath": "staticwebassets\\.DS_Store"
     },
     {
+      "Id": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\css\\loginView.css",
+      "PackagePath": "staticwebassets\\css\\loginView.css"
+    },
+    {
       "Id": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
       "Id": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\js\\loginView.js",
+      "PackagePath": "staticwebassets\\js\\loginView.js"
     },
     {
       "Id": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\js\\site.js",

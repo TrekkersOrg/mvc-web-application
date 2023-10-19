@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "D8Len4kUXroHew7XPEE+KOrcVGZsk0YdoDSz3r8qp8o=",
+  "Hash": "os+aQUj3YO/sGtQHGypk+quIaW3wsQgSbP7bu4hfU4A=",
   "Source": "Trekkers_AA",
   "BasePath": "_content/Trekkers_AA",
   "Mode": "Default",
@@ -68,6 +68,23 @@
       "OriginalItemSpec": "wwwroot\\.DS_Store"
     },
     {
+      "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\css\\loginView.css",
+      "SourceId": "Trekkers_AA",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\",
+      "BasePath": "_content/Trekkers_AA",
+      "RelativePath": "css/loginView.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\loginView.css"
+    },
+    {
       "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\css\\site.css",
       "SourceId": "Trekkers_AA",
       "SourceType": "Discovered",
@@ -100,6 +117,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\js\\loginView.js",
+      "SourceId": "Trekkers_AA",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\",
+      "BasePath": "_content/Trekkers_AA",
+      "RelativePath": "js/loginView.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\loginView.js"
     },
     {
       "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\js\\site.js",

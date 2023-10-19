@@ -1,119 +1,21 @@
 ﻿@{
-    ViewData["Title"] = "Login Page";
+    ViewData["Title"] = "Login";
 }
-<!DOCTYPE html>
-<html>
 
-<head>
-    <title>Login Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
+<link rel="stylesheet" type="text/css" href="\css\loginView.css" />
+<script src="\js\loginView.js"></script>
 
-        .login-container {
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-        }
+<div class="login-container">
+    <h2 class ="display-4">Login</h2>
 
-        h2 {
-            margin: 0;
-            padding: 10px 0;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-
-        button {
-            width: 100%;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-            button:hover {
-                background-color: #0056b3;
-            }
-
-        .forgot-password {
-            margin-top: 10px;
-        }
-    </style>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function getUser() {
-                console.log("Get user")
-                fetch('https://localhost:7114/api/databasemanagement?email=' + document.getElementById("get-email").value, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .catch(error => {
-                        console.error('There was a problem with the API request:', error);
-                    });
-            }
-            function findMatch() {
-                console.log("Find match");
-                var user = getUser();
-                if (user.email == document.getElementById("get-email").value) {
-                    if (user.password == document.getElementById("get-password").value) {
-                        console.log("Succesful login!");
-                    } else {
-                        console.log("Invalid password");
-                    }
-                } else {
-                    console.log("Invalid email");
-                }
-            }
-
-        });
-       </script>
-
-</head>
-
-
-<body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form>
-            <input id="get-email" type="text" placeholder="Email" required>
-            <input id="get-password" type="password" placeholder="Password" required>
-            <button class="submit" onclick="findMatch()">Login</button>
-        </form>
-
-
-        <div class="forgot-password">
-            <a href="Forgot-Password">Forgot Password</a>
+    <section class="login-container">
+        <div class="form">
+            <input id="email" type="text" placeholder="Enter Email" />
+            <input id="password" type="text" placeholder="Enter Password" />
+            <button class="btn" onclick="validateUser()">Login</button>
         </div>
-    </div>
-</body>
+    </section>
+</div>
 
-</html>
+
+
