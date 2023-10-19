@@ -5,6 +5,21 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+}
+.login-container {
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 input[type="text"],
