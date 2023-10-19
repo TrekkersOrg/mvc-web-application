@@ -51,24 +51,65 @@
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+            button:hover {
+                background-color: #0056b3;
+            }
 
         .forgot-password {
             margin-top: 10px;
         }
     </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function getUser() {
+                console.log("Get user")
+                fetch('https://localhost:7114/api/databasemanagement?email=' + document.getElementById("get-email").value, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the API request:', error);
+                    });
+            }
+            function findMatch() {
+                console.log("Find match");
+                var user = getUser();
+                if (user.email == document.getElementById("get-email").value) {
+                    if (user.password == document.getElementById("get-password").value) {
+                        console.log("Succesful login!");
+                    } else {
+                        console.log("Invalid password");
+                    }
+                } else {
+                    console.log("Invalid email");
+                }
+            }
+
+        });
+       </script>
+
 </head>
+
 
 <body>
     <div class="login-container">
         <h2>Login</h2>
         <form>
-            <input type="text" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <input id="get-email" type="text" placeholder="Email" required>
+            <input id="get-password" type="password" placeholder="Password" required>
+            <button class="submit" onclick="findMatch()">Login</button>
         </form>
+
+
         <div class="forgot-password">
             <a href="Forgot-Password">Forgot Password</a>
         </div>
