@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "os+aQUj3YO/sGtQHGypk+quIaW3wsQgSbP7bu4hfU4A=",
+  "Hash": "DevU++cd1yE7vX/dR0Z0DaJdnbn0l8ajEFtfc9cQFWk=",
   "Source": "Trekkers_AA",
   "BasePath": "_content/Trekkers_AA",
   "Mode": "Default",
@@ -68,6 +68,23 @@
       "OriginalItemSpec": "wwwroot\\.DS_Store"
     },
     {
+      "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\css\\forgotPasswordView.css",
+      "SourceId": "Trekkers_AA",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\",
+      "BasePath": "_content/Trekkers_AA",
+      "RelativePath": "css/forgotPasswordView.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\forgotPasswordView.css"
+    },
+    {
       "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\css\\loginView.css",
       "SourceId": "Trekkers_AA",
       "SourceType": "Discovered",
@@ -117,6 +134,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\js\\forgotPasswordView.js",
+      "SourceId": "Trekkers_AA",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\",
+      "BasePath": "_content/Trekkers_AA",
+      "RelativePath": "js/forgotPasswordView.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\forgotPasswordView.js"
     },
     {
       "Identity": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\wwwroot\\js\\loginView.js",
