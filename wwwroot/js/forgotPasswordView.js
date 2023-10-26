@@ -1,7 +1,8 @@
 function changePassword()
 {
     document.getElementById("loader-id").style.display = "flex";
-    
+
+
     document.getElementById("error").style.display = "none";
     document.getElementById("email").style.backgroundColor = "white";
     document.getElementById("new-password").style.backgroundColor = "white";
@@ -52,6 +53,9 @@ function changePassword()
         document.getElementById("email").style.backgroundColor = "#FFB3B3";
         return;
     }
+
+    // Call API GET Method using email
+    // If API GET response is 404, show "email does not exist" error message
 
     fetch('/api/databasemanagement?email=' + document.getElementById("email").value + '&newPassword=' + document.getElementById("confirm-password").value,{
         method: 'PUT',

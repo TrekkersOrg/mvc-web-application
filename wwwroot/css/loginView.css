@@ -45,6 +45,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 10px;
+    display: none;
 }
 
     .forgot-password:hover {
@@ -225,7 +226,6 @@ input:focus {
     display: none;
 }
 
-/* Background */
 #loader-id {
     display: none;
 }
