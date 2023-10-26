@@ -47,7 +47,7 @@ function validateUser()
             userData = data;
             if (document.getElementById("password").value == userData["password"])
             {
-                window.open(window.location.host + '/UserSession/FileUpload)', _blank);
+                window.location.assign('Test');
             } else {
                 document.getElementById("error").textContent = "Invalid login";
                 document.getElementById("error").style.display = "block";
