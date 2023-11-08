@@ -78,13 +78,19 @@ namespace Trekkers_AA.Controllers
         }
 
         [HttpPost]
-        public ActionResult<IEnumerable<SessionModel>> CreateUserSession(ObjectId sessionId)
+        public ActionResult<IEnumerable<SessionModel>> CreateUserSession(string email, string file)
         {
 
         }
 
         [HttpDelete]
-        public ActionResult<IEnumerable<SessionModel>> DeleteUserSession(ObjectId sessionId)
+        public ActionResult<IEnumerable<SessionModel>> DeleteUserSession(string email, string file)
+        {
+
+        }
+
+        [HttpPost]
+        public ActionResult<IEnumerable<DebugLogModel>> PostLog(ObjectId sessionId)
         {
 
         }
