@@ -80,18 +80,50 @@ namespace Trekkers_AA.Controllers
         [HttpPost]
         public ActionResult<IEnumerable<SessionModel>> CreateUserSession(ObjectId sessionId)
         {
+            // Connect to database
+            IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
 
+            // Get the MongoDB collection
+            var collection = userAccessDatabase.GetCollection<UserModel>("UserSession");
         }
 
+        [Route("session")]
         [HttpDelete]
-        public ActionResult<IEnumerable<SessionModel>> DeleteUserSession(ObjectId sessionId)
+        public async Task<ActionResult> DeleteUserSession(string sessionId)
         {
+            try
+            {
+                var objectId = new ObjectId(sessionId);
 
+                // Connect to UserAccess collection
+                IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
+
+                // Retrieve the MongoDB collection
+                var collection = userAccessDatabase.GetCollection<SessionModel>("UserSession");
+
+                // Create a filter to find the session with the given sessionId
+                var filter = Builders<SessionModel>.Filter.Eq("_id", objectId);
+
+                // Delete the session
+                var result = await collection.DeleteOneAsync(filter);
+
+                // Error
+                if (result.DeletedCount > 0)
+                {
+                    return Ok(new { Success = true, Message = "Session deleted successfully" });
+                }
+
+                return NotFound(new { Success = false, Message = "Session not found" });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as appropriate for your application
+                return StatusCode(500, new { Success = false, Message = "Internal server error" });
+            }
         }
 
-
-            // Custom function for email validation: Uses a regular expression to validate email addresses.
-            public bool emailValidator(string email)
+        // Custom function for email validation: Uses a regular expression to validate email addresses.
+        public bool emailValidator(string email)
         {
             string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             Regex regex = new Regex(pattern);
