@@ -78,7 +78,7 @@ namespace Trekkers_AA.Controllers
         }
 
         [HttpPost]
-        public ActionResult<IEnumerable<SessionModel>> CreateUserSession(ObjectId sessionId)
+        public ActionResult<IEnumerable<SessionModel>> CreateUserSession(string email, string file)
         {
             // Connect to database
             IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
@@ -89,7 +89,17 @@ namespace Trekkers_AA.Controllers
 
         [Route("session")]
         [HttpDelete]
+<<<<<<< HEAD
         public async Task<ActionResult> DeleteUserSession(string sessionId)
+=======
+        public ActionResult<IEnumerable<SessionModel>> DeleteUserSession(string email, string file)
+        {
+
+        }
+
+        [HttpPost]
+        public ActionResult<IEnumerable<DebugLogModel>> PostLog(ObjectId sessionId)
+>>>>>>> d8eb9de4a8f82af06411b0a43cd2845598a5a63b
         {
             try
             {
