@@ -77,15 +77,15 @@ namespace Trekkers_AA.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult<IEnumerable<SessionModel>> CreateUserSession(string email, string file)
-        {
-            // Connect to database
-            IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
+        // [HttpPost]
+        // public ActionResult<IEnumerable<SessionModel>> CreateUserSession(string email, string file)
+        // {
+        //     // Connect to database
+        //     IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
 
-            // Get the MongoDB collection
-            var collection = userAccessDatabase.GetCollection<UserModel>("UserSession");
-        }
+        //     // Get the MongoDB collection
+        //     var collection = userAccessDatabase.GetCollection<UserModel>("UserSession");
+        // }
 
         [Route("session")]
         [HttpDelete]
