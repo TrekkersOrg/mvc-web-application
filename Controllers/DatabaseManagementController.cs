@@ -80,6 +80,24 @@ namespace Trekkers_AA.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult<IEnumerable<SessionModel>> GetUserSession(ObjectId id)
+        {
+            // Connect to database
+            IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
+
+            // Get the MongoDB collection and find a user by their email.
+            var collection = userAccessDatabase.GetCollection<SessionModel>("UserSession");
+            var model = collection.Find(userSession => userSession.Id == id).FirstOrDefault();
+
+            // If the user is not found, return a 404 Not Found response; otherwise, return the user data.
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return Ok(model);
+        }
+
         [Route("session")]
         [HttpGet]
         public ActionResult<IEnumerable<SessionModel>> GetUserSession(ObjectId id)
@@ -100,6 +118,7 @@ namespace Trekkers_AA.Controllers
         }
 
         [Route("session")]
+        
         [HttpPost]
         public ActionResult<IEnumerable<SessionModel>> CreateUserSession(string email, string file)
         {
