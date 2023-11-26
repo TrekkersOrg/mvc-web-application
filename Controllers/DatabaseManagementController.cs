@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using Trekkers_AA.Models;
 using System.Text.RegularExpressions;
 using MongoDB.Bson;
+using System.Text.Json;
 
 namespace Trekkers_AA.Controllers
 {
@@ -21,6 +22,7 @@ namespace Trekkers_AA.Controllers
         }
 
         // HTTP GET request handler: Retrieves user information by email.
+        [Route("account")]
         [HttpGet]
         public ActionResult<IEnumerable<UserModel>> GetUser(string email)
         {
@@ -46,6 +48,7 @@ namespace Trekkers_AA.Controllers
         }
 
         // HTTP PUT request handler: Updates a user's password based on their email.
+        [Route("account")]
         [HttpPut]
         public ActionResult<IEnumerable<UserModel>> UpdateUserPassword(string email, string newPassword)
         {
@@ -77,21 +80,49 @@ namespace Trekkers_AA.Controllers
             }
         }
 
+        [Route("session")]
+        [HttpGet]
+        public ActionResult<IEnumerable<SessionModel>> GetUserSession(ObjectId id)
+        {
+            // Connect to database
+            IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
+
+            // Get the MongoDB collection and find a user by their email.
+            var collection = userAccessDatabase.GetCollection<SessionModel>("UserSession");
+            var model = collection.Find(userSession => userSession.Id == id).FirstOrDefault();
+
+            // If the user is not found, return a 404 Not Found response; otherwise, return the user data.
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return Ok(model);
+        }
+
+        [Route("session")]
         [HttpPost]
         public ActionResult<IEnumerable<SessionModel>> CreateUserSession(string email, string file)
         {
-
+            return Ok();
         }
 
+        [Route("session")]
         [HttpDelete]
         public ActionResult<IEnumerable<SessionModel>> DeleteUserSession(string email, string file)
         {
-
+            return Ok();
         }
 
+        [Route("debug")]
         [HttpPost]
-        public ActionResult<IEnumerable<DebugLogModel>> PostLog(ObjectId sessionId)
+        public ActionResult<DebugLogModel> PostLog([FromBody] JsonElement message)
         {
+            DebugLogModel result = new DebugLogModel();
+            result.message = message.ToString();
+            IMongoDatabase developerDatabase = _client.GetDatabase("Developer");
+            var collection = developerDatabase.GetCollection<DebugLogModel>("DebugLogs");
+            collection.InsertOne(result);
+            return Ok(result);
 
         }
 
