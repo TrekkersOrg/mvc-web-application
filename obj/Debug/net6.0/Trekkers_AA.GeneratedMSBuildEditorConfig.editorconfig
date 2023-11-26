@@ -9,57 +9,57 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Trekkers_AA
 build_property.RootNamespace = Trekkers_AA
-build_property.ProjectDir = /Users/apoorva/Documents/GitHub/mvc-web-application/
+build_property.ProjectDir = C:\Users\shahd\source\repos\TrekkersOrg\mvc-web-application\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = /Users/apoorva/Documents/GitHub/mvc-web-application
+build_property.MSBuildProjectDirectory = C:\Users\shahd\source\repos\TrekkersOrg\mvc-web-application
 build_property._RazorSourceGeneratorDebug = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/Home/ForgotPassword.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Gb3Jnb3RQYXNzd29yZC5jc2h0bWw=
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/Home/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/Home/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Mb2dpbi5jc2h0bWw=
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/Home/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/Home/TEST.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9URVNULmNzaHRtbA==
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/Home/TEST.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxURVNULmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/Home/UploadFile.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9VcGxvYWRGaWxlLmNzaHRtbA==
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/Home/UploadFile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxVcGxvYWRGaWxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/Shared/Error.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/Shared/_ValidationScriptsPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/UserSession/FileUpload.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVXNlclNlc3Npb24vRmlsZVVwbG9hZC5jc2h0bWw=
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/UserSession/FileUpload.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclNlc3Npb25cRmlsZVVwbG9hZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/apoorva/Documents/GitHub/mvc-web-application/Views/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = b-uy0gbjqdwn
+[C:/Users/shahd/source/repos/TrekkersOrg/mvc-web-application/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-u70a1kb3fk

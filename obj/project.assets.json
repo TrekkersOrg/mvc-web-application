@@ -780,29 +780,39 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "MongoDB.Driver >= 2.22.0"
+      "MongoDB.Bson >= 2.22.0",
+      "MongoDB.Driver >= 2.22.0",
+      "MongoDB.Driver.Core >= 2.22.0"
     ]
   },
   "packageFolders": {
-    "/Users/apoorva/.nuget/packages/": {}
+    "C:\\Users\\shahd\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/apoorva/Documents/GitHub/mvc-web-application/Trekkers_AA.csproj",
+      "projectUniqueName": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\Trekkers_AA.csproj",
       "projectName": "Trekkers_AA",
-      "projectPath": "/Users/apoorva/Documents/GitHub/mvc-web-application/Trekkers_AA.csproj",
-      "packagesPath": "/Users/apoorva/.nuget/packages/",
-      "outputPath": "/Users/apoorva/Documents/GitHub/mvc-web-application/obj/",
+      "projectPath": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\Trekkers_AA.csproj",
+      "packagesPath": "C:\\Users\\shahd\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\shahd\\source\\repos\\TrekkersOrg\\mvc-web-application\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/apoorva/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\shahd\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/sdk/7.0.310/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
+        "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -821,7 +831,15 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "MongoDB.Bson": {
+            "target": "Package",
+            "version": "[2.22.0, )"
+          },
           "MongoDB.Driver": {
+            "target": "Package",
+            "version": "[2.22.0, )"
+          },
+          "MongoDB.Driver.Core": {
             "target": "Package",
             "version": "[2.22.0, )"
           }
@@ -845,7 +863,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.310/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

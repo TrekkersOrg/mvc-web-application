@@ -8,7 +8,9 @@
     ".NETCoreApp,Version=v6.0": {
       "Trekkers_AA/1.0.0": {
         "dependencies": {
-          "MongoDB.Driver": "2.22.0"
+          "MongoDB.Bson": "2.22.0",
+          "MongoDB.Driver": "2.22.0",
+          "MongoDB.Driver.Core": "2.22.0"
         },
         "runtime": {
           "Trekkers_AA.dll": {}
