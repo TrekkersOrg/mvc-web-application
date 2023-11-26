@@ -100,7 +100,6 @@ namespace Trekkers_AA.Controllers
         }
 
         [Route("session")]
-        
         [HttpPost]
         public ActionResult<IEnumerable<SessionModel>> CreateUserSession(string email, string file)
         {
@@ -109,9 +108,37 @@ namespace Trekkers_AA.Controllers
 
         [Route("session")]
         [HttpDelete]
-        public ActionResult<IEnumerable<SessionModel>> DeleteUserSession(string email, string file)
+        public async Task<ActionResult> DeleteUserSession(string sessionId)
         {
-            return Ok();
+            try
+            {
+                var objectId = new ObjectId(sessionId);
+
+                // Connect to UserAccess collection
+                IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
+
+                // Retrieve the MongoDB collection
+                var collection = userAccessDatabase.GetCollection<SessionModel>("UserSession");
+
+                // Create a filter to find the session with the given sessionId
+                var filter = Builders<SessionModel>.Filter.Eq("_id", objectId);
+
+                // Delete the session
+                var result = await collection.DeleteOneAsync(filter);
+
+                // Error
+                if (result.DeletedCount > 0)
+                {
+                    return Ok(new { Success = true, Message = "Session deleted successfully" });
+                }
+
+                return NotFound(new { Success = false, Message = "Session not found" });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as appropriate for your application
+                return StatusCode(500, new { Success = false, Message = "Internal server error" });
+            }
         }
 
         [Route("debug")]
