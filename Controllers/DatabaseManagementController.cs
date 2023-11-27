@@ -82,14 +82,21 @@ namespace Trekkers_AA.Controllers
 
         [Route("session")]
         [HttpGet]
-        public ActionResult<IEnumerable<SessionModel>> GetUserSession(ObjectId id)
+        public ActionResult<IEnumerable<SessionModel>> GetUserSession(string id)
         {
+
+            ObjectId objectId;
+            if (!ObjectId.TryParse(id, out objectId))
+            {
+                return BadRequest("Invalid session ID format.");
+            }
+
             // Connect to database
             IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
 
             // Get the MongoDB collection and find a user by their email.
             var collection = userAccessDatabase.GetCollection<SessionModel>("UserSession");
-            var model = collection.Find(userSession => userSession.Id == id).FirstOrDefault();
+            var model = collection.Find(userSession => userSession.Id == objectId).FirstOrDefault();
 
             // If the user is not found, return a 404 Not Found response; otherwise, return the user data.
             if (model == null)
@@ -99,11 +106,71 @@ namespace Trekkers_AA.Controllers
             return Ok(model);
         }
 
+        public class CreateUserSessionRequest
+        {
+            public string? Email { get; set; }
+            public string? File { get; set; }
+        }
+
         [Route("session")]
         [HttpPost]
-        public ActionResult<IEnumerable<SessionModel>> CreateUserSession(string email, string file)
+        public ActionResult<IEnumerable<SessionModel>> CreateUserSession([FromBody] CreateUserSessionRequest request)
         {
-            return Ok();
+            if (string.IsNullOrEmpty(request?.Email) || string.IsNullOrEmpty(request?.File))
+            {
+                return BadRequest("Email and file are required in the request body.");
+            }
+
+            IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
+
+            var collection = userAccessDatabase.GetCollection<SessionModel>("UserSession");
+
+            var newSession = new SessionModel
+            {
+                email = request.Email,
+                timestamp = DateTime.UtcNow.AddHours(4).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                file = request.File,
+                status = true,
+            };
+
+            collection.InsertOne(newSession);
+
+            return Ok(newSession);
+        }
+
+        [Route("session")]
+        [HttpPut]
+        public async Task<ActionResult> UpdateUserSessionStatus(string id, bool status)
+        {
+            try
+            {
+                ObjectId objectId;
+                if (!ObjectId.TryParse(id, out objectId))
+                {
+                    return BadRequest("Invalid session ID format.");
+                }
+
+                IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
+
+                var collection = userAccessDatabase.GetCollection<SessionModel>("UserSession");
+
+                var filter = Builders<SessionModel>.Filter.Eq("_id", objectId);
+
+                var update = Builders<SessionModel>.Update.Set(s => s.status, status);
+
+                var result = await collection.UpdateOneAsync(filter, update);
+
+                if (result.ModifiedCount > 0)
+                {
+                    return Ok(result);
+                }
+
+                return NotFound(new { Success = false, Message = "Session not found" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Success = false, Message = "Internal server error" });
+            }
         }
 
         [Route("session")]
@@ -112,7 +179,11 @@ namespace Trekkers_AA.Controllers
         {
             try
             {
-                var objectId = new ObjectId(sessionId);
+                ObjectId objectId;
+                if (!ObjectId.TryParse(sessionId, out objectId))
+                {
+                    return BadRequest("Invalid session ID format.");
+                }
 
                 // Connect to UserAccess collection
                 IMongoDatabase userAccessDatabase = _client.GetDatabase("UserAccess");
