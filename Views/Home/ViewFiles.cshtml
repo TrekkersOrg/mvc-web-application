@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            border: 2px solid gray;
+            color: gray;
+            background-color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        .upload-btn-wrapper:hover {
+            cursor: pointer;
+        }
+
+        .remove-btn {
+            border: 2px solid red;
+            color: red;
+            background-color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .file-list {
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Document Upload</h2>
+        <div class="upload-btn-wrapper">
+            <button class="btn" onclick="document.getElementById('fileInput').click()">Upload</button>
+            <input type="file" id="fileInput" style="display:none" onchange="handleFileUpload()" />
+            <button class="remove-btn" onclick="removeFile()">Remove File</button>
+            <div class="next-btn-wrapper">
+                <button class="btn">Next</button>
+            </div>
+        </div>
+
+        <h2>Uploaded Files</h2>
+        <div class="file-list" id="fileList">
+            <!-- File list will be displayed here -->
+        </div>
+    </div>
+
+    <script>// Array to store uploaded files
+        const uploadedFiles = [];
+
+        // Function to update the file list
+        function updateFileList() {
+            const fileListContainer = document.getElementById("fileList");
+            fileListContainer.innerHTML = "<strong>File List:</strong><br>";
+
+            uploadedFiles.forEach((file) => {
+                fileListContainer.innerHTML += `${file.name}<br>`;
+            });
+        }
+
+        // Function to handle file upload
+        function handleFileUpload() {
+            const fileInput = document.getElementById("fileInput");
+            const files = fileInput.files;
+
+            // Add uploaded files to the array
+            for (const file of files) {
+                uploadedFiles.push(file);
+            }
+
+            // Update the file list
+            updateFileList();
+        }
+
+        // Function to remove the last uploaded file
+        function removeFile() {
+            uploadedFiles.pop(); // Remove the last file
+            updateFileList(); // Update the file list
+        }</script>
+</body>
+
+</html>
