@@ -23,11 +23,18 @@ namespace StriveAI.Controllers
             return View();
         }
 
-// Rendering TheTeam View
-        public IActionResult TheTeam()
+// Rendering The Team Page
+        public IActionResult AboutUs()
         {
             return View();
         }
+
+// Rendering OurProducts Page
+        public IActionResult OurProducts()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
