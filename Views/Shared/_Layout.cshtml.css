@@ -1,6 +1,10 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+.nav-gradient{
+  background-image: linear-gradient(to right, #ffffff, #005eff);
+}
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -46,3 +50,4 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+

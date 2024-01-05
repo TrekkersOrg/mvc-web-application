@@ -1456,7 +1456,7 @@
 }
 
 .bg-gradient {
-  background-image: var(--bs-gradient) !important;
+  background-image: var(--bs-gradient)!important;
 }
 
 .user-select-all {
