@@ -19,9 +19,10 @@ def split_docs(documents,chunk_size=500,chunk_overlap=20):
 
 # Load configuration
 print("Loading configuration...")
-with open('../appSettings.json') as parser:
+with open('../appSettings.Development.json') as parser:
   appSettings = json.load(parser)
 
+print(appSettings)
 print("Loading document(s)...")
 reader = PdfReader('../UserFiles/Sample.Marital.Settlement.Agreement.10.15.2012.pdf')
 page = reader.pages[0] 
