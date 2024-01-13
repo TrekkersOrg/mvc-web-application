@@ -3,15 +3,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<body>
-    <header>
-        <div class="container-fluid text-center">
-            <br>
-            <br>
-            <h1 class="display-4 font text-black ">Your legal document, decoded</h1>
-            <br>
-            <br>
-            <button type="button" class="btn btn-primary btn-lg rounded-pill text-white">Get Started</button>
+@* <div class= "home container-fluid">
+<div class= "home-header">
+<header>
+<h1 class= "text-center">Your legal document, decoded</h1>
+</header>
+</div>
+<div class= "text-center">
+<button type="button" class="btn btn-primary btn-lg rounded-pill text-white">Get Started</button>
+<button type="button" class="btn btn-primary btn-lg rounded-pill text-white">Learn More</button>
+</div>
+</div> *@
+
+<div class="container-fluid">
+    <div class="row align-items-center justify-content-center">
+        <div class="col-12 align-self-center text-center">
+            <header>
+                <h1 class="text-black">Legal Documents</h1>
+                <h1 class="text-primary">Decoded</h1>
+            </header>
+            <div class="button">
+                <button type="button" class="btn btn-primary btn-lg rounded-pill text-white">Get Started</button>
+            </div>
         </div>
-    </header>
-</body>
+    </div>
+</div>
