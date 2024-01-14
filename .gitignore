@@ -362,6 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /UserFiles/Sample.Marital.Settlement.Agreement.10.15.2012.pdf
+<<<<<<< HEAD
 Scripts/venv/Include/site/python3.10/greenlet/greenlet.h
 Scripts/venv/Lib/site-packages/distutils-precedence.pth
 Scripts/venv/Lib/site-packages/isympy.py
@@ -23783,3 +23784,7 @@ Scripts/venv/Scripts/tqdm.exe
 Scripts/venv/Scripts/transformers-cli.exe
 Scripts/venv/Scripts/unstructured-ingest.exe
 Scripts/venv/share/man/man1/isympy.1
+=======
+/Scripts/venv
+/venv
+>>>>>>> 4f0e8c72428d90316cd7d07b5e401fe3a5a4d98d
