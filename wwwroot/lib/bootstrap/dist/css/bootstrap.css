@@ -7819,7 +7819,7 @@ textarea.form-control-lg {
 }
 
 .bg-gradient {
-  background-image: linear-gradient(to right, #ffffff, #005eff) !important;
+  background-image: linear-gradient(to right, #ffffff, #005eff);
 }
 
 
