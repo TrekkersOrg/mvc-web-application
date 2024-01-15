@@ -5,6 +5,7 @@ from langchain.vectorstores import Pinecone
 import json
 from PyPDF2 import PdfReader
 import numpy
+import argparse
 
 class Document:
     def __init__(self, page_content, metadata=None):
@@ -16,6 +17,11 @@ def split_docs(documents,chunk_size=500,chunk_overlap=20):
   text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
   docs = text_splitter.split_documents(documents)
   return docs
+
+# Load shell configuration
+parser = argparse.ArgumentParser(description="Embed and index document into defined namespace.")
+parser.add_argument('-n', '--namespace', help='Specify the Pinecone index.', required=True)
+args = parser.parse_args()
 
 # Load configuration
 print("Loading configuration...")
@@ -45,5 +51,6 @@ pinecone.init(
     environment= appSettings.get("Pinecone", {}).get("Environment", None)
 )
 index_name = appSettings.get("Pinecone", {}).get("Index", None)
-index = Pinecone.from_documents(docs, embeddings, index_name=index_name)
+namespace = args.namespace
+index = Pinecone.from_documents(docs, embeddings, index_name=index_name, namespace=namespace)
 
