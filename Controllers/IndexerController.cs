@@ -128,8 +128,8 @@ namespace StriveAI.Controllers
                 var response = await httpClient.PostAsync(requestUri, null);
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseBodyRaw = await response.Content.ReadAsStringAsync();
-                    JsonDocument responseBodyJson = JsonDocument.Parse(responseBodyRaw);
+                    var responseBodyString = await response.Content.ReadAsStringAsync();
+                    JsonDocument responseBodyJson = JsonDocument.Parse(responseBodyString);
                     JsonElement responseBodyElement = responseBodyJson.RootElement;
                     var namespacesDictionary = new Dictionary<string, PineconeDetailsResponseModel.NamespaceModel>();
                     foreach (var namespaceProperty in responseBodyElement.GetProperty("namespaces").EnumerateObject())
