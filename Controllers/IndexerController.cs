@@ -10,14 +10,17 @@ namespace StriveAI.Controllers
     [ApiController]
     public class IndexerController : ControllerBase
     {
-        // Set configuration variables for controller
         private readonly IConfiguration _configuration;
         private readonly string _pineconeAPIKey;
         private readonly string _pineconeIndex;
         private readonly string _pineconeEnvironment;
         private readonly string _pineconeHost;
 
-        // Initialize configuration variables from appSettings.Development.json
+        /// <summary>
+        /// Initializes the controller using the configuration from appSettings.Development.json.
+        /// Initializes the local instances.
+        /// </summary>
+        /// <param name="configuration" type="IConfiguration"></param>
         public IndexerController(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -27,11 +30,47 @@ namespace StriveAI.Controllers
             _pineconeHost = _configuration["Pinecone:Host"];
         }
 
-
-        // Purge Pinecone: Deletes all records in a namespace.
+        /// <summary>
+        /// Deletes all vectors in a namespace of the Pinecone index.
+        /// </summary>
+        /// <param name="requestBody" type="PurgePineconeRequestModel"></param>
+        /// <returns type="Task<ActionResult>"></returns>
         [HttpPost("purgePinecone")]
         public async Task<ActionResult> PurgePinecone([FromBody] PurgePineconeRequestModel requestBody)
         {
+            var responseModel = new APIResponseBodyWrapperModel();
+            var purgePinecodeResponseModel = new PurgePineconeResponseModel();
+            if (requestBody.Namespace == null)
+            {
+                responseModel.StatusCode = 400;
+                responseModel.StatusMessage = "Bad Request";
+                responseModel.StatusMessageText = "The 'namespace' field is missing in the request body.";
+                responseModel.Timestamp = DateTime.Now;
+                return BadRequest(responseModel);
+            }
+            ActionResult? pineconeDetailsResult = await PineconeDetails();
+            List<string> existingNamespaces = new List<string>();
+            int namespaceVectorCount = 0;
+            if ((pineconeDetailsResult is OkObjectResult okResult) && (okResult.Value != null) && (okResult.Value is APIResponseBodyWrapperModel apiDetails) && (apiDetails != null) && (apiDetails.Data is PineconeDetailsResponseModel pineconeDetails))
+            {
+                Dictionary<string, PineconeDetailsResponseModel.NamespaceModel>? namespaces = pineconeDetails.Namespaces;
+                if (namespaces != null)
+                {
+                    List<string> namespaceKeys = new List<string>(namespaces.Keys);
+                    foreach (var key in namespaceKeys)
+                    {
+                        existingNamespaces.Add(key);
+                        if (key == requestBody.Namespace)
+                        {
+                            PineconeDetailsResponseModel.NamespaceModel? vectorCountModel = pineconeDetails?.Namespaces?.GetValueOrDefault(key);
+                            if (vectorCountModel != null)
+                            {
+                                namespaceVectorCount = vectorCountModel.VectorCount;
+                            }
+                        }
+                    }
+                } 
+            }
             using (var httpClient = new HttpClient())
             {
                 var requestUri = _pineconeHost + "/vectors/delete";
@@ -40,33 +79,44 @@ namespace StriveAI.Controllers
                     Encoding.UTF8,
                     "application/json"
                 );
-
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
-
-                var responseModel = new APIResponseBodyWrapperModel();
-                var purgePinecodeResponseModel = new PurgePineconeResponseModel();
-                // Check if namespace exists, if else, 404 error
+                if (requestBody.Namespace != null && !existingNamespaces.Contains(requestBody.Namespace))
+                {
+                    responseModel.StatusCode = 404;
+                    responseModel.StatusMessage = "Not Found";
+                    responseModel.StatusMessageText = "Unable to find index: " + requestBody.Namespace;
+                    responseModel.Timestamp = DateTime.Now;
+                    return NotFound(responseModel);
+                }
                 var response = await httpClient.PostAsync(requestUri, content);
-
-
                 if (response.IsSuccessStatusCode)
                 {
                     responseModel.StatusCode = 200;
-                    responseModel.StatusMessage = "Success.";
+                    responseModel.StatusMessage = "OK";
                     responseModel.StatusMessageText = "Pinecone records deleted successfully.";
                     responseModel.Timestamp = DateTime.Now;
                     purgePinecodeResponseModel.Namespace = requestBody.Namespace;
+                    purgePinecodeResponseModel.NumberOfVectorsDeleted = namespaceVectorCount;
                     responseModel.Data = purgePinecodeResponseModel;
                     return Ok(responseModel);
                 }
                 else
                 {
-                    return StatusCode((int)response.StatusCode, "Error purging Pinecone records.");
+                    responseModel.StatusCode = (int)response.StatusCode;
+                    responseModel.StatusMessage = "Unexpected Error";
+                    responseModel.StatusMessageText = "An unexpected error occurred, please refer to status code.";
+                    responseModel.Timestamp = DateTime.Now;
+                    return StatusCode((int)response.StatusCode, responseModel);
                 }
             }
         }
 
+        /// <summary>
+        /// Retrieves the index fullness, dimension, total vector count, and the vector count of each
+        /// namespace in the Pinecone index.
+        /// </summary>
+        /// <returns type="Task<ActionResult>"></returns>
         [HttpPost("pineconeDetails")]
         public async Task<ActionResult> PineconeDetails()
         {
@@ -76,14 +126,12 @@ namespace StriveAI.Controllers
                 httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
                 var responseModel = new APIResponseBodyWrapperModel();
                 var response = await httpClient.PostAsync(requestUri, null);
-
                 if (response.IsSuccessStatusCode)
                 {
                     var responseBodyRaw = await response.Content.ReadAsStringAsync();
                     JsonDocument responseBodyJson = JsonDocument.Parse(responseBodyRaw);
                     JsonElement responseBodyElement = responseBodyJson.RootElement;
                     var namespacesDictionary = new Dictionary<string, PineconeDetailsResponseModel.NamespaceModel>();
-
                     foreach (var namespaceProperty in responseBodyElement.GetProperty("namespaces").EnumerateObject())
                     {
                         var namespaceModel = new PineconeDetailsResponseModel.NamespaceModel
@@ -92,7 +140,6 @@ namespace StriveAI.Controllers
                         };
                         namespacesDictionary.Add(namespaceProperty.Name, namespaceModel);
                     }
-
                     PineconeDetailsResponseModel pineconeDetailsResponseModel = new PineconeDetailsResponseModel
                     {
                         Namespaces = namespacesDictionary,
@@ -100,7 +147,6 @@ namespace StriveAI.Controllers
                         IndexFullness = responseBodyElement.GetProperty("indexFullness").GetDouble(),
                         TotalVectorCount = responseBodyElement.GetProperty("totalVectorCount").GetInt32()
                     };
-
                     responseModel.StatusCode = 200;
                     responseModel.StatusMessage = "Success.";
                     responseModel.StatusMessageText = "Pinecone details retrieved successfully.";
@@ -110,7 +156,11 @@ namespace StriveAI.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)response.StatusCode, "Error retrieving Pinecone details.");
+                    responseModel.StatusCode = (int)response.StatusCode;
+                    responseModel.StatusMessage = "Unexpected Error";
+                    responseModel.StatusMessageText = "An unexpected error occurred, please refer to status code.";
+                    responseModel.Timestamp = DateTime.Now;
+                    return StatusCode((int)response.StatusCode, responseModel);
                 }
             }
         }
