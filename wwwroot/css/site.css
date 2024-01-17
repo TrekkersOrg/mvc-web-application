@@ -2,6 +2,16 @@ html {
   font-size: 14px;
 }
 
+.navbar-nav .nav-link:hover{
+  color:white;
+  background-color:rgb(3, 170, 254);
+}
+
+.navbar-nav .nav-link.active{
+  color: white;
+  background-color: rgb(3, 170, 254);
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
