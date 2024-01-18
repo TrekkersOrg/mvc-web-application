@@ -1,13 +1,13 @@
-﻿﻿@{
+﻿@{
     ViewData["Title"] = "";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
     .btn-outline-secondary.rounded-pill.btn-lg {
-        background-color:#ffffff;
         color: white;
         border: transparent;
+        position: relative;
     }
 
         .btn-outline-secondary.rounded-pill.btn-lg:hover {
@@ -26,12 +26,15 @@
     .btn-primary.rounded-pill.btn-lg {
         color: white;
         border: transparent;
+        position: relative;
+        padding: 8px 20px;
     }
 
     .bg-gradient {
         background-image: linear-gradient(to bottom, #ffffff, #005eff) !important;
         min-height: 100vh;
         margin-bottom: 10vh;
+        position: relative;
     }
 
     .header-container {
@@ -55,13 +58,12 @@
     </div>
 
     <div class="row mt-5">
-        <div class="col-5 text-center h-100 p-2 ms-auto">
+        <div class="col-md-5 text-center h-100 p-2 ms-auto">
             <a class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none" asp-area="Identity" asp-page="/Account/Register">Get Started</a>
         </div>
 
-        <div class="col-5 justify-content-start h-100 p-2">
-            <a class="btn btn-outline-secondary rounded-pill btn-lg text-dark text-decoration-none"
-               asp-controller="Home" asp-action="OurProducts">Learn More &#8594</a>
+        <div class="col-md-5 justify-content-start h-100 p-2">
+            <a class="btn btn-outline-secondary rounded-pill btn-lg text-dark text-decoration-none" asp-controller="Home" asp-action="OurProducts">Learn More &#8594</a>
         </div>
     </div>
 </div>
