@@ -1,3 +1,7 @@
+import os
+import sys
+
+
 from re import S
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import SentenceTransformerEmbeddings, HuggingFaceBgeEmbeddings
@@ -65,7 +69,10 @@ def main():
     )
     index_name = appSettings.get("Pinecone", {}).get("Index", None)
     namespace = args.namespace
-    index = Pinecone.from_documents(docs, embeddings, index_name=index_name, namespace=namespace)
+    try:
+        index = Pinecone.from_documents(docs, embeddings, index_name=index_name, namespace=namespace)
+    except Exception as e:
+        print(e)
     if args.debug:
         print("Index Name: " + index_name)
         print("Namespace: " + namespace)

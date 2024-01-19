@@ -3,9 +3,9 @@ using StriveAI.Models;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System;
-using System.Collections.Generic;
 using System.Web;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace StriveAI.Controllers
 {
@@ -295,6 +295,52 @@ namespace StriveAI.Controllers
         }
 
         /// <summary>
+        /// Embeds and inserts a document into namespace.
+        /// </summary>
+        /// <param name="requestBody" type="InsertDocumentRequestModel"></param>
+        /// <returns type="ActionResult"></returns>
+        [HttpPost("insertDocument")]
+        public ActionResult InsertDocument([FromBody] InsertDocumentRequestModel requestBody)
+        {
+            APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
+            try
+            {
+                string arguments = $"-n {requestBody.Namespace}";
+                if (Directory.GetCurrentDirectory() != "scripts")
+                {
+                    Directory.SetCurrentDirectory("scripts");
+                }
+                string finalOutput = RunCommand("py", $"embedder.py {arguments}");
+                
+                if (finalOutput.Contains("Finished"))
+                {
+                    responseModel.StatusCode = 200;
+                    responseModel.StatusMessage = "OK";
+                    responseModel.StatusMessageText = $"Document successfully inserted into {requestBody.Namespace} namespace.";
+                    responseModel.Timestamp = DateTime.Now;
+                    return Ok(responseModel);
+                }
+                else
+                {
+                    responseModel.StatusCode = 500;
+                    responseModel.StatusMessageText = "Error executing script.";
+                    responseModel.StatusMessage = "Internal Server Error.";
+                    responseModel.Timestamp = DateTime.Now;
+                    return StatusCode(500, responseModel);
+                }             
+            }
+            catch (Exception ex)
+            {
+                responseModel.StatusCode = 500;
+                responseModel.StatusMessageText = ex.Message;
+                responseModel.StatusMessage = "Internal Server Error.";
+                responseModel.Timestamp= DateTime.Now;
+                return StatusCode(500, responseModel);
+            }
+            
+        }
+
+        /// <summary>
         /// Creates a query parameter request URI string that assigns
         /// each query parameter in the list the same key.
         /// </summary>
@@ -305,6 +351,47 @@ namespace StriveAI.Controllers
         {
             var encodedValues = values.Select(v => HttpUtility.UrlEncode(v));
             return $"{key}={string.Join("&" + key + "=", encodedValues)}";
+        }
+
+        /// <summary>
+        /// Runs and processes a system command.
+        /// </summary>
+        /// <param name="command" type="string"></param>
+        /// <param name="arguments" type="string"></param>
+        /// <returns type="string"></returns>
+        static string RunCommand(string command, string arguments)
+        {
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = command,
+                    Arguments = arguments,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                using (Process process = new Process { StartInfo = startInfo })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+                    if (process.ExitCode == 0)
+                    {
+                        return output.Trim();
+                    }
+                    else
+                    {
+                        return $"{error}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return $"{ex.Message}";
+            }
         }
     }
 }
