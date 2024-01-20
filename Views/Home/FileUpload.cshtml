@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .btn-outline-secondary.rounded-pill.btn-lg {
+        color: white;
+        border: transparent;
+        position: relative;
+    }
+
+    .btn-outline-secondary.rounded-pill.btn-lg:hover {
+        background-color: rgb(3, 170, 254);
+        color: white;
+        border: transparent;
+    }
+
+    .btn-primary.rounded-pill.btn-lg:hover {
+        background-color: rgb(3, 170, 254);
+        color: white;
+        border: transparent;
+    }
+
+    .btn-primary.rounded-pill.btn-lg {
+        color: white;
+        border: transparent;
+        position: relative;
+        padding: 8px 20px;
+    }
+
+    .header-container {
+        padding-top: 5vh;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col-12 h-100 text-center header-container">
+            <header>
+                <h1 class="text-black display-4">Upload File Here &#8595</h1>
+            </header>
+        </div>
+    </div>
+    <div class="row mt-5 d-flex">
+        <button>
+            <img src="mvc-web-application/wwwroot/img/uploadfile.png" alt="Button Image">
+        </button>
+    </div>
+</div>
