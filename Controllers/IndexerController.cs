@@ -3,9 +3,11 @@ using StriveAI.Models;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System;
-using System.Collections.Generic;
 using System.Web;
+using System.Diagnostics;
+using Humanizer;
+using System.Numerics;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 
 namespace StriveAI.Controllers
 {
@@ -39,12 +41,9 @@ namespace StriveAI.Controllers
         {
             APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
             GetRecordResponseModel? getRecordResponseModel = new GetRecordResponseModel();
-            if (requestBody.Namespace == null || requestBody.Ids == null)
+            if (requestBody.Namespace == null || requestBody.Ids == null || requestBody.Ids.Any(string.IsNullOrEmpty) == true || requestBody.Ids.Any() == false)
             {
-                responseModel.StatusCode = 400;
-                responseModel.StatusMessage = "Bad Request";
-                responseModel.StatusMessageText = "The 'namespace' and/or 'ids' field is missing in the request body.";
-                responseModel.Timestamp = DateTime.Now;
+                responseModel = createResponseModel(400, "Bad Request", "The 'namespace' and/or 'ids' field is missing or empty in the request body.", DateTime.Now);
                 return BadRequest(responseModel);
             }
             ActionResult? pineconeDetailsResult = await PineconeDetails();
@@ -75,10 +74,7 @@ namespace StriveAI.Controllers
                 httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
                 if (requestBody.Namespace != null && !existingNamespaces.Contains(requestBody.Namespace))
                 {
-                    responseModel.StatusCode = 404;
-                    responseModel.StatusMessage = "Not Found";
-                    responseModel.StatusMessageText = "Unable to find index: " + requestBody.Namespace;
-                    responseModel.Timestamp = DateTime.Now;
+                    responseModel = createResponseModel(404, "Not Found", "Unable to find index: " + requestBody.Namespace, DateTime.Now);
                     return NotFound(responseModel);
                 }
                 var response = await httpClient.GetAsync(requestUri);
@@ -132,28 +128,18 @@ namespace StriveAI.Controllers
                             }
                             if (vectorsDetails.Vectors.Count == 0)
                             {
-                                responseModel.StatusCode = 404;
-                                responseModel.StatusMessage = "Not Found";
-                                responseModel.StatusMessageText = "Unable to find vectors: " + requestBody.Ids;
-                                responseModel.Timestamp = DateTime.Now;
+                                responseModel = createResponseModel(404, "Not Found", "Unable to find vectors: " + requestBody.Ids, DateTime.Now);
                                 return NotFound(responseModel);
                             }
                             getRecordResponseModel.Vectors = vectorsDetails;
                         }
                     }
-                    responseModel.StatusCode = 200;
-                    responseModel.StatusMessage = "OK";
-                    responseModel.StatusMessageText = "Pinecone records fetched successfully.";
-                    responseModel.Timestamp = DateTime.Now;
-                    responseModel.Data = getRecordResponseModel;
+                    responseModel = createResponseModel(200, "OK", "Pinecone records fetched successfully.", DateTime.Now, getRecordResponseModel);
                     return Ok(responseModel);
                 }
                 else
                 {
-                    responseModel.StatusCode = (int)response.StatusCode;
-                    responseModel.StatusMessage = "Unexpected Error";
-                    responseModel.StatusMessageText = "An unexpected error occurred, please refer to status code.";
-                    responseModel.Timestamp = DateTime.Now;
+                    responseModel = createResponseModel((int)response.StatusCode, "Unexpected Error", "An unexpected error occurred, please refer to status code.", DateTime.Now);
                     return StatusCode((int)response.StatusCode, responseModel);
                 }
             }
@@ -171,10 +157,7 @@ namespace StriveAI.Controllers
             var purgePinecodeResponseModel = new PurgePineconeResponseModel();
             if (requestBody.Namespace == null)
             {
-                responseModel.StatusCode = 400;
-                responseModel.StatusMessage = "Bad Request";
-                responseModel.StatusMessageText = "The 'namespace' field is missing in the request body.";
-                responseModel.Timestamp = DateTime.Now;
+                responseModel = createResponseModel(400, "Bad Request", "The 'namespace' field is missing in the request body.", DateTime.Now);
                 return BadRequest(responseModel);
             }
             ActionResult? pineconeDetailsResult = await PineconeDetails();
@@ -212,30 +195,20 @@ namespace StriveAI.Controllers
                 httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
                 if (requestBody.Namespace != null && !existingNamespaces.Contains(requestBody.Namespace))
                 {
-                    responseModel.StatusCode = 404;
-                    responseModel.StatusMessage = "Not Found";
-                    responseModel.StatusMessageText = "Unable to find index: " + requestBody.Namespace;
-                    responseModel.Timestamp = DateTime.Now;
+                    responseModel = createResponseModel(404, "Not Found", "Unable to find index: " + requestBody.Namespace, DateTime.Now);
                     return NotFound(responseModel);
                 }
                 var response = await httpClient.PostAsync(requestUri, content);
                 if (response.IsSuccessStatusCode)
                 {
-                    responseModel.StatusCode = 200;
-                    responseModel.StatusMessage = "OK";
-                    responseModel.StatusMessageText = "Pinecone records deleted successfully.";
-                    responseModel.Timestamp = DateTime.Now;
                     purgePinecodeResponseModel.Namespace = requestBody.Namespace;
                     purgePinecodeResponseModel.NumberOfVectorsDeleted = namespaceVectorCount;
-                    responseModel.Data = purgePinecodeResponseModel;
+                    responseModel = createResponseModel(200, "OK", "Pinecone records deleted successfully.", DateTime.Now, purgePinecodeResponseModel);
                     return Ok(responseModel);
                 }
                 else
                 {
-                    responseModel.StatusCode = (int)response.StatusCode;
-                    responseModel.StatusMessage = "Unexpected Error";
-                    responseModel.StatusMessageText = "An unexpected error occurred, please refer to status code.";
-                    responseModel.Timestamp = DateTime.Now;
+                    responseModel = createResponseModel((int)response.StatusCode, "Unexpected Error", "An unexpected error occurred, please refer to status code.", DateTime.Now);
                     return StatusCode((int)response.StatusCode, responseModel);
                 }
             }
@@ -276,21 +249,55 @@ namespace StriveAI.Controllers
                         IndexFullness = responseBodyElement.GetProperty("indexFullness").GetDouble(),
                         TotalVectorCount = responseBodyElement.GetProperty("totalVectorCount").GetInt32()
                     };
-                    responseModel.StatusCode = 200;
-                    responseModel.StatusMessage = "Success.";
-                    responseModel.StatusMessageText = "Pinecone details retrieved successfully.";
-                    responseModel.Timestamp = DateTime.Now;
-                    responseModel.Data = pineconeDetailsResponseModel;
+                    responseModel = createResponseModel(200, "Success", "Pinecone details retrieved successfully.", DateTime.Now, pineconeDetailsResponseModel);
                     return Ok(responseModel);
                 }
                 else
                 {
-                    responseModel.StatusCode = (int)response.StatusCode;
-                    responseModel.StatusMessage = "Unexpected Error";
-                    responseModel.StatusMessageText = "An unexpected error occurred, please refer to status code.";
-                    responseModel.Timestamp = DateTime.Now;
+                    responseModel = createResponseModel((int)response.StatusCode, "Unexpected Error", "An unexpected error occurred, please refer to status code.", DateTime.Now);
                     return StatusCode((int)response.StatusCode, responseModel);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Embeds and inserts a document into namespace.
+        /// </summary>
+        /// <param name="requestBody" type="InsertDocumentRequestModel"></param>
+        /// <returns type="ActionResult"></returns>
+        [HttpPost("insertDocument")]
+        public ActionResult InsertDocument([FromBody] InsertDocumentRequestModel requestBody)
+        {
+            APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
+            try
+            {
+                if (requestBody.Namespace == null || requestBody.Namespace == "")
+                {
+                    responseModel = createResponseModel(400, "Bad Request", "The 'namespace' field is missing or empty.", DateTime.Now);
+                    return BadRequest(responseModel);
+                }
+                string arguments = $"-n {requestBody.Namespace}";
+                if (!Directory.GetCurrentDirectory().Contains("scripts", StringComparison.OrdinalIgnoreCase))
+                {
+                    Directory.SetCurrentDirectory("scripts");
+                }
+                string finalOutput = RunCommand("py", $"embedder.py {arguments}");
+                
+                if (finalOutput.Contains("Finished"))
+                {
+                    responseModel = createResponseModel(200, "OK", $"Document successfully inserted into {requestBody.Namespace} namespace.", DateTime.Now);
+                    return Ok(responseModel);
+                }
+                else
+                {
+                    responseModel = createResponseModel(500, "Internal Server Error", "Error executing script", DateTime.Now);
+                    return StatusCode(500, responseModel);
+                }             
+            }
+            catch (Exception ex)
+            {
+                responseModel = createResponseModel(500, "Internal Server Error", ex.Message, DateTime.Now);
+                return StatusCode(500, responseModel);
             }
         }
 
@@ -305,6 +312,83 @@ namespace StriveAI.Controllers
         {
             var encodedValues = values.Select(v => HttpUtility.UrlEncode(v));
             return $"{key}={string.Join("&" + key + "=", encodedValues)}";
+        }
+
+        /// <summary>
+        /// Runs and processes a system command and output.
+        /// </summary>
+        /// <param name="command" type="string"></param>
+        /// <param name="arguments" type="string"></param>
+        /// <returns type="string"></returns>
+        static string RunCommand(string command, string arguments)
+        {
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = command,
+                    Arguments = arguments,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                using (Process process = new Process { StartInfo = startInfo })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+                    if (process.ExitCode == 0)
+                    {
+                        return output.Trim();
+                    }
+                    else
+                    {
+                        return $"{error}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return $"{ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Initializes response body with APIResponseBodyWrapperModel
+        /// type.
+        /// </summary>
+        /// <param name="statusCode" type="int"></param>
+        /// <param name="statusMessage" type="string"></param>
+        /// <param name="statusMessageText" type="string"></param>
+        /// <param name="timestamp" type="DateTime"></param>
+        /// <param name="data" type="Object"></param>
+        /// <returns type="APIResponseBodyWrapperModel"></returns>
+        static APIResponseBodyWrapperModel createResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
+        {
+            APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
+            responseModel.StatusCode = statusCode;
+            responseModel.StatusMessage = statusMessage;
+            responseModel.StatusMessageText = statusMessageText;
+            responseModel.Timestamp = timestamp;
+            if (data is GetRecordResponseModel)
+            {
+                responseModel.Data = data;
+            }
+            else if (data is PineconeDetailsResponseModel)
+            {
+                responseModel.Data = data;
+            }
+            else if (data is PurgePineconeResponseModel)
+            {
+                responseModel.Data = data;
+            }
+            else
+            {
+                responseModel.Data = "";
+            }
+            return responseModel;
         }
     }
 }
