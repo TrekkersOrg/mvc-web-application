@@ -1,7 +1,5 @@
 import os
 import sys
-
-
 from re import S
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import SentenceTransformerEmbeddings, HuggingFaceBgeEmbeddings
