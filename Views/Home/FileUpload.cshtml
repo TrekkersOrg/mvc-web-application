@@ -5,8 +5,8 @@
 
 <style>
     .btn-outline-secondary.rounded-pill.btn-lg {
-        color: white;
-        border: transparent;
+        background-color: gray;
+        border: blue;
         position: relative;
     }
 
@@ -32,20 +32,38 @@
     .header-container {
         padding-top: 5vh;
     }
-</style>
 
+    .bg-color {
+        background-color: white;
+    }
 
-<div class="container-fluid">
-    <div class="row mt-5">
-        <div class="col-12 h-100 text-center header-container">
+    .btn.rounded-0 {
+        border-width: 3px;
+        border-color: rgba(0, 0, 255, 0.7);
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style> 
+
+<div>
+
+    <div class="container-fluid">
+        <div class="row mt-5 text-center d-flex">
             <header>
-                <h1 class="text-black display-4">Upload File Here &#8595</h1>
+                <h1>File upload portal</h1>
             </header>
         </div>
+    <br />
+    <br />
+        <div class="btn-container">
+            <a class="btn btn-outline-secondary rounded-pill btn-lg text-dark text-decoration-none">Browse Files</a>
+        </div>
+
     </div>
-    <div class="row mt-5 d-flex">
-        <button>
-            <img src="mvc-web-application/wwwroot/img/uploadfile.png" alt="Button Image">
-        </button>
-    </div>
+
 </div>
