@@ -8,6 +8,7 @@ using System.Diagnostics;
 using Humanizer;
 using System.Numerics;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace StriveAI.Controllers
 {
@@ -271,12 +272,12 @@ namespace StriveAI.Controllers
             APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
             try
             {
-                if (requestBody.Namespace == null || requestBody.Namespace == "")
+                if (requestBody.Namespace == null || requestBody.Namespace == "" || requestBody.FileName == null || requestBody.FileName == "")
                 {
-                    responseModel = createResponseModel(400, "Bad Request", "The 'namespace' field is missing or empty.", DateTime.Now);
+                    responseModel = createResponseModel(400, "Bad Request", "The 'namespace' and/or 'filename' field is missing or empty.", DateTime.Now);
                     return BadRequest(responseModel);
                 }
-                string arguments = $"-n {requestBody.Namespace}";
+                string arguments = $"-n {requestBody.Namespace} -f {requestBody.FileName}";
                 if (!Directory.GetCurrentDirectory().Contains("scripts", StringComparison.OrdinalIgnoreCase))
                 {
                     Directory.SetCurrentDirectory("scripts");
@@ -287,6 +288,16 @@ namespace StriveAI.Controllers
                 {
                     responseModel = createResponseModel(200, "OK", $"Document successfully inserted into {requestBody.Namespace} namespace.", DateTime.Now);
                     return Ok(responseModel);
+                }
+                else if (finalOutput.Contains("File type not supported."))
+                {
+                    responseModel = createResponseModel(400, "Bad Request", $"File type for file {requestBody.FileName} is not supported.", DateTime.Now);
+                    return BadRequest(responseModel);
+                }
+                else if (finalOutput.Contains("File does not exist."))
+                {
+                    responseModel = createResponseModel(404, "Not Found", $"File {requestBody.FileName} does not exist.", DateTime.Now);
+                    return NotFound(responseModel);
                 }
                 else
                 {

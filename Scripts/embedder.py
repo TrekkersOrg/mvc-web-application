@@ -9,6 +9,8 @@ import json
 from PyPDF2 import PdfReader
 import numpy
 import argparse
+from docx import Document as DocumentReader
+from docx.opc.exceptions import PackageNotFoundError
 
 class Document:
     def __init__(self, page_content, metadata=None):
@@ -20,12 +22,22 @@ def split_docs(documents,chunk_size=500,chunk_overlap=20):
   text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
   docs = text_splitter.split_documents(documents)
   return docs
+  
+
+def read_docx(file_path):
+    document = DocumentReader(file_path)
+    text = ""
+    for paragraph in document.paragraphs:
+        text += paragraph.text + "\n"
+    return text
+
 
 def main():
     # Load shell configuration
     parser = argparse.ArgumentParser(description="Embed and index document into defined namespace.")
     parser.add_argument('-n', '--namespace', help='Specify the Pinecone namespace.', required=True)
     parser.add_argument('-d', '--debug', help='Provides additional information in output.', action='store_true')
+    parser.add_argument('-f', '--filename', help='The name of the file.', required=True)
     args = parser.parse_args()
 
     # Load configuration
@@ -37,13 +49,31 @@ def main():
 
     # Load documents
     print("\n(2/6) Loading document(s)...")
-    reader = PdfReader('../UserFiles/Sample.Marital.Settlement.Agreement.10.15.2012.pdf')
-    page = reader.pages[0] 
-    text = page.extract_text() 
     documents = []
-    documents.append(Document(page_content=text))
-    if args.debug:
-        print(documents)
+    documentFileName = args.filename
+    documentFilePath = f'../UserFiles/{documentFileName}'
+    try:
+        if ".pdf" in documentFilePath:
+            reader = PdfReader(documentFilePath)
+            page = reader.pages[0] 
+            text = page.extract_text() 
+            documents.append(Document(page_content=text))
+        if args.debug:
+            print(documents)
+        elif ".docx" in documentFilePath:
+            text = read_docx(documentFilePath)
+            documents.append(Document(page_content=text))
+            if args.debug:
+                print(documents)
+        else:
+            print("File type not supported.")
+            return
+    except PackageNotFoundError as e:
+        print("File does not exist.")
+        return
+    except FileNotFoundError as e:
+        print("File does not exist.")
+        return
 
     # Split document(s)
     print("\n(3/6) Splitting document(s)...")
