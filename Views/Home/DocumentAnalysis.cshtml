@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .vh-45 {
+        height: 45vh;
+        border-left: 5px solid #007bff;
+        border-radius: 5px 0 0 5px;
+
+    }
+    .chat-header {
+        background-color: gray;
+    }
+</style>
+
+
+<div>
+    @* Chatbot  *@
+    <div class="vh-45 d-flex align-items-center">
+        <div class="chatbot-container mt-auto ">
+            <label for="chatbot-input" class="form-label">
+                Ask me anything:
+            </label>
+            <div class="input-group">
+                <button class="btn btn-primary" type="button">Send</button>
+            </div>
+        </div>
+        <div>
+
+        </div>
+    </div>
+    @* Summmary *@
+    <div>
+        <p>
+            Summary div
+        </p>
+    </div>
+    @* View doc *@
+    <div>
+        <p>
+            View doc button
+        </p>
+    </div>
+
+    <div>
+        <p>
+            Save button
+        </p>
+    </div>
+    <div>
+        <p>
+            New upload button
+        </p>
+    </div>
+</div>
