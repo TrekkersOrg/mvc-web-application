@@ -12,6 +12,7 @@ import argparse
 from docx import Document as DocumentReader
 from docx.opc.exceptions import PackageNotFoundError
 
+
 class Document:
     def __init__(self, page_content, metadata=None):
         self.page_content = page_content
@@ -19,12 +20,30 @@ class Document:
 
 
 def split_docs(documents,chunk_size=500,chunk_overlap=20):
-  text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-  docs = text_splitter.split_documents(documents)
-  return docs
+    """
+    Splits the documents into chunks.
+    :param documents: List with a single element containing text of document
+    :type documents: list[Document]
+    :param chunk_size: Maximum number of characters per chunk. Default 500.
+    :type chunk_size: int
+    :param chunk_overlap: Number of characters each chunk overlaps the previous chunk.
+    :type chunk_overlap: int
+    :return: A list of chunks.
+    :rtype: list[Document]
+    """
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    docs = text_splitter.split_documents(documents)
+    return docs
   
 
 def read_docx(file_path):
+    """
+    Extrapolates text from a .docx file type.
+    :param file_path: The relative file path of target document.
+    :type file_path: str
+    :return: The text of the document.
+    :rtype: str
+    """
     document = DocumentReader(file_path)
     text = ""
     for paragraph in document.paragraphs:
@@ -106,6 +125,7 @@ def main():
         print("Namespace: " + namespace)
         print("Number of documents: " + str(len(docs)))
 
+    # Complete
     print("\n(6/6) Finished.")
 
 

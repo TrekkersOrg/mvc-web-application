@@ -5,10 +5,6 @@ using System.Text;
 using System.Text.Json;
 using System.Web;
 using System.Diagnostics;
-using Humanizer;
-using System.Numerics;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace StriveAI.Controllers
 {
