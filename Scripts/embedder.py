@@ -73,12 +73,13 @@ def main():
     documentFilePath = f'../UserFiles/{documentFileName}'
     try:
         if ".pdf" in documentFilePath:
+            
             reader = PdfReader(documentFilePath)
             page = reader.pages[0] 
             text = page.extract_text() 
             documents.append(Document(page_content=text))
-        if args.debug:
-            print(documents)
+            if args.debug:
+                print(documents)
         elif ".docx" in documentFilePath:
             text = read_docx(documentFilePath)
             documents.append(Document(page_content=text))
