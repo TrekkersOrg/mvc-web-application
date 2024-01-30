@@ -1,7 +1,3 @@
-@{
-    ViewData["Title"] = "";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
 <style>
     .chatbot-container {
         position: relative;
@@ -10,9 +6,7 @@
         border-radius: 5px;
         height: 70vh;
         display: flex;
-        /* Added for vertical positioning */
         flex-direction: column;
-        /* Added for vertical positioning */
     }
 
     .chat-body {
@@ -27,27 +21,20 @@
         width: calc(100% - 30px);
         bottom: 10px;
     }
-    .summary-header {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        margin-left: 10px;
-        position: relative;
-    }
 
+    .summary-header,
     .summary-body-container {
         border: 2px solid #007bff;
         padding: 5px;
-        height: auto;
         position: relative;
     }
 
-    .summary-footer {
-        margin-top: 10px;
-        margin-left: 10px;
-        position: relative;
-    }
-
-    .view-doc-button {
+    .view-doc-button,
+    .view-doc-button:hover,
+    .new-upload-button,
+    .new-upload-button:hover,
+    .save-button,
+    .save-button:hover {
         width: 90%;
         padding: 10px;
         border: 2px solid #007bff;
@@ -61,17 +48,6 @@
     .view-doc-button:hover {
         background-color: #007bff;
         color: white;
-        position: relative;
-    }
-
-    .new-upload-button {
-        padding: 10px;
-        border: 2px solid #007bff;
-        color: #007bff;
-        background-color: white;
-        border-radius: 5px;
-        cursor: pointer;
-        position: relative;
     }
 
     .new-upload-button:hover {
@@ -79,40 +55,32 @@
         color: white;
     }
 
-    .save-button {
-        padding: 10px;
-        border: 2px solid #007bff;
-        color: #007bff;
-        background-color: white;
-        border-radius: 5px;
-        cursor: pointer; 
-        position: relative;
-    }
-
     .save-button:hover {
         background-color: #007bff;
-        color: white
+        color: white;
     }
 </style>
 
 <div class="container-fluid d-flex">
     <div class="row mt-9">
-        <div class="chatbot-container border rounded shadow bg-light col-md-6">
-            <div class="chat-header d-flex align-items-center justify-content-between p-3">
-                <h4 class="mb-0">Pam</h4>
-            </div>
+        <div class="col-md-6">
+            <div class="chatbot-container border rounded shadow bg-light">
+                <div class="chat-header d-flex align-items-center justify-content-between p-3">
+                    <h4 class="mb-0">Pam</h4>
+                </div>
 
-            <div class="chat-body flex-grow-1 overflow-auto p-3">
-                <ul class="chat-messages list-unstyled m-0 p-0"></ul>
-            </div>
+                <div class="chat-body flex-grow-1 overflow-auto p-3">
+                    <ul class="chat-messages list-unstyled m-0 p-0"></ul>
+                </div>
 
-            <div class="chat-input d-flex align-items-center p-3">
-                <input type="text" class="form-control flex-grow-1 rounded-0" placeholder="Ask me anything…">
-                <button class="btn btn-primary ml-3 rounded-0">Send</button>
+                <div class="chat-input d-flex align-items-center p-3">
+                    <input type="text" class="form-control flex-grow-1 rounded-0" placeholder="Ask me anything…">
+                    <button class="btn btn-primary ml-3 rounded-0">Send</button>
+                </div>
             </div>
         </div>
-        <div class="mt-8">
-            <div class="col-md-5 summary-container border rounded shadow d-flex flex-column">
+        <div class="col-md-6 mt-9">
+            <div class="summary-container border rounded shadow d-flex flex-column">
                 <div class="summary-header">
                     <h4>Summary</h4>
                 </div>
@@ -121,7 +89,7 @@
                         doloremque aut totam suscipit accusantium sunt, ab obcaecati architecto cum? Numquam iusto nihil
                         iure, explicabo ratione impedit.</p>
                 </div>
-                <div class="summary-footer mt-auto">
+                <div class="summary-footer mt-center">
                     <button class="view-doc-button">View Document</button>
                     <button class="new-upload-button">New upload</button>
                     <button class="save-button">Save</button>
