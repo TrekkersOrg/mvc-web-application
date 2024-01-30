@@ -88,3 +88,171 @@
         </p>
     </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+@* 
+@{
+    ViewData["Title"] = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .chat-container {
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+    }
+
+    .chatbot-container {
+        border: 1px solid #ccc;
+        border-color: #007bff;
+        border-width: 3px;
+        border-radius: 5px;
+        height: 70vh;
+    }
+
+    .chat-header {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+    }
+
+    .chat-messages {
+        list-style: none;
+        padding: 0;
+    }
+
+    .chat-message-user,
+    .chat-message-bot {
+        margin-top: 10px;
+    }
+
+    .summary-container {
+        border: 3px solid #007bff;
+        border-radius: 5px;
+        margin-left: 10px;
+        height: 60%;
+    }
+
+    .chat-message-user {
+        text-align: right;
+    }
+
+    .chat-message-bot {
+        text-align: left;
+    }
+
+    .chat-input {
+        margin-bottom: 3px;
+    }
+
+    .summary-header {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+    }
+
+    .summary-body-container {
+        border: 2px solid #007bff;
+        padding: 5px;
+        height: auto;
+        /* Allow the content to take full height */
+    }
+
+    .summary-footer {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    .view-doc-button {
+        width: 90%;
+        padding: 10px;
+        border: 2px solid #007bff;
+        color: #007bff;
+        background-color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .view-doc-button:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .new-upload-button {
+        padding: 10px;
+        border: 2px solid #007bff;
+        color: #007bff;
+        background-color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .new-upload-button:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .save-button {
+        padding: 10px;
+        border: 2px solid #007bff;
+        color: #007bff;
+        background-color: white;
+        border-radius: 5px;
+        cursor: pointer
+    }
+
+    .save-button:hover {
+        background-color: #007bff;
+        color: white
+    }
+</style>
+
+<div class="container-fluid d-flex">
+    <div class="container-fluid d-flex">
+        <div class="chatbot-container col-md-6 border rounded shadow">
+            <div class="chat-header">
+                <h3>Chatbot</h3>
+            </div>
+            <div class="chat-body flex-grow-1">
+                <ul class="chat-messages">
+                    <!-- Add your chat messages here -->
+                </ul>
+            </div>
+            <div class="chat-input mt-auto">
+                <input type="text" class="form-control" placeholder="Type your message...">
+                <button class="btn btn-primary btn-send">Send</button>
+            </div>
+        </div>
+        <div class="summary-container col-md-6 border rounded shadow">
+            <div class="summary-header">
+                <h3>Summary</h3>
+            </div>
+            <div class="summary-body-container flex-grow-1">
+                <div class="summary-body flex-grow-1">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae aspernatur sit aperiam
+                        laborum animi ducimus, aut rerum perferendis magnam consectetur odit! Quia obcaecati quide autem
+                        asperiores, recusandae incidunt vel quis.Lorem ipsum dolor sit amet consectetur adipisicing
+                        elit. Repudiandae aspernatur sit aperiam
+                        laborum animi ducimus, aut rerum perferendis magnam consectetur odit! Quia obcaecati quide autem asperiores, recusandae incidunt vel quis.<p>
+                </div>
+            </div>
+
+            <div class="summary-footer">
+                <button class="view-doc-button">View Document</button>
+                <button class="new-upload-button">New upload</button>
+                <button class="save-button">Save</button>
+            </div> 
+        </div>
+    </div>
+</div> *@
