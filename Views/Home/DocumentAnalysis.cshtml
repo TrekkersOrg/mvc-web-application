@@ -27,27 +27,102 @@
         width: calc(100% - 30px);
         bottom: 10px;
     }
+    .summary-header {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+    }
 
+    .summary-body-container {
+        border: 2px solid #007bff;
+        padding: 5px;
+        height: auto;
+        /* Allow the content to take full height */
+    }
+
+    .summary-footer {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    .view-doc-button {
+        width: 90%;
+        padding: 10px;
+        border: 2px solid #007bff;
+        color: #007bff;
+        background-color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .view-doc-button:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .new-upload-button {
+        padding: 10px;
+        border: 2px solid #007bff;
+        color: #007bff;
+        background-color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .new-upload-button:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .save-button {
+        padding: 10px;
+        border: 2px solid #007bff;
+        color: #007bff;
+        background-color: white;
+        border-radius: 5px;
+        cursor: pointer
+    }
+
+    .save-button:hover {
+        background-color: #007bff;
+        color: white
+    }
 </style>
 
-
-
-
 <div class="container-fluid d-flex">
-    <div class="chatbot-container col-md-6 border rounded shadow bg-light">
-        <div class="chat-header d-flex align-items-center justify-content-between p-3">
-            <h4 class="mb-0">Satva</h4>
-        </div>
+    <div class="row mt-9">
+        <div class="chatbot-container border rounded shadow bg-light col-md-6">
+            <!-- Adjusted column size to accommodate the chatbot-container -->
+            <div class="chat-header d-flex align-items-center justify-content-between p-3">
+                <h4 class="mb-0">Pam</h4>
+            </div>
 
-        <div class="chat-body flex-grow-1 overflow-auto p-3">
-            <ul class="chat-messages list-unstyled m-0 p-0">
-            </ul>
-        </div>
+            <div class="chat-body flex-grow-1 overflow-auto p-3">
+                <ul class="chat-messages list-unstyled m-0 p-0"></ul>
+            </div>
 
-        <div class="chat-input d-flex align-items-center p-3">
-            <input type="text" class="form-control flex-grow-1 rounded-0" placeholder="Ask me anything…">
-            <button class="btn btn-primary ml-3 rounded-0">Send</button>
+            <div class="chat-input d-flex align-items-center p-3">
+                <input type="text" class="form-control flex-grow-1 rounded-0" placeholder="Ask me anything…">
+                <button class="btn btn-primary ml-3 rounded-0">Send</button>
+            </div>
+        </div>
+        <div class="mt-8">
+            <!-- Adjusted column size and margin-top to align with chatbot-container -->
+            <div class="col-md-5 summary-container border rounded shadow d-flex flex-column">
+                <div class="summary-header">
+                    <h4>Summary</h4>
+                </div>
+                <div class="summary-body-container flex-grow-1">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. At facere amet adipisci repellendus
+                        doloremque aut totam suscipit accusantium sunt, ab obcaecati architecto cum? Numquam iusto nihil
+                        iure, explicabo ratione impedit.</p>
+                </div>
+                <div class="summary-footer mt-auto">
+                    <button class="view-doc-button">View Document</button>
+                    <button class="new-upload-button">New upload</button>
+                    <button class="save-button">Save</button>
+                </div>
+            </div>
         </div>
     </div>
-    
 </div>
