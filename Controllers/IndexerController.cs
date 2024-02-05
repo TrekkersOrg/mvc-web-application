@@ -125,7 +125,7 @@ namespace StriveAI.Controllers
                             }
                             if (vectorsDetails.Vectors.Count == 0)
                             {
-                                responseModel = createResponseModel(404, "Not Found", "Unable to find vectors: " + requestBody.Ids, DateTime.Now);
+                                responseModel = createResponseModel(404, "Not Found", "Unable to find vectors: " + string.Join(",", requestBody.Ids), DateTime.Now);
                                 return NotFound(responseModel);
                             }
                             getRecordResponseModel.Vectors = vectorsDetails;
