@@ -2,7 +2,7 @@ import os
 import sys
 from re import S
 
-from pandas import Index, notnull
+# from pandas import Index, notnull
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import SentenceTransformerEmbeddings, HuggingFaceBgeEmbeddings
 import pinecone
@@ -154,7 +154,7 @@ def main():
             llm = llm,
             chain_type = "stuff",
             retriever = index.as_retriever())
-        print(qa.run("Tell me key people in this agreement."))
+        print(qa.run("Is this a contract, a purchase agreement, a witness statement, or a news article?"))
 
     # Complete
     print("\n(6/6) Finished.")
