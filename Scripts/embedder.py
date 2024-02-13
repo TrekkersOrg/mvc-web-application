@@ -138,13 +138,12 @@ def main():
         print("Namespace: " + namespace)
         print("Number of documents: " + str(len(docs)))
     
-    # CHATBOT HERE
     if args.chatbot:
         query = "What happened in Winnebago County?"
-        print("--------------------------------")
         llm = ChatOpenAI(openai_api_key = appSettings.get("OpenAI", {}).get("SecretKey", None),
                 model_name = appSettings.get("OpenAI", {}).get("Model", None),
                 temperature = 0.0)
+
         conv_mem = ConversationBufferWindowMemory(
         memory_key = 'history',
         k = 5,
@@ -154,7 +153,7 @@ def main():
             llm = llm,
             chain_type = "stuff",
             retriever = index.as_retriever())
-        print(qa.run("Tell me key people in this agreement."))
+        print(qa.run("Complete this statement: \"The parties shall further request the Court, upon entry of any judgment for dissolution of marriage, to retain the right to enforce the provisions of this Agreement. This Agreement, despite its incorporation, shall survive and...\""))
 
     # Complete
     print("\n(6/6) Finished.")
