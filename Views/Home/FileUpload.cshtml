@@ -42,11 +42,14 @@
     <br />
     <br />
         <div class="btn-container">
-            <a class="btn btn-outline-secondary rounded-pill btn-lg text-white text-decoration-none">Browse Files</a>
+            <button class="btn btn-outline-secondary rounded-pill btn-lg text-white text-decoration-none" type="button" id="browse-button">Browse Files</button>
+            <div id="selected-file-name"></div>
         </div>
-
     </div>
 
 </div>
 
-<script src="/js/fileUpload.js"></script>
+<script src="/js/fileUpload.js">
+    const browseButton = document.getElementById('browse-button');
+    browseButton.addEventListener('onclick', fileUpload.openFileDialog);
+</script>
