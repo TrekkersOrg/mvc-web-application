@@ -33,6 +33,11 @@ namespace StriveAI.Controllers
             _domain = _configuration["Hosting:Domain"];
         }
 
+        /// <summary>
+        /// Sends a query to chatbot and returns response.
+        /// </summary>
+        /// <param name="requestBody" type="SendQueryRequestModel"></param>
+        /// <returns type="ActionResult"></returns>
         [HttpPost("sendQuery")]
         public ActionResult SendQuery([FromBody] SendQueryRequestModel requestBody)
         {
@@ -147,6 +152,10 @@ namespace StriveAI.Controllers
             return responseModel;
         }
 
+        /// <summary>
+        /// Calls /GetPineconeDetails endpoint and returns response.
+        /// </summary>
+        /// <returns type="Task<string>"></returns>
         private async Task<string> GetPineconeDetails()
         {
             using (var client = _httpClientFactory.CreateClient())
