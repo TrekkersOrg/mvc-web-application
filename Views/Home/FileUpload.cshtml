@@ -45,11 +45,15 @@
             <button class="btn btn-outline-secondary rounded-pill btn-lg text-white text-decoration-none" type="button" id="browse-button">Browse Files</button>
             <div id="selected-file-name"></div>
         </div>
+        <div class="btn-container">
+            <button class="btn btn-outline-secondary rounded-pill btn-lg text-white text-decoration-none" onclick="uploadDocument()" type="button" id="browse-button">DEVENS BUTTON FOR TESTING API DONT DELETE ME DADDY</button>
+        </div>
     </div>
 
 </div>
 
-<script src="/js/fileUpload.js">
+<script src="/js/fileUpload.js"></script>
+<script>
     const browseButton = document.getElementById('browse-button');
-    browseButton.addEventListener('onclick', fileUpload.openFileDialog);
+    browseButton.addEventListener('onclick',fileUpload.openFileDialog());
 </script>
