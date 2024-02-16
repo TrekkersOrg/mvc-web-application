@@ -2,7 +2,7 @@ import os
 import sys
 from re import S
 
-from pandas import Index, notnull
+# from pandas import Index, notnull
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import SentenceTransformerEmbeddings, HuggingFaceBgeEmbeddings
 import pinecone
@@ -22,6 +22,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain.chains import RetrievalQA
 import json
+import dill
 
 
 class Document:
@@ -68,7 +69,6 @@ def main():
     parser.add_argument('-n', '--namespace', help='Specify the Pinecone namespace.', required=True)
     parser.add_argument('-d', '--debug', help='Provides additional information in output.', action='store_true')
     parser.add_argument('-f', '--filename', help='The name of the file.', required=True)
-    parser.add_argument('-c', '--chatbot', help='Launches chatbot.', action='store_true')
     args = parser.parse_args()
 
     # Load configuration
@@ -137,23 +137,6 @@ def main():
         print("Index Name: " + index_name)
         print("Namespace: " + namespace)
         print("Number of documents: " + str(len(docs)))
-    
-    if args.chatbot:
-        query = "What happened in Winnebago County?"
-        llm = ChatOpenAI(openai_api_key = appSettings.get("OpenAI", {}).get("SecretKey", None),
-                model_name = appSettings.get("OpenAI", {}).get("Model", None),
-                temperature = 0.0)
-
-        conv_mem = ConversationBufferWindowMemory(
-        memory_key = 'history',
-        k = 5,
-        return_messages =True)
-
-        qa = RetrievalQA.from_chain_type(
-            llm = llm,
-            chain_type = "stuff",
-            retriever = index.as_retriever())
-        print(qa.run("Complete this statement: \"The parties shall further request the Court, upon entry of any judgment for dissolution of marriage, to retain the right to enforce the provisions of this Agreement. This Agreement, despite its incorporation, shall survive and...\""))
 
     # Complete
     print("\n(6/6) Finished.")

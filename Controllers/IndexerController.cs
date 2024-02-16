@@ -128,6 +128,23 @@ namespace StriveAI.Controllers
                                 responseModel = createResponseModel(404, "Not Found", "Unable to find vectors: " + string.Join(",", requestBody.Ids), DateTime.Now);
                                 return NotFound(responseModel);
                             }
+                            List<String> invalidVectors = new List<String>();
+                            if (vectorsDetails.Vectors.Count > 0 && vectorsDetails.Vectors.Count < idList.Count)
+                            {
+                                foreach (string vector in idList)
+                                {
+                                    if (vectorsDetails.Vectors.ContainsKey(vector) == false)
+                                    {
+                                        invalidVectors.Add(vector);
+                                    }
+                                }
+                                if (invalidVectors.Count > 0)
+                                {
+                                    getRecordResponseModel.Vectors = vectorsDetails;
+                                    responseModel = createResponseModel(200, "OK", "Some Pinecone records fetched successfully. The following records were not found: " + string.Join(", ", invalidVectors), DateTime.Now, getRecordResponseModel);
+                                    return Ok(responseModel);
+                                }
+                            }
                             getRecordResponseModel.Vectors = vectorsDetails;
                         }
                     }

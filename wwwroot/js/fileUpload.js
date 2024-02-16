@@ -23,3 +23,34 @@ function openFileDialog() {
 
     fileInput.onclick(); 
 }
+
+function uploadDocument()
+{
+    const requestBody = {
+        Namespace: "Deven",
+        FileName: "contract.pdf"
+    };
+    fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/insertDocument",{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
+        .then(response =>
+        {
+            if (!response.ok)
+            {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data =>
+        {
+            console.log(data);
+        })
+        .catch(error =>
+        {
+            console.error('Fetch error:',error);
+        });
+}
