@@ -19,7 +19,4 @@
   <ItemGroup>
     <None Remove="Scripts\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\" />
-  </ItemGroup>
 </Project>
