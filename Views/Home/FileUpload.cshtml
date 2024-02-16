@@ -5,7 +5,7 @@
 
 <style>
     .btn-outline-secondary.rounded-pill.btn-lg {
-        background-color: #007bff;
+        color: white;
         border: transparent;
         position: relative;
     }
@@ -16,40 +16,60 @@
         border: transparent;
     }
 
+    .btn-primary.rounded-pill.btn-lg:hover {
+        background-color: rgb(3, 170, 254);
+        color: white;
+        border: transparent;
+    }
+
+    .btn-primary.rounded-pill.btn-lg {
+        color: white;
+        border: transparent;
+        position: relative;
+        padding: 8px 20px;
+    }
+
+    .bg-gradient {
+        background-image: linear-gradient(to bottom, #ffffff, #005eff) !important;
+        min-height: 100vh;
+        margin-bottom: 10vh;
+        position: relative;
+    }
+
     .header-container {
         padding-top: 5vh;
     }
+</style>
 
-    .bg-color {
-        background-color: white;
-    }
 
-    .btn-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-</style> 
 
-<div>
 
-    <div class="container-fluid">
-        <div class="row mt-5 text-center d-flex">
+
+
+<div class="container-fluid bg-gradient">
+    <div class="row mt-5">
+        <div class="col-12 h-100 text-center header-container">
             <header>
-                <h1>File upload portal</h1>
+                <h1>File Upload Portal</h1>
             </header>
-        </div>
-    <br />
-    <br />
-        <div class="btn-container">
-            <button class="btn btn-outline-secondary rounded-pill btn-lg text-white text-decoration-none" type="button" id="browse-button">Browse Files</button>
-            <div id="selected-file-name"></div>
         </div>
     </div>
 
+    <div class="row mt-5 justify-content-center">
+
+        <div class="col-md-5 d-flex  h-200 p-2 btn btn-primary rounded-pill btn-lg justify-content-center text-white text-decoration-none">
+            <label for="fileInput" class="text-center">Select a file</label>
+            <input type="file" id="fileInput" style="display:none;">
+        </div>
+
+    </div>
 </div>
 
+
+
+
+
+
+
 <script src="/js/fileUpload.js">
-    const browseButton = document.getElementById('browse-button');
-    browseButton.addEventListener('onclick', fileUpload.openFileDialog);
 </script>
