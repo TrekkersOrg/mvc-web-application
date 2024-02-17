@@ -46,7 +46,7 @@
 
 
 
-<div class="container-fluid bg-gradient">
+<div class="container-fluid">
     <div class="row mt-5">
         <div class="col-12 h-100 text-center header-container">
             <header>
@@ -56,12 +56,22 @@
     </div>
 
     <div class="row mt-5 justify-content-center">
+        <div class="col-md-6 d-flex">
+            <div class="d-flex h-200 p-2 btn btn-primary rounded-pill btn-lg justify-content-center text-white text-decoration-none">
+                <label for="fileInput" class="text-center">Browse files</label>
+                <form method="post" enctype="multipart/form-data" asp-controller="FileUploadController" asp-action="Upload">    
+                    <input type="file" id="fileInput" style="display:none" ; name="file" />
+                </form>
+            </div>
 
-        <div class="col-md-5 d-flex  h-200 p-2 btn btn-primary rounded-pill btn-lg justify-content-center text-white text-decoration-none">
-            <label for="fileInput" class="text-center">Select a file</label>
-            <input type="file" id="fileInput" style="display:none;">
+            <div class="d-flex h-200 p-2 justify-content-end btn btn-primary rounded-pill btn-lg text-white text-decoration-none">
+                <label for="submitFile" class="text-center">Upload</label>
+                <form method="post" enctype="multipart/form-data" asp-controller="FileUploadController"
+                    asp-action="Upload">
+                    <input id="submitFile" type="submit" style="display:none" ; value="Upload" />
+                </form>
+            </div>
         </div>
-
     </div>
 </div>
 
@@ -71,5 +81,9 @@
 
 
 
-<script src="/js/fileUpload.js">
+
+<script src="/js/fileUpload.js"></script>
+<script>
+    const browseButton = document.getElementById('browse-button');
+    browseButton.addEvenListener('onclick',fileUpload.openFileDialog);
 </script>
