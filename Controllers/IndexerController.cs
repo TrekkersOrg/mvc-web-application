@@ -71,7 +71,7 @@ namespace StriveAI.Controllers
                 httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
                 if (requestBody.Namespace != null && !existingNamespaces.Contains(requestBody.Namespace))
                 {
-                    responseModel = createResponseModel(404, "Not Found", "Unable to find index: " + requestBody.Namespace, DateTime.Now);
+                    responseModel = createResponseModel(404, "Not Found", "Unable to find index: " + string.Join(", ", requestBody.Namespace), DateTime.Now);
                     return NotFound(responseModel);
                 }
                 var response = await httpClient.GetAsync(requestUri);
@@ -125,7 +125,7 @@ namespace StriveAI.Controllers
                             }
                             if (vectorsDetails.Vectors.Count == 0)
                             {
-                                responseModel = createResponseModel(404, "Not Found", "Unable to find vectors: " + string.Join(",", requestBody.Ids), DateTime.Now);
+                                responseModel = createResponseModel(404, "Not Found", "Unable to find vectors: " + string.Join(", ", requestBody.Ids), DateTime.Now);
                                 return NotFound(responseModel);
                             }
                             List<String> invalidVectors = new List<String>();
