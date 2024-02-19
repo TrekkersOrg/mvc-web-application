@@ -307,6 +307,11 @@ namespace StriveAI.Controllers
                     responseModel = createResponseModel(400, "Bad Request", $"File type for file {requestBody.FileName} is not supported.", DateTime.Now);
                     return BadRequest(responseModel);
                 }
+                else if (finalOutput.Contains("File name must include file type."))
+                {
+                    responseModel = createResponseModel(400, "Bad Request", $"File type must be included for file {requestBody.FileName}.", DateTime.Now);
+                    return BadRequest(responseModel);
+                }
                 else if (finalOutput.Contains("File does not exist."))
                 {
                     responseModel = createResponseModel(404, "Not Found", $"File {requestBody.FileName} does not exist.", DateTime.Now);

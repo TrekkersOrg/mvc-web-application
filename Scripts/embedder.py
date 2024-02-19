@@ -83,6 +83,9 @@ def main():
     documents = []
     documentFileName = args.filename
     documentFilePath = f'../UserFiles/{documentFileName}'
+    if args.debug:
+        print("File Name: " + documentFileName)
+        print("File Path: " + documentFilePath)
     try:
         if ".pdf" in documentFilePath:
             
@@ -97,6 +100,11 @@ def main():
             documents.append(Document(page_content=text))
             if args.debug:
                 print(documents)
+        elif "." not in documentFilePath[2:]:
+            print("File name must include file type.")
+            if args.debug:
+                print(documents)
+            return
         else:
             print("File type not supported.")
             return
