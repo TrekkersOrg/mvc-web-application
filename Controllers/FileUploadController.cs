@@ -23,7 +23,7 @@ namespace StriveAI.Controllers
                 {
                     targetFile.CopyTo(fileStream);
                 }
-                return RedirectToAction("FileUpload");
+                return Ok();
             }
             return RedirectToAction("FileUpload");
         }
