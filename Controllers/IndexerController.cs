@@ -169,9 +169,9 @@ namespace StriveAI.Controllers
         {
             var responseModel = new APIResponseBodyWrapperModel();
             var purgePinecodeResponseModel = new PurgePineconeResponseModel();
-            if (requestBody.Namespace == null)
+            if (string.IsNullOrEmpty(requestBody.Namespace))
             {
-                responseModel = createResponseModel(400, "Bad Request", "The 'namespace' field is missing in the request body.", DateTime.Now);
+                responseModel = createResponseModel(400, "Bad Request", "The 'namespace' field is empty in the request body.", DateTime.Now);
                 return BadRequest(responseModel);
             }
             ActionResult? pineconeDetailsResult = await PineconeDetails();
