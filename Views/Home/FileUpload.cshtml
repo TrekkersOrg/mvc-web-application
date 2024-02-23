@@ -57,7 +57,7 @@
     </div>
 
     <div class="row mt-5 justify-content-center">
-        <button class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none" onclick="browseFiles()"
+        <button class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none"
             type="button" id="upload-button">Browse files</button>
         <span id="selected-file-name"></span>
     </div>
@@ -91,8 +91,8 @@
 
                 // Send the selected file to the API for server-side execution
                 const formData = new FormData();
-                formData.append('file', selectedFile);
-                fetch('/api/file-upload/upload', {
+                formData.append('targetFile', selectedFile);
+                fetch('/api/fileupload/upload', {
                     method: 'POST',
                     body: formData
                 })
