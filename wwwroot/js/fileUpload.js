@@ -12,7 +12,11 @@ function uploadDocumentToApplication()
         if (selectedFile)
         {
             selectedFileName.textContent = "Selected file: " + selectedFile.name;
-            localStorage.setItem("selectedFiles", selectedFile.name);
+            localStorage.setItem("selectedFiles",selectedFile.name);
+            if (localStorage.getItem("selectedFiles") !== null)
+            {
+                document.getElementById("next-button").removeAttribute("disabled");
+            }
 
             // Send the selected file to the API for server-side execution
             const formData = new FormData();
@@ -26,7 +30,6 @@ function uploadDocumentToApplication()
                 .catch(error => console.error('Upload error:',error));
         }
     });
-
     fileInput.click(); // Trigger the file selection dialog
 }
 
