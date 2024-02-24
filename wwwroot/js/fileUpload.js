@@ -1,53 +1,64 @@
-const uploadButton = document.getElementById('upload-button');
-const selectedFileName = document.getElementById('selected-file-name');
+localStorage.removeItem("selectedFiles");
 
-uploadButton.addEventListener('click', () => {
+function uploadDocumentToApplication()
+{
+    const uploadButton = document.getElementById('upload-button');
+    const selectedFileName = document.getElementById('selected-file-name');
     const fileInput = document.createElement("input");
     fileInput.type = "file";
-
-    fileInput.addEventListener("change", (event) => {
+    fileInput.addEventListener("change",(event) =>
+    {
         const selectedFile = event.target.files[0];
-        if (selectedFile) {
+        if (selectedFile)
+        {
             selectedFileName.textContent = "Selected file: " + selectedFile.name;
+            localStorage.setItem("selectedFiles", selectedFile.name);
 
             // Send the selected file to the API for server-side execution
             const formData = new FormData();
-            formData.append('targetFile', selectedFile);
-            fetch('/api/fileupload/upload', {
+            formData.append('targetFile',selectedFile);
+            fetch('/api/fileupload/upload',{
                 method: 'POST',
                 body: formData
             })
                 .then(response => response.json())
                 .then(data => console.log(data))
-                .catch(error => console.error('Upload error:', error));
+                .catch(error => console.error('Upload error:',error));
         }
     });
 
     fileInput.click(); // Trigger the file selection dialog
-});
+}
 
-function uploadDocument() {
+
+
+function uploadDocumentToPinecone()
+{
     const requestBody = {
         Namespace: "Deven",
-        FileName: "contract.pdf"
+        FileName: localStorage.getItem("selectedFiles")
     };
-    fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/insertDocument", {
+    fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/insertDocument",{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestBody)
     })
-        .then(response => {
-            if (!response.ok) {
+        .then(response =>
+        {
+            if (!response.ok)
+            {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.json();
         })
-        .then(data => {
+        .then(data =>
+        {
             console.log(data);
         })
-        .catch(error => {
-            console.error('Fetch error:', error);
+        .catch(error =>
+        {
+            console.error('Fetch error:',error);
         });
 }
