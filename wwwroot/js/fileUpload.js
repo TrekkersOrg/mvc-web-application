@@ -1,10 +1,44 @@
-localStorage.removeItem("selectedFiles");
+
+function deleteSelectedFile() {
+    const selectedFileName = document.getElementById('selected-file-name');
+    const deleteFileButton = document.getElementById("delete-button"); 
+    deleteFileButton.addEventListener("click", deleteSelectedFile);
+    const requestBody = {
+        FileName: localStorage.getItem("selectedFiles")
+    };
+    fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/delete",{
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
+        .then(response =>
+        {
+            if (!response.ok)
+            {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data =>
+        {
+            console.log(data);
+        })
+        .catch(error =>
+        {
+            console.error('Fetch error:',error);
+        });
+    localStorage.removeItem("selectedFiles",selectedFileName);
+
+}
 
 function uploadDocumentToApplication()
 {
     const uploadButton = document.getElementById('upload-button');
     const selectedFileName = document.getElementById('selected-file-name');
     const fileInput = document.createElement("input");
+
     fileInput.type = "file";
     fileInput.addEventListener("change",(event) =>
     {
@@ -16,7 +50,9 @@ function uploadDocumentToApplication()
             if (localStorage.getItem("selectedFiles") !== null)
             {
                 document.getElementById("next-button").removeAttribute("disabled");
+                document.getElementById('delete-button').removeAttribute("disabled")
             }
+
 
             // Send the selected file to the API for server-side execution
             const formData = new FormData();
@@ -29,6 +65,7 @@ function uploadDocumentToApplication()
                 .then(data => console.log(data))
                 .catch(error => console.error('Upload error:',error));
         }
+        
     });
     fileInput.click(); // Trigger the file selection dialog
 }

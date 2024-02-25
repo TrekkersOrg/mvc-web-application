@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StriveAI.Models;
 
 namespace StriveAI.Controllers
 {
@@ -27,5 +28,28 @@ namespace StriveAI.Controllers
             }
             return RedirectToAction("FileUpload");
         }
+
+        [HttpDelete("delete")]
+
+        public ActionResult Delete([FromBody] DeleteFileRequestModel requestBody)
+        {
+            var targetFileName = requestBody.FileName;
+            if (!string.IsNullOrEmpty(targetFileName))
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "UserFiles", targetFileName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound("File not found");
+                }
+            }
+            return BadRequest("File name is required");
+        }
     }
+
 }
+
