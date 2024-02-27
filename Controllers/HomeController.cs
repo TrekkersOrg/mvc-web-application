@@ -39,6 +39,11 @@ namespace StriveAI.Controllers
         {
             return View();
         }
+
+        public IActionResult TESTING()
+        {
+            return View();
+        }
         public IActionResult FileUpload()
         {
             return View();
