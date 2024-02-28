@@ -299,32 +299,50 @@ namespace StriveAI.Controllers
                 
                 if (finalOutput.Contains("Finished"))
                 {
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string rootDirectory = Directory.GetParent(currentDirectory).FullName;
+                    Directory.SetCurrentDirectory(rootDirectory);
                     responseModel = createResponseModel(200, "OK", $"Document successfully inserted into {requestBody.Namespace} namespace.", DateTime.Now);
                     return Ok(responseModel);
                 }
                 else if (finalOutput.Contains("File type not supported."))
                 {
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string rootDirectory = Directory.GetParent(currentDirectory).FullName;
+                    Directory.SetCurrentDirectory(rootDirectory);
                     responseModel = createResponseModel(400, "Bad Request", $"File type for file {requestBody.FileName} is not supported.", DateTime.Now);
                     return BadRequest(responseModel);
                 }
                 else if (finalOutput.Contains("File name must include file type."))
                 {
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string rootDirectory = Directory.GetParent(currentDirectory).FullName;
+                    Directory.SetCurrentDirectory(rootDirectory);
                     responseModel = createResponseModel(400, "Bad Request", $"File type must be included for file {requestBody.FileName}.", DateTime.Now);
                     return BadRequest(responseModel);
                 }
                 else if (finalOutput.Contains("File does not exist."))
                 {
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string rootDirectory = Directory.GetParent(currentDirectory).FullName;
+                    Directory.SetCurrentDirectory(rootDirectory);
                     responseModel = createResponseModel(404, "Not Found", $"File {requestBody.FileName} does not exist.", DateTime.Now);
                     return NotFound(responseModel);
                 }
                 else
                 {
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string rootDirectory = Directory.GetParent(currentDirectory).FullName;
+                    Directory.SetCurrentDirectory(rootDirectory);
                     responseModel = createResponseModel(500, "Internal Server Error", "Error executing script", DateTime.Now);
                     return StatusCode(500, responseModel);
                 }             
             }
             catch (Exception ex)
             {
+                string currentDirectory = Directory.GetCurrentDirectory();
+                string rootDirectory = Directory.GetParent(currentDirectory).FullName;
+                Directory.SetCurrentDirectory(rootDirectory);
                 responseModel = createResponseModel(500, "Internal Server Error", ex.Message, DateTime.Now);
                 return StatusCode(500, responseModel);
             }

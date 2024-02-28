@@ -59,12 +59,14 @@ function uploadDocumentToApplication()
             // Send the selected file to the API for server-side execution
             const formData = new FormData();
             formData.append('targetFile',selectedFile);
+            showLoader();
             fetch('/api/fileupload/upload',{
                 method: 'POST',
                 body: formData
             })
                 .then(response =>
                 {
+                    hideLoader();
                     if (!response.ok)
                     {
                         displayError("System is under maintenance. Please try again later.")
@@ -75,9 +77,11 @@ function uploadDocumentToApplication()
                 .then(data => console.log(data))
                 .catch(error =>
                 {
+                    hideLoader();
                     displayError("System is under maintenance. Please try again later.")
                     console.log('Upload error:',error);
-                })
+                });
+            hideLoader();
         }
     });
     fileInput.click(); // Trigger the file selection dialog
@@ -91,6 +95,7 @@ function uploadDocumentToPinecone()
         Namespace: "Deven",
         FileName: localStorage.getItem("selectedFiles")
     };
+    showLoader();
     fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/insertDocument",{
         method: 'POST',
         headers: {
@@ -100,6 +105,7 @@ function uploadDocumentToPinecone()
     })
         .then(response =>
         {
+            hideLoader();
             if (!response.ok)
             {
                 displayError("System is under maintenance. Please try again later.")
@@ -109,10 +115,12 @@ function uploadDocumentToPinecone()
         })
         .then(data =>
         {
+            hideLoader();
             console.log(data);
         })
         .catch(error =>
         {
+            hideLoader();
             displayError("System is under maintenance. Please try again later.")
             console.error('Fetch error:',error);
         });
@@ -130,3 +138,21 @@ function displayError(errorMessage)
         errorBackground.style.display = "none";
     }
 }
+
+function showLoader()
+{
+    document.getElementById("loader-spinner").style.display = "";
+    document.getElementById("page-container").style.opacity = 0.5;
+}
+
+function hideLoader()
+{
+    document.getElementById("loader-spinner").style.display = "none";
+    document.getElementById("page-container").style.opacity = 1;
+
+}
+
+window.onload = function ()
+{
+    hideLoader();
+};
