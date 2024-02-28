@@ -40,11 +40,21 @@ function uploadDocumentToApplication()
     const uploadButton = document.getElementById('upload-button');
     const selectedFileName = document.getElementById('selected-file-name');
     const fileInput = document.createElement("input");
-
     fileInput.type = "file";
+
     fileInput.addEventListener("change",(event) =>
     {
         const selectedFile = event.target.files[0];
+        // Check for supported file types
+        const allowedExtensions = ['pdf', 'docx', 'doc'];
+        const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
+        const deleteButton = document.getElementById('delete-button');
+
+        if (!allowedExtensions.includes(fileExtension)) {
+            displayError("Only PDF, DOCX, DOC files are allowed.");
+            return;
+        }
+        
         if (selectedFile)
         {
             selectedFileName.textContent = "Selected file: " + selectedFile.name;
@@ -52,7 +62,8 @@ function uploadDocumentToApplication()
             if (localStorage.getItem("selectedFiles") !== null)
             {
                 document.getElementById("next-button").removeAttribute("disabled");
-                document.getElementById('delete-button').removeAttribute("disabled")
+                // Show delete button upon file selection
+                deleteButton.classList.remove('d-none');
             }
 
 
@@ -83,6 +94,7 @@ function uploadDocumentToApplication()
                 });
             hideLoader();
         }
+        
     });
     fileInput.click(); // Trigger the file selection dialog
 }
