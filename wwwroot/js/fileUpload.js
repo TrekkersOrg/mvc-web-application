@@ -17,6 +17,7 @@ function deleteSelectedFile() {
         {
             if (!response.ok)
             {
+                displayError("System is under maintenance. Please try again later.")
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.json();
@@ -27,6 +28,7 @@ function deleteSelectedFile() {
         })
         .catch(error =>
         {
+            displayError("System is under maintenance. Please try again later.")
             console.error('Fetch error:',error);
         });
     localStorage.removeItem("selectedFiles",selectedFileName);
@@ -61,11 +63,22 @@ function uploadDocumentToApplication()
                 method: 'POST',
                 body: formData
             })
-                .then(response => response.json())
+                .then(response =>
+                {
+                    if (!response.ok)
+                    {
+                        displayError("System is under maintenance. Please try again later.")
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                })
                 .then(data => console.log(data))
-                .catch(error => console.error('Upload error:',error));
+                .catch(error =>
+                {
+                    displayError("System is under maintenance. Please try again later.")
+                    console.log('Upload error:',error);
+                })
         }
-        
     });
     fileInput.click(); // Trigger the file selection dialog
 }
@@ -89,6 +102,7 @@ function uploadDocumentToPinecone()
         {
             if (!response.ok)
             {
+                displayError("System is under maintenance. Please try again later.")
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.json();
@@ -99,6 +113,20 @@ function uploadDocumentToPinecone()
         })
         .catch(error =>
         {
+            displayError("System is under maintenance. Please try again later.")
             console.error('Fetch error:',error);
         });
+}
+
+function displayError(errorMessage)
+{
+    var errorBackground = document.getElementById("error-background");
+    var errorCloseButton = document.getElementById("error-close");
+    var errorText = document.getElementById("error-message");
+    errorText.innerText = errorMessage;
+    errorBackground.style.display = "block";
+    errorCloseButton.onclick = function()
+    {
+        errorBackground.style.display = "none";
+    }
 }
