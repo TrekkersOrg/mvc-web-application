@@ -24,20 +24,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="AboutUs">About us</a>
                         </li>
-
-                        <li class="nav-item">
-                                <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="FileUpload">File Upload</a>
-                        </li>
-
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="OurProducts">Try Strive free</a>
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="PythonTerminal" style="display: none !important">Python Terminal</a>
-                        </li>
                         @if (User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
