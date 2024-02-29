@@ -20,7 +20,6 @@ function deleteSelectedFile() {
                 displayError("System is under maintenance. Please try again later.")
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            return response.json();
         })
         .then(data =>
         {
@@ -111,7 +110,6 @@ function uploadDocumentToApplication()
                                     displayError("System is under maintenance. Please try again later.")
                                     throw new Error(`HTTP error! Status: ${response.status}`);
                                 }
-                                return response.json();
                             })
                             .then(data => console.log(data))
                             .catch(error =>
@@ -133,8 +131,6 @@ function uploadDocumentToApplication()
     });
     fileInput.click(); // Trigger the file selection dialog
 }
-
-
 
 function uploadDocumentToPinecone()
 {
