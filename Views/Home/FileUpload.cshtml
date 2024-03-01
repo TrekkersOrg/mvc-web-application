@@ -70,8 +70,7 @@
         </div>
 
         <div class="col-md-5 d-flex justify-content-start h-100 p-2">
-            <button class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none"
-                onclick="uploadDocumentToPinecone(); generateSummary();" type="button" id="next-button" disabled>Next</button>
+            <button class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none"onclick="setTimeout(uploadDocumentToPinecone, 1000); setTimeout(generateSummary, 1000);" type="button" id="next-button" disabled>Next</button>
         </div>
 
         <div class="row mt-5 justify-content-center text-center">

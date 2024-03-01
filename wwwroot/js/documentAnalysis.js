@@ -16,7 +16,6 @@ function generateSummary()
     })
         .then(response =>
         {
-            hideLoader();
             if (!response.ok)
             {
                 displayError("System is under maintenance. Please try again later.")
@@ -27,6 +26,9 @@ function generateSummary()
         .then(data =>
         {
             localStorage.setItem("documentSummary",data["data"]["response"]);
+            var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentAnalysis';
+            window.location.href = documentAnalysisUrl;
+            hideLoader();
         })
         .catch(error =>
         {
@@ -35,3 +37,5 @@ function generateSummary()
             console.error('Fetch error:',error);
         });
 }
+
+
