@@ -20,7 +20,6 @@ function deleteSelectedFile() {
                 displayError("System is under maintenance. Please try again later.")
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            return response.json();
         })
         .then(data =>
         {
@@ -57,49 +56,81 @@ function uploadDocumentToApplication()
         
         if (selectedFile)
         {
-            selectedFileName.textContent = "Selected file: " + selectedFile.name;
-            localStorage.setItem("selectedFiles",selectedFile.name);
-            if (localStorage.getItem("selectedFiles") !== null)
-            {
-                document.getElementById("next-button").removeAttribute("disabled");
-                // Show delete button upon file selection
-                deleteButton.classList.remove('d-none');
+            const getFileRequestBody = {
+                FileName: selectedFile.name
             }
-
-
-            // Send the selected file to the API for server-side execution
-            const formData = new FormData();
-            formData.append('targetFile',selectedFile);
-            showLoader();
-            fetch('/api/fileupload/upload',{
+            fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/getFile", {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(getFileRequestBody)
             })
                 .then(response =>
                 {
-                    hideLoader();
                     if (!response.ok)
                     {
-                        displayError("System is under maintenance. Please try again later.")
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                        displayError("System is under maintenance. Please try again later.");
                     }
-
+                    return response.json();
                 })
-                .then(data => console.log(data))
+                .then(data =>
+                {
+                    const fileExists = data.data.fileExists;
+                    if (fileExists)
+                    {
+                        displayError("File is already uploaded, please try another file.");
+                        return;
+                    }
+                    else
+                    {
+                        selectedFileName.textContent = "Selected file: " + selectedFile.name;
+                        localStorage.setItem("selectedFiles",selectedFile.name);
+                        if (localStorage.getItem("selectedFiles") !== null)
+                        {
+                            document.getElementById("next-button").removeAttribute("disabled");
+                            // Show delete button upon file selection
+                            deleteButton.classList.remove('d-none');
+                        }
+
+
+                        // Send the selected file to the API for server-side execution
+                        const formData = new FormData();
+                        formData.append('targetFile',selectedFile);
+                        showLoader();
+                        fetch('/api/fileupload/upload',{
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response =>
+                            {
+                                hideLoader();
+                                if (!response.ok)
+                                {
+                                    displayError("System is under maintenance. Please try again later.")
+                                    throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                            })
+                            .then(data => console.log(data))
+                            .catch(error =>
+                            {
+                                hideLoader();
+                                displayError("System is under maintenance. Please try again later.")
+                                console.log('Upload error:',error);
+                            });
+                        hideLoader();
+                    }
+                })
                 .catch(error =>
                 {
-                    hideLoader();
                     displayError("System is under maintenance. Please try again later.")
-                    console.log('Upload error:',error);
+                    console.log('Get error:',error);
                 });
-            hideLoader();
         }
         
     });
     fileInput.click(); // Trigger the file selection dialog
 }
-
-
 
 function uploadDocumentToPinecone()
 {

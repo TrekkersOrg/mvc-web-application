@@ -290,6 +290,11 @@ namespace StriveAI.Controllers
                     responseModel = createResponseModel(400, "Bad Request", "The 'namespace' and/or 'filename' field is missing or empty.", DateTime.Now);
                     return BadRequest(responseModel);
                 }
+                if (requestBody.FileName.Contains(" "))
+                {
+                    responseModel = createResponseModel(400, "Bad Request", "The file name must not contain spaces.", DateTime.Now);
+                    return BadRequest(responseModel);
+                }
                 string arguments = $"-n {requestBody.Namespace} -f {requestBody.FileName}";
                 if (!Directory.GetCurrentDirectory().Contains("scripts", StringComparison.OrdinalIgnoreCase))
                 {
