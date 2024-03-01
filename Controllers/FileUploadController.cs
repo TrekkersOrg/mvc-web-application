@@ -20,7 +20,8 @@ namespace StriveAI.Controllers
         {
             if (targetFile != null && targetFile.Length > 0)
             {
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "UserFiles", targetFile.FileName);
+                var formattedFileName = targetFile.FileName.Replace(" ", "_");
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "UserFiles", formattedFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     targetFile.CopyTo(fileStream);
