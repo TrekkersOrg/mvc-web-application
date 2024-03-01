@@ -7,6 +7,7 @@
         height: 70vh;
         display: flex;
         flex-direction: column;
+        margin-top: 20px;
     }
 
     .chat-body {
@@ -30,71 +31,92 @@
     }
 
     .view-doc-button,
-    .view-doc-button:hover,
     .new-upload-button,
-    .new-upload-button:hover,
-    .save-button,
-    .save-button:hover {
+    .save-button {
         width: 90%;
-        padding: 10px;
         border: 2px solid #007bff;
         color: white;
         background-color: #007bff;
         border-radius: 5px;
         cursor: pointer;
         position: relative;
+        padding: 8px 20px;
     }
 
-    .view-doc-button:hover {
+    .view-doc-button:hover,
+    .new-upload-button:hover,
+    .save-button:hover,
+    .send-button:hover {
         background-color: #ffffff;
         color: #007bff;
     }
 
-    .new-upload-button:hover {
-        background-color: #ffffff;
-        color: #007bff;
+    .instructions-box {
+        background-color: #f5f5f5;
+        box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        margin-top: 20px;
+        position: relative;
     }
 
-    .save-button:hover {
-        background-color: #ffffff;
-        color: #007bff;
+    .instructions-list {
+        list-style-type: numbered;
+        position: relative;
+    }
+
+    .generate-summary-button {
+        font-size: 3vw;
     }
 </style>
 
 <div class="container-fluid d-flex">
+
     <div class="row mt-9">
         <div class="col-md-6">
             <div class="chatbot-container border rounded shadow bg-light">
                 <div class="chat-header d-flex align-items-center justify-content-between p-3">
-                    <h4 class="mb-0">Pam</h4>
+                    <h4 class="mb-0">Chat</h4>
                 </div>
 
                 <div class="chat-body flex-grow-1 overflow-auto p-3">
-                    <ul class="chat-messages list-unstyled m-0 p-0"></ul>
+                    <ul id="response-output" class="chat-messages list-unstyled m-0 p-0"></ul>
                 </div>
 
                 <div class="chat-input d-flex align-items-center p-3">
-                    <input type="text" class="form-control flex-grow-1 rounded-0" placeholder="Ask me anything…">
-                    <button class="btn btn-primary ml-3 rounded-0">Send</button>
+                    <input type="text" class="form-control flex-grow-1 rounded-0" id="queryInput"
+                        placeholder="Enter your query">
+                    <button class="btn btn-primary ml-3 send-button rounded-0" onclick="sendQuery()">Send</button>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 mt-9">
-            <div class="summary-container border rounded shadow d-flex flex-column">
-                <div class="summary-header">
-                    <h4>Summary</h4>
+
+        <div class="col-md-6">
+            <div class="instructions-box border rounded shadow d-flex flex-column">
+                <button class="generate-summary-button">Summary Generator &#10561</button>
+
+                <div class="instructions-list flex-grow-1">
+                    <p class="insert-summary"></p>
                 </div>
-                <div class="summary-body-container flex-grow-1">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. At facere amet adipisci repellendus
-                        doloremque aut totam suscipit accusantium sunt, ab obcaecati architecto cum? Numquam iusto nihil
-                        iure, explicabo ratione impedit.</p>
+            </div>
+            <br>
+            <br>
+
+            <div class="row mt-5 summary-footer justify-content-center d-flex mt-auto">
+
+                <div class="col-md-5 d-flex justify-content-end h-200 p-2">
+                    <button class="new-upload-button">Next upload</button>
                 </div>
-                <div class="summary-footer mt-auto justify-content-center d-flex">
-                    <button class="view-doc-button">View Document</button>
-                    <button class="new-upload-button">New upload</button>
+                <div class="col-md-5 d-flex justify-content-start h-100 p-2">
                     <button class="save-button">Save</button>
                 </div>
+                <div class="col-md-5 d-flex justify-content-start h-100 p-2">
+                    <button class="view-doc-button">View Document</button>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+
+<script src="/js/chatbot.js"></script>
+<script src="/js/documentAnalysis.js"></script>
