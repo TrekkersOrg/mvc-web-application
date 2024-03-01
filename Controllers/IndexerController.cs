@@ -101,7 +101,7 @@ namespace StriveAI.Controllers
                         }
                         if (property.Name == "vectors")
                         {
-                            GetRecordResponseModel.VectorsDetails vectorsDetails= new GetRecordResponseModel.VectorsDetails();
+                            GetRecordResponseModel.VectorsDetails vectorsDetails = new GetRecordResponseModel.VectorsDetails();
                             vectorsDetails.Vectors = new Dictionary<string, GetRecordResponseModel.VectorDetails>();
                             foreach (var vectorsDetailsProperty in property.Value.EnumerateObject())
                             {
@@ -195,7 +195,7 @@ namespace StriveAI.Controllers
                             }
                         }
                     }
-                } 
+                }
             }
             using (var httpClient = new HttpClient())
             {
@@ -301,7 +301,7 @@ namespace StriveAI.Controllers
                     Directory.SetCurrentDirectory("scripts");
                 }
                 string finalOutput = RunCommand("py", $"embedder.py {arguments}");
-                
+
                 if (finalOutput.Contains("Finished"))
                 {
                     string currentDirectory = Directory.GetCurrentDirectory();
@@ -341,7 +341,7 @@ namespace StriveAI.Controllers
                     Directory.SetCurrentDirectory(rootDirectory);
                     responseModel = createResponseModel(500, "Internal Server Error", "Error executing script", DateTime.Now);
                     return StatusCode(500, responseModel);
-                }             
+                }
             }
             catch (Exception ex)
             {

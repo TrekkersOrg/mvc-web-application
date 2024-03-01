@@ -71,7 +71,7 @@
 
         <div class="col-md-5 d-flex justify-content-start h-100 p-2">
             <button class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none"
-                onclick="uploadDocumentToPinecone()" type="button" id="next-button" disabled>Next</button>
+                onclick="uploadDocumentToPinecone(); generateSummary();" type="button" id="next-button" disabled>Next</button>
         </div>
 
         <div class="row mt-5 justify-content-center text-center">
@@ -120,3 +120,4 @@
 
 
 <script src="/js/fileUpload.js"></script>
+<script src="/js/documentAnalysis.js"></script>

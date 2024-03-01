@@ -3,7 +3,7 @@ import sys
 from re import S
 
 # from pandas import Index, notnull
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter 
 from langchain_community.embeddings import SentenceTransformerEmbeddings, HuggingFaceBgeEmbeddings
 import pinecone
 from langchain_community.vectorstores import Pinecone
@@ -46,7 +46,7 @@ def split_docs(documents,chunk_size=500,chunk_overlap=20):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     docs = text_splitter.split_documents(documents)
     return docs
-  
+
 
 def read_docx(file_path):
     """
@@ -74,7 +74,7 @@ def main():
     # Load configuration
     print("\n(1/6) Loading configuration...")
     with open('../appSettings.Development.json') as parser:
-      appSettings = json.load(parser)
+        appSettings = json.load(parser)
     if args.debug:
         print(appSettings)
 

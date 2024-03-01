@@ -10,7 +10,7 @@ function generateSummary()
     fetch(window.location.protocol + "//" + window.location.host + "/api/chatbot/sendQuery",{
         method: 'POST',
         headers: {
-            'Content-Type': 'text/plain'
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestBody)
     })
@@ -22,22 +22,19 @@ function generateSummary()
                 displayError("System is under maintenance. Please try again later.")
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            return response.data();
-            summaryParagraph.textContent = response.data;
-        })
-        .then(data =>
-        {
             try 
             {
-                const summaryParagraph = document.querySelector(".insert-summary");
-                const summary = response.data;
-                summaryParagraph.textContent = summary.content 
+                var responseJson = response.json();
+                var responseSummary = responseJson["data"]["response"];
+                localStorage.setItem("documentSummary", responseSummary);
             } catch (error)
             {
                 console.error("Error loading response: ", error);
                 displayError("Failed summary generation.");
             }
+            summaryParagraph.textContent = response.data;
         })
+        .then(data => {console.log(data)})
         .catch(error =>
         {
             hideLoader();
