@@ -68,10 +68,7 @@ namespace StriveAI.Controllers
                     Directory.SetCurrentDirectory("scripts");
                 }
                 string finalOutput = RunCommand("py", $"llm.py {arguments}");
-                string delimiter = "(6/6) Loading LLM response to query...";
-                int delimiterIndex = finalOutput.IndexOf(delimiter);
-                string response = finalOutput.Substring(delimiterIndex + delimiter.Length);
-                sendQueryResponseModel.Response = response;
+                sendQueryResponseModel.Response = finalOutput;
                 responseModel = createResponseModel(200, "Success", "Response generated successfully.", DateTime.Now, sendQueryResponseModel);
                 return Ok(responseModel);
             }
