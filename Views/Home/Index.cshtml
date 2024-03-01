@@ -3,23 +3,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <style>
+    .flip-animation {
+        /* Initial styles for the card */
+        transition: transform 0.5s ease-in-out;
+        /* Add transition for smooth animation */
+    }
+
+    .flip-animation:hover {
+        transform: rotateY(180deg);
+        /* Rotate the card on hover */
+    }
+
     .btn-outline-secondary.rounded-pill.btn-lg {
         color: white;
         border: transparent;
         position: relative;
     }
 
+    .btn-primary.rounded-pill.btn-lg:hover,
     .btn-outline-secondary.rounded-pill.btn-lg:hover {
-        background-color: rgb(3, 170, 254);
-        color: white;
-        border: transparent;
-    }
-
-    .btn-primary.rounded-pill.btn-lg:hover {
-        background-color: rgb(3, 170, 254);
-        color: white;
-        border: transparent;
+        animation: button-hover-glow 0.5s ease-in-out;
     }
 
     .btn-primary.rounded-pill.btn-lg {
@@ -30,41 +35,104 @@
     }
 
     .bg-gradient {
-        background-image: linear-gradient(to bottom, #ffffff, #005eff) !important;
+        background-image: linear-gradient(to left, #294d0e, #053d1c) !important;
         min-height: 100vh;
+        min-width: 100vw;
         margin-bottom: 10vh;
         position: relative;
     }
 
     .header-container {
-        padding-top: 5vh;
+        padding-top: 2%;
+    }
+
+    .image1 {
+        width: 17vw;
+        height: 17vh;
+        position: relative;
+    }
+
+    .image2 {
+        width: 17vw;
+        height: 17vh;
+        padding-left: 5vw;
+        position: relative;
+    }
+
+    .image3 { 
+        width: 17vw;
+        height: 17vh;
+        padding-left: 5vw;
+        position: relative;
+    }
+
+    .top-row {
+        width: 100vw;
+        height:50vh;
+    }
+
+    .image-row {
+        
     }
 </style>
 
+<body>
 
-<head>
-    <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true" />
-</head>
+    <head>
+        <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true" />
+    </head>
 
-<div class="container-fluid bg-gradient">
-    <div class="row mt-5">
-        <div class="col-12 h-100 text-center header-container">
-            <header>
-                <h1 class="text-black display-4">Legal Documents,</h1>
-                <h1 class="text-primary display-4">Decoded</h1>
-            </header>
+
+    <div class="container-fluid">
+        <div class="row bg-gradient top-row">
+            <div class="col">
+                <div class="row">
+                    <header>
+                        <h1 class="text-white display-4">Legal Documents,</h1>
+                        <h1 class="text-white display-4">Decoded</h1>
+                    </header>
+                </div>
+                <div class="row">
+
+                </div>
+                <div class="row">
+                    <a class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none" asp-area="Identity"
+                        asp-page="/Account/Register">Get Started</a>
+
+                    <a class="btn btn-outline-secondary rounded-pill btn-lg text-white text-decoration-none"
+                        asp-controller="Home" asp-action="OurProducts">Learn More &#8594</a>
+                </div>
+
+            </div>
+            <div class="col">
+
+            </div>
         </div>
+
+        <div class="row">
+            <div class="col-md justify-content-center">
+                <h2>
+                    A team building for world class organizations
+                </h2>
+            </div>
+            <div class="row image-row">
+                <div class="col justify-content-center">
+                    <img class="image1" src="../img/google-business-logo.svg" alt="Google business logo">
+                    <img class="image2" src="../img/skale-labs-vector-logo.png" alt="SKALE Labs logo">
+                    <img class="image3" src="../img/SJSU logo.png" alt="SJSU logo">
+                </div>
+                <div class="image2-col">
+                    
+
+                </div>
+                <div class="image3-col">
+                    
+                </div>
+                
+
+            </div>
+        </div>
+
     </div>
 
-    <div class="row mt-5 justify-content-center">
-
-        <div class="col-md-5 d-flex justify-content-end h-200 p-2">
-            <a class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none" asp-area="Identity" asp-page="/Account/Register">Get Started</a>
-        </div>
-        <div class="col-md-5 d-flex justify-content-start h-100 p-2">
-            <a class="btn btn-outline-secondary rounded-pill btn-lg text-dark text-decoration-none" asp-controller="Home" asp-action="OurProducts">Learn More &#8594</a>
-        </div>
-
-    </div>
-</div>
-
+</body>
