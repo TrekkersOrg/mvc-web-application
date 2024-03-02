@@ -38,4 +38,14 @@ function generateSummary()
         });
 }
 
+function loadSummary()
+    {
+        document.getElementById("summary-box") = localStorage.getItem("documentSummary")
+    }
 
+
+
+window.onload = function ()
+{
+    loadSummary();
+};
