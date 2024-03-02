@@ -35,11 +35,6 @@ namespace StriveAI.Controllers
             return View();
         }
 
-        public IActionResult PythonTerminal()
-        {
-            return View();
-        }
-
         public IActionResult TESTING()
         {
             return View();

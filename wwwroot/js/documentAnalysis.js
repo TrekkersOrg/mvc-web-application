@@ -1,4 +1,3 @@
-
 function generateSummary()
 {
     const summaryParagraph = document.querySelector(".insert-summary p");
@@ -38,14 +37,42 @@ function generateSummary()
         });
 }
 
-function loadSummary()
+function displayError(errorMessage)
+{
+    var errorBackground = document.getElementById("error-background");
+    var errorCloseButton = document.getElementById("error-close");
+    var errorText = document.getElementById("error-message");
+    errorText.innerText = errorMessage;
+    errorBackground.style.display = "block";
+    errorCloseButton.onclick = function ()
     {
-        document.getElementById("summary-box") = localStorage.getItem("documentSummary")
+        errorBackground.style.display = "none";
     }
+}
+function showLoader()
+{
+    document.getElementById("loader-spinner").style.display = "";
+    document.getElementById("page-container").style.opacity = 0.5;
+}
+
+function hideLoader()
+{
+    document.getElementById("loader-spinner").style.display = "none";
+    document.getElementById("page-container").style.opacity = 1;
+
+}
+function loadSummary()
+{
+    document.getElementById("summary-box").innerText = localStorage.getItem("documentSummary");
+}
 
 
 
 window.onload = function ()
 {
-    loadSummary();
+    document.addEventListener("DOMContentLoaded",function ()
+    {
+        loadSummary();
+    });
+    hideLoader();
 };
