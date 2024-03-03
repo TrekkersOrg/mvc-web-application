@@ -3,19 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 <style>
-    .flip-animation {
-        /* Initial styles for the card */
-        transition: transform 0.5s ease-in-out;
-        /* Add transition for smooth animation */
-    }
-
-    .flip-animation:hover {
-        transform: rotateY(180deg);
-        /* Rotate the card on hover */
-    }
-
     .btn-outline-secondary.rounded-pill.btn-lg {
         color: white;
         border: transparent;
@@ -35,104 +23,152 @@
     }
 
     .bg-gradient {
-        background-image: linear-gradient(to left, #294d0e, #053d1c) !important;
+        background-image: linear-gradient(to right, #053d1c, #a2d6b7) !important;
         min-height: 100vh;
         min-width: 100vw;
-        margin-bottom: 10vh;
+        margin-bottom: 3vh;
         position: relative;
     }
 
-    .header-container {
-        padding-top: 2%;
+    .wireframe-img {
+        width: 50vw;
+        height: 80vh;
+        padding-left: 0vw;
+        position: relative;
+        padding-top: 17vh;
+        padding-right: 7vw;
     }
 
     .image1 {
-        width: 17vw;
-        height: 17vh;
+        width: 11vw;
+        height: 11vh;
         position: relative;
     }
 
     .image2 {
-        width: 17vw;
-        height: 17vh;
+        width: 13vw;
+        height: 15vh;
         padding-left: 5vw;
         position: relative;
+        padding-top: 0vh;
     }
 
-    .image3 { 
-        width: 17vw;
-        height: 17vh;
+    .image3 {
+        width: 11vw;
+        height: 11vh;
         padding-left: 5vw;
         position: relative;
     }
 
     .top-row {
-        width: 100vw;
-        height:50vh;
+        max-width: 100vw !important;
+        height: 50vh;
+        padding-bottom: 0vh;
     }
 
-    .image-row {
-        
+    .bottom-row {
+        max-width: 100vw !important;
+        height: 50vh;
+        padding-bottom: 0vh;
+    }
+
+    .container {
+        min-width: 100vw !important;
+        padding-left: 0 !important;
+    }
+
+    .title-frame {
+        padding-left: 10vw;
+        padding-top: 25vh;
+        padding-bottom: 1vh;
+    }
+
+    .start-button-frame {
+        padding-left: 10vw;
+        padding-right: 5vw;
+    }
+
+    .description-row {
+        padding-left: 11vw;
+        padding-bottom: 2vh;
+    }
+
+    .demo-button {
+        padding-left: 0vw;
+
+    }
+
+    .images-row {
+        padding-top: 3vh;
+
     }
 </style>
 
+
+<head>
+    <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true" />
+</head>
+
+
 <body>
-
-    <head>
-        <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true" />
-    </head>
-
 
     <div class="container-fluid">
         <div class="row bg-gradient top-row">
-            <div class="col">
-                <div class="row">
-                    <header>
+            <div class="col ">
+                <div class="row title-frame">
+                    <header class="animated-text">
                         <h1 class="text-white display-4">Legal Documents,</h1>
-                        <h1 class="text-white display-4">Decoded</h1>
+                        <h1 id="text-container" class="text-white display-4">Decoded</h1>
                     </header>
                 </div>
                 <div class="row">
-
+                    <div class="description-row text-white">
+                        <h5>Understand complex legal documents with two clicks. Have your attorney work for you.
+                        </h5>
+                    </div>
                 </div>
-                <div class="row">
-                    <a class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none" asp-area="Identity"
-                        asp-page="/Account/Register">Get Started</a>
+                <div class="row start-button-frame">
+                    <div class="col start-button-col">
+                        <a class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none"
+                            asp-area="Identity" asp-page="/Account/Register">Get Started</a>
+                    </div>
+                    <div class="col">
+                        <a class=" demo-button btn btn-outline-secondary rounded-pill btn-lg text-white text-decoration-none"
+                            asp-controller="Home" asp-action="OurProducts">Watch our demo &#8594</a>
+                    </div>
 
-                    <a class="btn btn-outline-secondary rounded-pill btn-lg text-white text-decoration-none"
-                        asp-controller="Home" asp-action="OurProducts">Learn More &#8594</a>
                 </div>
 
             </div>
             <div class="col">
-
+                <img class="wireframe-img" src="../img/Wireframe.png" alt="Wireframe">
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md justify-content-center">
-                <h2>
-                    A team building for world class organizations
-                </h2>
+        <div class="bottom-row">
+            <div class="row ">
+                <header class="text-center">
+                    <h2>The team built from world class organizations</h2>
+                </header>
             </div>
-            <div class="row image-row">
-                <div class="col justify-content-center">
-                    <img class="image1" src="../img/google-business-logo.svg" alt="Google business logo">
-                    <img class="image2" src="../img/skale-labs-vector-logo.png" alt="SKALE Labs logo">
-                    <img class="image3" src="../img/SJSU logo.png" alt="SJSU logo">
-                </div>
-                <div class="image2-col">
-                    
+            <div class="row images-row justify-content-center">
+                <img class="image1" src="../img/google-business-logo.svg" alt="Google business logo">
+                <img class="image3" src="../img/SJSU logo.png" alt="SJSU logo">
+                <img class="image2" src="../img/skale-labs-vector-logo.png" alt="SKALE Labs logo">
+            </div>
+            <div class="row">
+                <div class="">
 
                 </div>
-                <div class="image3-col">
-                    
-                </div>
-                
-
             </div>
         </div>
 
     </div>
 
 </body>
+
+<script>
+    window.onload() = function () {
+
+    };
+</script>
