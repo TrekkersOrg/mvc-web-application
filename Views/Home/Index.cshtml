@@ -4,30 +4,33 @@
 }
 
 <style>
-    .btn-outline-secondary.rounded-pill.btn-lg {
-        color: white;
-        border: transparent;
-        position: relative;
-    }
-
-    .btn-primary.rounded-pill.btn-lg:hover,
-    .btn-outline-secondary.rounded-pill.btn-lg:hover {
-        animation: button-hover-glow 0.5s ease-in-out;
-    }
-
     .btn-primary.rounded-pill.btn-lg {
         color: white;
         border: transparent;
         position: relative;
         padding: 8px 20px;
+        background-color: white;
+
+    }
+
+    .btn-primary.rounded-pill.btn-lg:hover {
+        border-color: black;
     }
 
     .bg-gradient {
-        background-image: linear-gradient(to left, #8001c9, #400d3d) !important;
+        background-image: linear-gradient(to left, #63029c, #400d3d) !important;
         min-height: 100vh;
         min-width: 100vw;
         margin-bottom: 3vh;
         position: relative;
+    }
+
+    .btn-primary-demo {
+        color: transparent;
+    }
+
+    .btn-primary-demo:hover {
+        background-color: #400d3d;
     }
 
     .wireframe-img {
@@ -73,56 +76,94 @@
         padding-bottom: 2vh;
     }
 
-    .demo-button {
-        padding-left: 0vw;
-
-    }
-
     .summary-row {
         padding-top: 3vh;
 
     }
 
+    .title-row {
+        padding-top: 3vh;
+    }
+
+
     .name-box {
-        padding-left: 17vw;
+        padding-left: 20vw;
         background-color: #f2f2f2;
         border: 1px solid #ccc;
-        border-radius: 4px;
+        border-radius: 5.5px;
         padding: 12px 16px;
         height: 7vh;
-        width: 15vw;
+        width: 18vw;
     }
 
     .name-col {
-        padding-left: 25vw;
-        padding-right: 25vw;
-        
+        padding-left: 31.4vw;
+        flex: 1;
+        padding-right: 2.7vw;
+    }
+
+    .email-col {
+        margin-left: -31vw;
+        flex: 1;
     }
 
     .email-box {
         padding-left: 17vw;
         background-color: #f2f2f2;
         border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 12px 16px;
+        border-radius: 5.5px;
+        padding: 10px 20px;
         height: 7vh;
-        width: 15vw;
+        width: 18vw;
+    }
+
+
+    .name-email-frame {
+        display: flex;
+    }
+
+    .usecase-col {
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+        border-radius: 5.5px;
+        padding: 10px 20px;
+        width: 38vw;
+        height: 15vh;
     }
 
     .usecase-box {
-        padding-left: 17vw;
-        background-color: #f2f2f2;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 12px 16px;
-        height: 5vh;
-        width: 7vw;
+        padding-left: 31.2vw;
+        margin-top: 1.6vh;
     }
 
-    .email-col {
-        padding-left: 10vw;
-        padding-top: 3vh;
-        width: 15vw;
+    .submit-btn {
+        background-color: black;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
+        width: 38vw;
+        height: 7vh;
+        margin-bottom: 9vh;
+    }
+
+    .send-button-frame {
+        padding-left: 1.1vw;
+        margin-top: 1.6vh;
+
+    }
+
+    .demo-button-frame {
+        margin-left: -7vw;
+    }
+
+
+    .submit-btn:hover {
+        background-color: rgb(51, 48, 48);
     }
 </style>
 
@@ -133,7 +174,6 @@
 
 
 <body>
-
     <div class="container-fluid">
         <div class="row bg-gradient top-row">
             <div class="col ">
@@ -145,18 +185,18 @@
                 </div>
                 <div class="row">
                     <div class="description-row text-white">
-                        <h5>Understand complex legal documents with two clicks. Have your attorney work for you.
+                        <h5>Understand complex legal documents in two clicks. Have your attorney work for you.
                         </h5>
                     </div>
                 </div>
                 <div class="row start-button-frame">
                     <div class="col start-button-col">
-                        <a class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none"
+                        <a class="btn btn-primary rounded-pill btn-lg text-dark text-decoration-none"
                             asp-area="Identity" asp-page="/Account/Register">Get Started</a>
                     </div>
-                    <div class="col">
-                        <a class=" demo-button btn btn-outline-secondary rounded-pill btn-lg text-white text-decoration-none"
-                            asp-controller="Home" asp-action="OurProducts">Watch our demo &#8594</a>
+                    <div class="col demo-button-frame">
+                        <a class="btn btn-primary-demo rounded-pill btn-lg text-white text-decoration-none"
+                            asp-area="Identity" asp-page="/Account/Register">Demo &#8594</a>
                     </div>
 
                 </div>
@@ -168,41 +208,37 @@
         </div>
 
         <div class="bottom-row">
-            <div class="row summary-row text-center">
-                <h2>Work With Us</h2>
+            <div class="row title-row text-center">
+                <h1 class="display-3 text-black font-weight-bold">Work With Us</h1>
             </div>
             <div class="row summary-row text-center">
-                <p>Axl is currently in beta but we would love to work with you. Tell us about your use case and we will
-                    drive your doubts away.</p>
+                <p class="lead text-dark">Strive is currently in closed beta but we would love to work with you.</p>
             </div>
-            <div class="row">
-                <div class="form-row justify-content-center">
-
-                    <div class="col name-col">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control name-box" id="name" aria-describedby="nameHelp">
-                        <div class="col email-col">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control email-box" id="email" aria-describedby="emailHelp">
-                        </div>
-                    </div>
-
-
-
+            <div class="row name-email justify-content-end">
+                <div class="col name-col">
+                    <input type="text" placeholder="Name" class="form-control name-box" id="name"
+                        aria-describedby="nameHelp">
+                </div>
+                <div class="col email-col">
+                    <input type="text" placeholder="Email" class="form-control email-box" id="email"
+                        aria-describedby="emailHelp">
+                </div>
+            </div>
+            <div class="row usecase-frame">
+                <div class="col usecase-box">
+                    <textarea id="usecase" class="usecase-col expandable-input" placeholder="Use Case"
+                        rows="4"></textarea>
                 </div>
             </div>
 
-                <div class="form-row justify-content-center">
-                    <div class="row usecase-row justify-content-center">
-                        <label for="usecase" class="form-label text-center">Use Case</label>
-                        <input type="text" class="form-control usecase-box" id="usecase" aria-describedby="usecaseHelp">
-                    </div>
+            <div class="row send-button-frame">
+                <div class="col send-button-box">
+                    <button type="submit" class="submit-btn">Send</button>
                 </div>
+
             </div>
         </div>
-
     </div>
-
 </body>
 
 <script>
