@@ -29,13 +29,12 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-black" asp-area="" asp-controller="Home"
-                                asp-action="DocumentAnalysis">Document Analysis</a>
+                            <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="DocAnalysis">Doc Analysis</a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link text-black" asp-area="" asp-controller="Home"
-                                asp-action="FileUpload">File Upload</a>
+                                asp-action="DocumentAnalysis">Document Analysis</a>
                         </li>
 
                         @if (!User?.Identity?.IsAuthenticated ?? false)

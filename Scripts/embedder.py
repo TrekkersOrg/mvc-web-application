@@ -31,7 +31,7 @@ class Document:
         self.metadata = metadata if metadata is not None else {}
 
 
-def split_docs(documents,chunk_size=500,chunk_overlap=20):
+def split_docs(documents,chunk_size=150,chunk_overlap=10):
     """
     Splits the documents into chunks.
     :param documents: List with a single element containing text of document
