@@ -7,6 +7,7 @@ from langchain_community.embeddings import SentenceTransformerEmbeddings, Huggin
 import json
 import pinecone
 import argparse
+from langchain.embeddings.openai import OpenAIEmbeddings
 
 
 def main():
@@ -28,8 +29,12 @@ def main():
     # Initialize embedding model
     if args.debug:
         print("\n(2/6) Initializing Huggingface embedding model...")
-    model_name = "all-MiniLM-L6-v2"
-    embeddings = HuggingFaceBgeEmbeddings(model_name=model_name)
+    embeddings = OpenAIEmbeddings(
+        model = "text-embedding-3-large",
+        openai_api_key = "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")
+    if args.debug:
+        print("Model Name: " + "text-embedding-3-large")
+        print(embeddings)
 
     # Load vector store
     if args.debug:
@@ -38,7 +43,7 @@ def main():
         api_key = appSettings.get("Pinecone", {}).get("APIKey", None),
         environment= appSettings.get("Pinecone", {}).get("Environment", None)
     )
-    vectorstore = Pinecone.from_existing_index(index_name="langchain-chatbot", embedding=embeddings, namespace=args.vectorstore)
+    vectorstore = Pinecone.from_existing_index(index_name="document-index", embedding=embeddings, namespace=args.vectorstore)
 
     # Initialize LLM
     if args.debug:

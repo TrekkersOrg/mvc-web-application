@@ -23,6 +23,7 @@ from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain.chains import RetrievalQA
 import json
 import dill
+from langchain.embeddings.openai import OpenAIEmbeddings
 
 
 class Document:
@@ -123,10 +124,11 @@ def main():
 
     # Initialize embedding model
     print("\n(4/6) Initializing embedding model...")
-    model_name = "all-MiniLM-L6-v2"
-    embeddings = HuggingFaceBgeEmbeddings(model_name=model_name)
+    embeddings = OpenAIEmbeddings(
+        model = "text-embedding-3-large",
+        openai_api_key = appSettings.get("OpenAI", {}).get("SecretKey", None))
     if args.debug:
-        print("Model Name: " + model_name)
+        print("Model Name: " + "text-embedding-3-large")
         print(embeddings)
 
     # Initialize Pinecone index
