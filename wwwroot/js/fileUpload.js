@@ -132,14 +132,14 @@ function uploadDocumentToApplication()
     fileInput.click(); // Trigger the file selection dialog
 }
 
-function uploadDocumentToPinecone()
+async function uploadDocumentToPinecone()
 {
     const requestBody = {
         Namespace: "Deven",
         FileName: localStorage.getItem("selectedFiles")
     };
     showLoader();
-    fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/insertDocument",{
+    await fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/insertDocument",{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -167,6 +167,9 @@ function uploadDocumentToPinecone()
             displayError("System is under maintenance. Please try again later.")
             console.error('Fetch error:',error);
         });
+    return Promise.resolve();
+
+
 }
 
 function displayError(errorMessage)
@@ -195,6 +198,59 @@ function hideLoader()
 
 }
 
+
+
+async function generateSummary()
+{
+    const summaryParagraph = document.querySelector(".insert-summary p");
+    const requestBody = {
+        Vectorstore: "TestSuite",
+        Query: "Generate a brief yet informative summary about this especially the critical details (e.g., dates, people, references). Make sure your summary does not exceed 250 words."
+    };
+    showLoader();
+    await fetch("/api/chatbot/sendQuery",{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
+        .then(response =>
+        {
+            if (!response.ok)
+            {
+                displayError("System is under maintenance. Please try again later.")
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data =>
+        {
+            localStorage.setItem("documentSummary",data["data"]["response"]);
+            hideLoader();
+        })
+        .catch(error =>
+        {
+            hideLoader();
+            displayError("System is under maintenance. Please try again later.")
+            console.error('Fetch error:',error);
+        });
+    return Promise.resolve();
+}
+
+function routeToDocumentAnalysis()
+{
+    var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentAnalysis';
+    window.location.href = documentAnalysisUrl;
+    return Promise.resolve();
+}
+
+async function uploadFileFlow()
+{
+    await uploadDocumentToPinecone();
+    await generateSummary();
+    await routeToDocumentAnalysis();
+}
 window.onload = function ()
 {
     hideLoader();

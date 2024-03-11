@@ -1,0 +1,89 @@
+﻿.top-row {
+    margin-top: 10vh;
+}
+
+.summary-col {
+    position: relative;
+    margin-right: 5vw;
+    margin-top: -5vh;
+}
+
+.summary-border {
+    @*border:1pxsolidblack;
+    *@
+}
+
+.summary-title-row {
+    @*border:1pxsolidblack;
+    *@
+}
+
+.text-col {
+    @*border:1pxsolidblack;
+    *@margin-top: 3vh;
+}
+
+.chat-col {
+    position: relative;
+    margin-top: -5vh;
+}
+
+.viewdocument-button-row {
+    margin-bottom: 5vh;
+}
+
+.viewdocument-button-col {
+    margin-top: 0vh;
+}
+
+
+.btn-warning:hover {
+    background-color: transparent;
+    color: rgb(255, 157, 0);
+}
+
+.newupload-btn:hover {
+    background-color: green;
+    color: white;
+}
+
+.btn-block {
+    border: 1px solid grey;
+    background-color: grey;
+}
+
+.btn-primary-viewdoc {
+    color: green;
+    position: relative;
+    border: 1px solid green;
+    margin-left: 1vw;
+    margin-right: 1vw;
+}
+
+    .btn-primary-viewdoc:hover {
+        background-color: rgb(68, 64, 64);
+        color: white;
+    }
+
+.chatbox-container {
+    border: 1px solid white;
+    border-radius: 10cqw;
+}
+
+.chatbox-body {
+    @*border:1pxsolidblack;
+    *@
+}
+
+.chatbox-input {
+    @*border:1pxsolidblack;
+    *@
+}
+
+.chatbox-col {
+    margin-top: 0.9vh;
+}
+
+.newuploadbtn-col {
+    margin-left: -3vw;
+}

@@ -1,124 +1,79 @@
-<style>
-    .chatbot-container {
-        position: relative;
-        border-color: #007bff;
-        border-width: 3px;
-        border-radius: 5px;
-        height: 70vh;
-        display: flex;
-        flex-direction: column;
-        margin-top: 20px;
-    }
+@{
+    ViewData["Title"] = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    .chat-body {
-        flex-grow: 1;
-        position: relative;
-    }
 
-    .chat-input {
-        position: relative;
-        left: 15px;
-        right: 15px;
-        width: calc(100% - 30px);
-        bottom: 10px;
-    }
+<link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
+<link rel="stylesheet" href="~/css/documentAnalysis.css">
 
-    .summary-header,
-    .summary-body-container {
-        border: 2px solid #007bff;
-        padding: 5px;
-        position: relative;
-    }
 
-    .view-doc-button,
-    .new-upload-button,
-    .save-button {
-        width: 90%;
-        border: 2px solid #007bff;
-        color: white;
-        background-color: #007bff;
-        border-radius: 5px;
-        cursor: pointer;
-        position: relative;
-        padding: 8px 20px;
-    }
-
-    .view-doc-button:hover,
-    .new-upload-button:hover,
-    .save-button:hover,
-    .send-button:hover {
-        background-color: #ffffff;
-        color: #007bff;
-    }
-
-    .instructions-box {
-        background-color: #f5f5f5;
-        box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        margin-top: 20px;
-        position: relative;
-    }
-
-    .instructions-list {
-        list-style-type: numbered;
-        position: relative;
-    }
-
-    .generate-summary-button {
-        font-size: 3vw;
-    }
-</style>
-
-<div class="container-fluid d-flex" id="page-container">
-
-    <div class="row mt-9">
-        <div class="col-md-6">
-            <div class="chatbot-container border rounded shadow bg-light">
-                <div class="chat-header d-flex align-items-center justify-content-between p-3">
-                    <h4 class="mb-0">Chat</h4>
-                </div>
-
-                <div class="chat-body flex-grow-1 overflow-auto p-3">
-                    <ul id="response-output" class="chat-messages list-unstyled m-0 p-0"></ul>
-                </div>
-
-                <div class="chat-input d-flex align-items-center p-3">
-                    <input type="text" class="form-control flex-grow-1 rounded-0" id="queryInput"
-                        placeholder="Enter your query">
-                    <button class="btn btn-primary ml-3 send-button rounded-0" onclick="sendQuery()">Send</button>
+<div class="container-fluid bg-color">
+    <div class="row top-row">
+        <div class="col summary-col summary-border">
+            <div class="row summary-title-row">
+                <h4>Sample Marital Settlement Agreement</h4>
+            </div>
+            <div class="col text-col">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
+                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                    explicabo omnis corporis dignissimos!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
+                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                    explicabo omnis corporis dignissimos!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
+                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                    explicabo omnis corporis dignissimos!Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Ipsa praesentium, at, fugit quasi est
+                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                    explicabo omnis corporis dignissimos!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
+                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                    explicabo omnis corporis dignissimos!
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
+                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                    explicabo omnis corporis dignissimos!
+                </p>
+            </div>
+            <div class="row viewdocumentbtn-row">
+                <div class="col viewdocument-button-col">
+                    <a class="btn btn-warning btn-lg savebtn-btn">Save</a>
+                    <a class="btn btn-primary-viewdoc btn-lg">View Document</a>
+                    <a class="btn btn-lg newupload-btn btn-block">New Upload</a>
                 </div>
             </div>
         </div>
+        <div class="col chat-col chat-border">
+            <div class="col chatbox-col">
+                <div class="row chat-header-row">
+                    <h4>Ask Donna</h4>
+                </div>
+                <div class="row savebtn-row">
 
-        <div class="col-md-6">
-            <div class="instructions-box border rounded shadow d-flex flex-column">
-                <div class="summary-title">
-                    <h4>Summary</h4>
                 </div>
-                <div class="summary-list flex-grow-1">
-                    <p id="summary-box"></p>
+                <div class="chatbot-container border rounded shadow bg-light">
+                    <div class="chatbox-body flex-grow-1 overflow-auto p-3">
+                        <ul id="response-output" class="chat-messages list-unstyled m-0 p-0">
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et saepe asperiores quasi,
+                                placeat nesciunt facere rem, qui sit rerum est quo, error impedit cumque ipsa illo
+                                pariatur unde quae reiciendis!</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit
+                                quasi est dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus
+                                quas expedita explicabo omnis corporis dignissimos!</p>
+                        </ul>
+                    </div>
+                    <div class="chatbox-input d-flex align-items-center p-3">
+                        <input type="text" class="form-control flex-grow-1" id="queryInput"
+                            placeholder="e.g. Explain this contract in plain English">
+                        <button class="btn btn-primary ml-3 send-button" onclick="sendQuery()">?</button>
+                    </div>
+                    <div class="row btn-row">
+                    </div>
                 </div>
-            </div>
-            <br>
-            <br>
-
-            <div class="row mt-5 summary-footer justify-content-center d-flex mt-auto">
-
-                <div class="col-md-5 d-flex justify-content-end h-200 p-2">
-                    <button class="new-upload-button">Next upload</button>
-                </div>
-                <div class="col-md-5 d-flex justify-content-start h-100 p-2">
-                    <button class="save-button">Save</button>
-                </div>
-                <div class="col-md-5 d-flex justify-content-start h-100 p-2">
-                    <button class="view-doc-button">View Document</button>
-                </div>
-
             </div>
         </div>
     </div>
 </div>
-
 <svg class="loader-spinner" id="loader-spinner" version=" 1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 59">
     <path d="M55.42 25.14C55.64 26.48 55.75 27.85 55.75 29.25C55.75 43.27 44.46 54.61 30.5 54.61C16.54 54.61 5.25 43.27 5.25 29.25C5.25 15.23 16.54 3.89 30.5 3.89 C34.8 3.89 38.84 4.97 42.38 6.86" />
     <path d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
@@ -126,3 +81,5 @@
 
 <script src="/js/chatbot.js"></script>
 <script src="/js/documentAnalysis.js"></script>
+
+<script></script>

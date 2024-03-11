@@ -23,14 +23,7 @@ namespace StriveAI.Controllers
             return View();
         }
 
-// Rendering The Team Page
         public IActionResult AboutUs()
-        {
-            return View();
-        }
-
-// Rendering OurProducts Page
-        public IActionResult OurProducts()
         {
             return View();
         }
@@ -44,11 +37,6 @@ namespace StriveAI.Controllers
             return View();
         }
         public IActionResult DocumentAnalysis()
-        {
-            return View();
-        }
-
-        public IActionResult DocAnalysis()
         {
             return View();
         }

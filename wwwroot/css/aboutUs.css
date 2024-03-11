@@ -1,0 +1,25 @@
+﻿.btn-primary.rounded-pill.btn-lg {
+    color: white;
+    border: transparent;
+    position: relative;
+}
+
+    .btn-primary.rounded-pill.btn-lg:hover {
+        background-color: rgb(3, 170, 254);
+        color: white;
+        border: transparent;
+    }
+
+.bg-color {
+    min-height: 100vh;
+    margin-bottom: 10vh;
+    position: relative;
+}
+
+.header-container {
+    padding-top: 5vh;
+}
+
+.font {
+    font-family: Helvetica, serif;
+}

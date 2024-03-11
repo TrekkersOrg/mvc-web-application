@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StriveAI.Models;
 using System.Diagnostics;
-using System.Net.Http;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace StriveAI.Controllers

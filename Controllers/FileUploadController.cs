@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StriveAI.Models;
 
 namespace StriveAI.Controllers
@@ -38,8 +37,12 @@ namespace StriveAI.Controllers
             return Ok(responseBody);
         }
 
+        /// <summary>
+        /// Deletes file from "UserFiles".
+        /// </summary>
+        /// <param name="requestBody" type="DeleteFileRequestModel"></param>
+        /// <returns type="ActionResult"></returns>
         [HttpDelete("delete")]
-
         public ActionResult Delete([FromBody] DeleteFileRequestModel requestBody)
         {
             APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();
@@ -70,6 +73,11 @@ namespace StriveAI.Controllers
             return Ok(responseBody);
         }
 
+        /// <summary>
+        /// Gets file from "UserFiles".
+        /// </summary>
+        /// <param name="requestBody" type="GetFileRequestModel"></param>
+        /// <returns type="ActionResult"></returns>
         [HttpPost("getFile")]
         public ActionResult Get([FromBody] GetFileRequestModel requestBody)
         {
@@ -90,7 +98,16 @@ namespace StriveAI.Controllers
             return Ok(responseBody);
         }
 
-
+        /// <summary>
+        /// Initializes response body with APIResponseBodyWrapperModel
+        /// type.
+        /// </summary>
+        /// <param name="statusCode" type="int"></param>
+        /// <param name="statusMessage" type="string"></param>
+        /// <param name="statusMessageText" type="string"></param>
+        /// <param name="timestamp" type="DateTime"></param>
+        /// <param name="data" type="Object"></param>
+        /// <returns type="APIResponseBodyWrapperModel"></returns>
         static APIResponseBodyWrapperModel createResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
         {
             APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();

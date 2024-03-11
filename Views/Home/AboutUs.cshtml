@@ -4,30 +4,7 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<style>
-
-    .btn-primary.rounded-pill.btn-lg {
-        color: white;
-        border: transparent;
-        position: relative;
-    }
-    .btn-primary.rounded-pill.btn-lg:hover {
-        background-color: rgb(3, 170, 254);
-        color: white;
-        border: transparent;
-    }
-
-    .bg-color {
-        min-height: 100vh;
-        margin-bottom: 10vh;
-        position: relative;
-    }
-
-    .header-container {
-        padding-top: 5vh;
-    }
-
-</style>
+<link rel="stylesheet" href="~/css/aboutUs.css">
 
 <div class="container-fluid bg-color">
     <div class="header-container">
@@ -39,12 +16,6 @@
     {
         <div class="get-started-button mt-4 text-center">
             <a class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none" asp-area="" asp-controller="Home" asp-action="FileUpload">Explore Now</a>
-        </div>
-    }
-    else
-    {
-        <div class="get-started-button mt-4 text-center">
-            <a class="btn btn-primary rounded-pill btn-lg text-white text-decoration-none" asp-controller="Home" asp-action="OurProducts">Explore Now</a>
         </div>
     }
     <div class="row mt-8">
