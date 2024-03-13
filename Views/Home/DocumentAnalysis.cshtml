@@ -7,8 +7,8 @@
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
 <link rel="stylesheet" href="~/css/documentAnalysis.css">
 
-
-<div class="container-fluid bg-color">
+<body>
+<div id="page-container" class="container-fluid bg-color">
     <div class="row top-row">
         <div class="col summary-col summary-border">
             <div class="row summary-title-row">
@@ -54,12 +54,6 @@
                 <div class="chatbot-container border rounded shadow bg-light">
                     <div class="chatbox-body flex-grow-1 overflow-auto p-3">
                         <ul id="response-output" class="chat-messages list-unstyled m-0 p-0">
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et saepe asperiores quasi,
-                                placeat nesciunt facere rem, qui sit rerum est quo, error impedit cumque ipsa illo
-                                pariatur unde quae reiciendis!</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit
-                                quasi est dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus
-                                quas expedita explicabo omnis corporis dignissimos!</p>
                         </ul>
                     </div>
                     <div class="chatbox-input d-flex align-items-center p-3">
@@ -79,7 +73,34 @@
     <path d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
 </svg>
 
-<script src="/js/chatbot.js"></script>
+@*<script src="/js/chatbot.js"></script>*@
 <script src="/js/documentAnalysis.js"></script>
 
-<script></script>
+    <script>
+        const ws = new WebSocket('ws://localhost:3000');
+
+        ws.onopen = () =>
+        {
+            console.log('WebSocket connection established');
+        };
+
+        ws.onmessage = (event) =>
+        {
+            const data = JSON.parse(event.data);
+            if (data.response)
+            {
+                document.getElementById('response-output').innerText = `Response: ${data.response.response}`;
+            } else if (data.error)
+            {
+                document.getElementById('response-output').innerText = `Error: ${data.error}`;
+            }
+        };
+
+        function sendQuery()
+        {
+            const query = document.getElementById('queryInput').value;
+            const vectorstore = 'TestSuite';
+            ws.send(JSON.stringify({ query,vectorstore }));
+        }
+    </script>
+</body>

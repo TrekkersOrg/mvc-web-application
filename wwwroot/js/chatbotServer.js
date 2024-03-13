@@ -1,4 +1,4 @@
-/*const WebSocket = require('ws');
+const WebSocket = require('ws');
 const { exec } = require('child_process');
 
 const server = new WebSocket.Server({ port: 3000 });
@@ -53,4 +53,4 @@ function executeQuery(query,vectorstore,callback)
     });
 
     pythonProcess.stdin.end();
-}*/
+}

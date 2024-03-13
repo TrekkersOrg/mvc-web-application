@@ -23,7 +23,7 @@ def main():
     # Load configuration
     if args.debug:
         print("\n(1/6) Loading configuration...")
-    with open('../appSettings.Development.json') as parser:
+    with open('../../appSettings.Development.json') as parser:
         appSettings = json.load(parser)
 
     # Initialize embedding model
