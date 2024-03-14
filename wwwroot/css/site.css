@@ -4,12 +4,20 @@ html {
 
 .navbar-nav .nav-link:hover{
   color:white;
-  background-color:rgb(3, 170, 254);
+  background-color:grey;
 }
 
-.navbar-nav .nav-link.active{
-  color: white;
-  background-color: rgb(3, 170, 254);
+/* .navbar-nav .nav-link.active{
+  background-color: #f7f7f7;
+} */
+
+.btn .btn-lg{
+  background-color:#f7f7f7;
+  border: #f7f7f7;
+}
+
+.nav-gradient{
+  background-image: linear-gradient(to left, #63029c, #400d3d) !important;
 }
 
 @media (min-width: 768px) {

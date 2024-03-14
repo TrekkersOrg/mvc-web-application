@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AXL</title>
+    <title>@ViewData["Title"]Strive</title>
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -13,9 +13,9 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm nav-gradient border-bottom box-shadow">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm nav-gradient box-shadow">
             <div class="container-fluid">
-                <a class="navbar-brand text-black" asp-area="" asp-controller="Home" asp-action="Index">Axl AI</a>
+                <a class="navbar-brand font text-white" asp-area="" asp-controller="Home" asp-action="Index">Strive</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -24,25 +24,24 @@
                     <ul class="navbar-nav flex-grow-1">
 
                         <li class="nav-item">
-                            <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="AboutUs">About
-                                us</a>
+                            <a class="nav-link font btn btn-lg text-white" asp-area="" asp-controller="Home" asp-action="AboutUs">Demo</a>
                         </li>
 
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-black" asp-area="" asp-controller="Home"
+                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
                                     asp-action="OurProducts">Try Strive free</a>
                             </li>
                         }
                         @if (User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-black" asp-area="" asp-controller="Home"
+                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
                                     asp-action="FileUpload">File Upload</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-black" asp-area="" asp-controller="Home"
+                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
                                     asp-action="DocumentAnalysis">Document Analysis</a>
                             </li>
                         }
