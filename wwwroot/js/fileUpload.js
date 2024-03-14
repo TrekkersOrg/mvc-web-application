@@ -151,18 +151,22 @@ async function uploadDocumentToPinecone()
             hideLoader();
             if (!response.ok)
             {
+                sessionStorage.setItem("insertDocumentStatus","fail");
                 displayError("System is under maintenance. Please try again later.")
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
+            sessionStorage.setItem("insertDocumentStatus","success");
             return response.json();
         })
         .then(data =>
         {
             hideLoader();
+            sessionStorage.setItem("insertDocumentStatus","success");
             console.log(data);
         })
         .catch(error =>
         {
+            sessionStorage.setItem("insertDocumentStatus","fail");
             hideLoader();
             displayError("System is under maintenance. Please try again later.")
             console.error('Fetch error:',error);
@@ -232,7 +236,7 @@ async function generateSummary()
         .catch(error =>
         {
             hideLoader();
-            displayError("System is under maintenance. Please try again later.")
+            displayError("System is under maintenance. Please try again later.");
             console.error('Fetch error:',error);
         });
     return Promise.resolve();
@@ -248,6 +252,10 @@ function routeToDocumentAnalysis()
 async function uploadFileFlow()
 {
     await uploadDocumentToPinecone();
+    if (sessionStorage.getItem("insertDocumentStatus") == "fail")
+    {
+        return;
+    }
     await generateSummary();
     await routeToDocumentAnalysis();
 }
