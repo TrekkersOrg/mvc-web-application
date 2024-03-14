@@ -77,6 +77,7 @@ function uploadDocumentToApplication()
                 .then(data =>
                 {
                     const fileExists = data.data.fileExists;
+                    selectedFileName.textContent = "Selected file: " + selectedFile.name;
                     if (fileExists)
                     {
                         displayError("File is already uploaded, please try another file.");
@@ -84,14 +85,6 @@ function uploadDocumentToApplication()
                     }
                     else
                     {
-                        selectedFileName.textContent = "Selected file: " + selectedFile.name;
-                        localStorage.setItem("selectedFiles",selectedFile.name);
-                        if (localStorage.getItem("selectedFiles") !== null)
-                        {
-                            document.getElementById("next-button").removeAttribute("disabled");
-                            // Show delete button upon file selection
-                            deleteButton.classList.remove('d-none');
-                        }
 
 
                         // Send the selected file to the API for server-side execution
@@ -110,8 +103,18 @@ function uploadDocumentToApplication()
                                     displayError("System is under maintenance. Please try again later.")
                                     throw new Error(`HTTP error! Status: ${response.status}`);
                                 }
+                                return response.json();
                             })
-                            .then(data => console.log(data))
+                            .then(data =>
+                            {
+                                localStorage.setItem("selectedFiles",data.data.fileName);
+                                if (localStorage.getItem("selectedFiles") !== null)
+                                {
+                                    document.getElementById("next-button").removeAttribute("disabled");
+                                    // Show delete button upon file selection
+                                    deleteButton.classList.remove('d-none');
+                                }
+                            })
                             .catch(error =>
                             {
                                 hideLoader();
@@ -135,7 +138,7 @@ function uploadDocumentToApplication()
 async function uploadDocumentToPinecone()
 {
     const requestBody = {
-        Namespace: currentUser,
+        Namespace: sessionStorage.getItem("sessionNamespace"),
         FileName: localStorage.getItem("selectedFiles")
     };
     showLoader();
