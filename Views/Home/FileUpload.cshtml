@@ -114,4 +114,10 @@
 </svg>
 
 
+@{
+    string username = User.Identity.Name;
+}
+<script>
+    var currentUser = @Html.Raw(Json.Serialize(username));
+</script>
 <script src="/js/fileUpload.js"></script>

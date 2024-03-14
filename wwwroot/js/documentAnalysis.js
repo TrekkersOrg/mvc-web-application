@@ -61,6 +61,10 @@ function openWebSocket() {
     }
 }
 
+function getUserName {
+
+}
+
 
 
 window.onload = function ()

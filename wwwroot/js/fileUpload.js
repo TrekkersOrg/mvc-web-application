@@ -135,7 +135,7 @@ function uploadDocumentToApplication()
 async function uploadDocumentToPinecone()
 {
     const requestBody = {
-        Namespace: "Deven",
+        Namespace: currentUser,
         FileName: localStorage.getItem("selectedFiles")
     };
     showLoader();
@@ -253,5 +253,6 @@ async function uploadFileFlow()
 }
 window.onload = function ()
 {
+    console.log(currentUser);
     hideLoader();
 };
