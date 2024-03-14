@@ -253,6 +253,5 @@ async function uploadFileFlow()
 }
 window.onload = function ()
 {
-    console.log(currentUser);
     hideLoader();
 };

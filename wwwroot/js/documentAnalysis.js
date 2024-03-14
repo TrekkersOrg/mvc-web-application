@@ -61,12 +61,6 @@ function openWebSocket() {
     }
 }
 
-function getUserName {
-
-}
-
-
-
 window.onload = function ()
 {
     //let ws = new WebSocket('ws://localhost:3000');
