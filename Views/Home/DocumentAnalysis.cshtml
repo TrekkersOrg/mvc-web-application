@@ -39,7 +39,7 @@
                 <div class="col viewdocument-button-col">
                     <a class="btn btn-warning btn-lg savebtn-btn">Save</a>
                     <a class="btn btn-primary-viewdoc btn-lg">View Document</a>
-                    <a class="btn btn-lg newupload-btn btn-block">New Upload</a>
+                    <a class="btn btn-lg newupload-btn btn-block" onclick="newUploadFlow()">New Upload</a>
                 </div>
             </div>
         </div>
@@ -73,7 +73,6 @@
     <path d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
 </svg>
 
-@*<script src="/js/chatbot.js"></script>*@
 <script src="/js/documentAnalysis.js"></script>
 
     <script>
@@ -99,8 +98,65 @@
         function sendQuery()
         {
             const query = document.getElementById('queryInput').value;
-            const vectorstore = 'TestSuite';
+            const vectorstore = sessionStorage.getItem("sessionNamespace");
             ws.send(JSON.stringify({ query,vectorstore }));
+        }
+
+        async function purgePinecone()
+        {
+            const purgePineconeRequestBody = {
+                Namespace: sessionStorage.getItem("sessionNamespace")
+            }
+            showLoader();
+            await fetch("/api/indexer/purgePinecone",{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(purgePineconeRequestBody)
+            })
+                .then(response =>
+                {
+                    hideLoader();
+                    if (!response.ok)
+                    {
+                        sessionStorage.setItem("purgePineconeStatus","fail");
+                        displayError("System is under maintenance. Please try again later.")
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    sessionStorage.setItem("purgePineconeStatus","success");
+                    return response.json();
+                })
+                .then(data =>
+                {
+                    hideLoader();
+                    sessionStorage.setItem("purgePineconeStatus","success");
+                    console.log(data);
+                })
+                .catch(error =>
+                {
+                    sessionStorage.setItem("purgePineconeStatus","fail");
+                    hideLoader();
+                    displayError("System is under maintenance. Please try again later.")
+                    console.error('Fetch error:',error);
+                });
+            return Promise.resolve();
+        }
+
+        function routeToFileUpload()
+        {
+            var fileUploadUrl = window.location.protocol + "//" + window.location.host + '/Home/FileUpload';
+            window.location.href = fileUploadUrl;
+            return Promise.resolve();
+        }
+
+        async function newUploadFlow()
+        {
+            await purgePinecone();
+            if (sessionStorage.getItem("purgePineconeStatus") == "success")
+            {
+                await routeToFileUpload();
+            }
         }
     </script>
 </body>

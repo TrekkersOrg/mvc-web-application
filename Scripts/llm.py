@@ -23,8 +23,15 @@ def main():
     # Load configuration
     if args.debug:
         print("\n(1/6) Loading configuration...")
-    with open('../../appSettings.Development.json') as parser:
-        appSettings = json.load(parser)
+    try:
+        with open('../../appSettings.Development.json') as parser:
+            appSettings = json.load(parser)
+    except FileNotFoundError:
+        try:
+            with open('../appSettings.Development.json') as parser:
+                appSettings = json.load(parser)
+        except FileNotFoundError:
+            print("Error: The file 'appSettings.Development.json' was not found.")
 
     # Initialize embedding model
     if args.debug:

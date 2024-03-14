@@ -1,3 +1,4 @@
+const { Session } = require("inspector");
 
 function displayError(errorMessage)
 {
@@ -28,43 +29,9 @@ function loadSummary()
     document.getElementById("summary-box").innerText = localStorage.getItem("documentSummary");
 }
 
-
-function openWebSocket() {
-    ws.onopen = () =>
-    {
-        console.log('WebSocket connection established');
-    };
-
-    ws.onmessage = (event) =>
-    {
-        const data = JSON.parse(event.data);
-        if (data.response)
-        {
-            var responseText = document.createElement('p');
-            responseText.innerText = data.response.response
-            document.getElementById('response-output').appendChild(responseText)
-        } else if (data.error)
-        {
-            var responseText = document.createElement('p');
-            responseText.innerText = data.error
-            document.getElementById('response-output').appendChild(responseText)
-        }
-    };
-
-    function sendQuery()
-    {
-        let ws = new WebSocket('ws://localhost:3000');
-
-        const query = document.getElementById('queryInput').value;
-        const vectorstore = 'TestSuite';
-        ws.send(JSON.stringify({ query,vectorstore }));
-    }
-}
-
 window.onload = function ()
 {
-    //let ws = new WebSocket('ws://localhost:3000');
-    //openWebSocket();
+    console.log("HI");
     document.addEventListener("DOMContentLoaded",function ()
     {
         loadSummary();

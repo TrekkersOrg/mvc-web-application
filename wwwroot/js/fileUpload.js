@@ -211,11 +211,11 @@ async function generateSummary()
 {
     const summaryParagraph = document.querySelector(".insert-summary p");
     const requestBody = {
-        Vectorstore: "TestSuite",
+        Vectorstore: sessionStorage.getItem("sessionNamespace"),
         Query: "Generate a brief yet informative summary about this especially the critical details (e.g., dates, people, references). Make sure your summary does not exceed 250 words."
     };
     showLoader();
-    await fetch("/api/chatbot/sendQuery",{
+    await fetch(window.location.protocol + "//" + window.location.host + "/api/chatbot/sendQuery",{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -226,18 +226,23 @@ async function generateSummary()
         {
             if (!response.ok)
             {
+                sessionStorage.setItem("generateSummaryStatus","fail");
                 displayError("System is under maintenance. Please try again later.")
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
+            sessionStorage.setItem("generateSummaryStatus","success");
+
             return response.json();
         })
         .then(data =>
         {
+            sessionStorage.setItem("generateSummaryStatus","success");
             localStorage.setItem("documentSummary",data["data"]["response"]);
             hideLoader();
         })
         .catch(error =>
         {
+            sessionStorage.setItem("generateSummaryStatus","fail");
             hideLoader();
             displayError("System is under maintenance. Please try again later.");
             console.error('Fetch error:',error);
@@ -259,8 +264,19 @@ async function uploadFileFlow()
     {
         return;
     }
-    await generateSummary();
-    await routeToDocumentAnalysis();
+    else
+    {
+        await routeToDocumentAnalysis();
+        /*await generateSummary();
+        if (sessionStorage.getItem("generateSummaryStatus") == "fail")
+        {
+            return;
+        }
+        else
+        {
+            await routeToDocumentAnalysis();
+        }*/
+    }
 }
 window.onload = function ()
 {
