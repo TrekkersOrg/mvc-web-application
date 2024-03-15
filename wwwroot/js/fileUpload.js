@@ -1,4 +1,3 @@
-
 function deleteSelectedFile() {
     const selectedFileName = document.getElementById('selected-file-name');
     const deleteFileButton = document.getElementById("delete-button"); 
@@ -48,6 +47,7 @@ function uploadDocumentToApplication()
         const allowedExtensions = ['pdf', 'docx', 'doc'];
         const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
         const deleteButton = document.getElementById('delete-button');
+        const uploadFileDisplay = document.getElementById('uploadFileDisplayPanel');
 
         if (!allowedExtensions.includes(fileExtension)) {
             displayError("Only PDF, DOCX, DOC files are allowed.");
@@ -110,6 +110,7 @@ function uploadDocumentToApplication()
                                 sessionStorage.setItem("selectedFiles",data.data.fileName);
                                 if (sessionStorage.getItem("selectedFiles") !== null)
                                 {
+                                    uploadFileDisplay.classList.remove('d-none');
                                     document.getElementById("next-button").removeAttribute("disabled");
                                     // Show delete button upon file selection
                                     deleteButton.classList.remove('d-none');
