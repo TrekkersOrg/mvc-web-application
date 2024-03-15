@@ -4,7 +4,7 @@ function deleteSelectedFile() {
     const deleteFileButton = document.getElementById("delete-button"); 
     deleteFileButton.addEventListener("click", deleteSelectedFile);
     const requestBody = {
-        FileName: localStorage.getItem("selectedFiles")
+        FileName: sessionStorage.getItem("selectedFiles")
     };
     fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/delete",{
         method: 'DELETE',
@@ -30,7 +30,7 @@ function deleteSelectedFile() {
             displayError("System is under maintenance. Please try again later.")
             console.error('Fetch error:',error);
         });
-    localStorage.removeItem("selectedFiles",selectedFileName);
+    sessionStorage.removeItem("selectedFiles",selectedFileName);
 
 }
 
@@ -107,8 +107,8 @@ function uploadDocumentToApplication()
                             })
                             .then(data =>
                             {
-                                localStorage.setItem("selectedFiles",data.data.fileName);
-                                if (localStorage.getItem("selectedFiles") !== null)
+                                sessionStorage.setItem("selectedFiles",data.data.fileName);
+                                if (sessionStorage.getItem("selectedFiles") !== null)
                                 {
                                     document.getElementById("next-button").removeAttribute("disabled");
                                     // Show delete button upon file selection
@@ -139,7 +139,7 @@ async function uploadDocumentToPinecone()
 {
     const requestBody = {
         Namespace: sessionStorage.getItem("sessionNamespace"),
-        FileName: localStorage.getItem("selectedFiles")
+        FileName: sessionStorage.getItem("selectedFiles")
     };
     showLoader();
     await fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/insertDocument",{
@@ -237,7 +237,7 @@ async function generateSummary()
         .then(data =>
         {
             sessionStorage.setItem("generateSummaryStatus","success");
-            localStorage.setItem("documentSummary",data["data"]["response"]);
+            sessionStorage.setItem("documentSummary",data["data"]["response"]);
             hideLoader();
         })
         .catch(error =>
