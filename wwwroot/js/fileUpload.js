@@ -77,7 +77,7 @@ function uploadDocumentToApplication()
                 .then(data =>
                 {
                     const fileExists = data.data.fileExists;
-                    selectedFileName.textContent = "Selected file: " + selectedFile.name;
+                    selectedFileName.textContent = selectedFile.name;
                     if (fileExists)
                     {
                         displayError("File is already uploaded, please try another file.");

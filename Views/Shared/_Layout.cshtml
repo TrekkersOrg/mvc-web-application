@@ -24,7 +24,16 @@
                     <ul class="navbar-nav flex-grow-1">
 
                         <li class="nav-item">
-                            <a class="nav-link font btn btn-lg text-white" asp-area="" asp-controller="Home" asp-action="AboutUs">Demo</a>
+                            <a class="nav-link font btn btn-lg text-white" asp-area="" asp-controller="Home"
+                                asp-action="AboutUs">Demo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
+                                asp-action="FileUpload">File Upload</a>
+                        </li>
+                        <li class="nav-item">
+                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
+                                    asp-action="DocumentAnalysis">Document Analysis</a>
                         </li>
 
                         @if (!User?.Identity?.IsAuthenticated ?? false)
@@ -58,9 +67,9 @@
     </div>
 
     @* <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - StriveAI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <div class="container">
+    &copy; 2023 - StriveAI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
     </footer> *@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
