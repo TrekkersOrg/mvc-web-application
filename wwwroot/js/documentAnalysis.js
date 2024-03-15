@@ -26,7 +26,7 @@ function hideLoader()
 }
 function loadSummary()
 {
-    document.getElementById("summary-box").innerText = localStorage.getItem("documentSummary");
+    document.getElementById("summary-box").innerText = sessionStorage.getItem("documentSummary");
 }
 
 window.onload = function ()
