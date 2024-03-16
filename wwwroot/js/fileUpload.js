@@ -23,6 +23,13 @@ function deleteSelectedFile() {
         .then(data =>
         {
             console.log(data);
+
+            const uploadFileDisplay = document.getElementById('uploadFileDisplayPanel');
+            if (uploadFileDisplay.classList.contains('d-none')) {
+                // Keep uploadFileDisplay hidden
+            } else {
+                uploadFileDisplay.classList.add('d-none');
+            }
         })
         .catch(error =>
         {
@@ -30,7 +37,7 @@ function deleteSelectedFile() {
             console.error('Fetch error:',error);
         });
     sessionStorage.removeItem("selectedFiles",selectedFileName);
-
+    
 }
 
 function uploadDocumentToApplication()
