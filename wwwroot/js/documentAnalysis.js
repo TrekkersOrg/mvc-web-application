@@ -1,4 +1,3 @@
-const { Session } = require("inspector");
 
 function displayError(errorMessage)
 {
@@ -32,9 +31,6 @@ function loadSummary()
 window.onload = function ()
 {
     console.log("HI");
-    document.addEventListener("DOMContentLoaded",function ()
-    {
-        loadSummary();
-    });
+    // loadSummary();
     hideLoader();
 };
