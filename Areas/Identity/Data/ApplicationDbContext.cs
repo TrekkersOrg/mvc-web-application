@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace StriveAI.Areas.Identity.Data
 {
     public partial class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext()
+        private readonly IConfiguration Configuration;
+
+        public ApplicationDbContext(IConfiguration configuration)
         {
+            Configuration = configuration;
         }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration configuration)
             : base(options)
         {
+            Configuration = configuration;
         }
 
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; } = null!;
@@ -27,8 +33,8 @@ namespace StriveAI.Areas.Identity.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=aspnet-StriveAI-8938cb5a-9bb1-4971-906d-1647c444be62;Trusted_Connection=True;MultipleActiveResultSets=true");
+                string connectionString = Configuration.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StriveAI.Models;
+using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Web;
-using System.Diagnostics;
 
 namespace StriveAI.Controllers
 {
@@ -40,8 +40,8 @@ namespace StriveAI.Controllers
             GetRecordResponseModel? getRecordResponseModel = new GetRecordResponseModel();
             if (requestBody.Namespace == null || requestBody.Ids == null || requestBody.Ids.Any(string.IsNullOrEmpty) == true || requestBody.Ids.Any() == false)
             {
-                responseModel = createResponseModel(400, "Bad Request", "The 'namespace' and/or 'ids' field is missing or empty in the request body.", DateTime.Now);
-                return BadRequest(responseModel);
+                responseModel = createResponseModel(200, "Success", "The 'namespace' and/or 'ids' field is missing or empty in the request body.", DateTime.Now);
+                return Ok(responseModel);
             }
             ActionResult? pineconeDetailsResult = await PineconeDetails();
             List<string> existingNamespaces = new List<string>();
@@ -71,8 +71,8 @@ namespace StriveAI.Controllers
                 httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
                 if (requestBody.Namespace != null && !existingNamespaces.Contains(requestBody.Namespace))
                 {
-                    responseModel = createResponseModel(404, "Not Found", "Unable to find index: " + string.Join(", ", requestBody.Namespace), DateTime.Now);
-                    return NotFound(responseModel);
+                    responseModel = createResponseModel(200, "Success", "Unable to find index: " + string.Join(", ", requestBody.Namespace), DateTime.Now);
+                    return Ok(responseModel);
                 }
                 var response = await httpClient.GetAsync(requestUri);
                 if (response.IsSuccessStatusCode)
@@ -125,8 +125,8 @@ namespace StriveAI.Controllers
                             }
                             if (vectorsDetails.Vectors.Count == 0)
                             {
-                                responseModel = createResponseModel(404, "Not Found", "Unable to find vectors: " + string.Join(", ", requestBody.Ids), DateTime.Now);
-                                return NotFound(responseModel);
+                                responseModel = createResponseModel(200, "Success", "Unable to find vectors: " + string.Join(", ", requestBody.Ids), DateTime.Now);
+                                return Ok(responseModel);
                             }
                             List<String> invalidVectors = new List<String>();
                             if (vectorsDetails.Vectors.Count > 0 && vectorsDetails.Vectors.Count < idList.Count)
@@ -171,8 +171,8 @@ namespace StriveAI.Controllers
             var purgePinecodeResponseModel = new PurgePineconeResponseModel();
             if (string.IsNullOrEmpty(requestBody.Namespace))
             {
-                responseModel = createResponseModel(400, "Bad Request", "The 'namespace' field is empty in the request body.", DateTime.Now);
-                return BadRequest(responseModel);
+                responseModel = createResponseModel(200, "Success", "The 'namespace' field is empty in the request body.", DateTime.Now);
+                return Ok(responseModel);
             }
             ActionResult? pineconeDetailsResult = await PineconeDetails();
             List<string> existingNamespaces = new List<string>();
@@ -209,8 +209,8 @@ namespace StriveAI.Controllers
                 httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
                 if (requestBody.Namespace != null && !existingNamespaces.Contains(requestBody.Namespace))
                 {
-                    responseModel = createResponseModel(404, "Not Found", "Unable to find index: " + requestBody.Namespace, DateTime.Now);
-                    return NotFound(responseModel);
+                    responseModel = createResponseModel(200, "Success", "Unable to find index: " + requestBody.Namespace, DateTime.Now);
+                    return Ok(responseModel);
                 }
                 var response = await httpClient.PostAsync(requestUri, content);
                 if (response.IsSuccessStatusCode)
@@ -287,13 +287,13 @@ namespace StriveAI.Controllers
             {
                 if (requestBody.Namespace == null || requestBody.Namespace == "" || requestBody.FileName == null || requestBody.FileName == "")
                 {
-                    responseModel = createResponseModel(400, "Bad Request", "The 'namespace' and/or 'filename' field is missing or empty.", DateTime.Now);
-                    return BadRequest(responseModel);
+                    responseModel = createResponseModel(200, "Success", "The 'namespace' and/or 'filename' field is missing or empty.", DateTime.Now);
+                    return Ok(responseModel);
                 }
                 if (requestBody.FileName.Contains(" "))
                 {
-                    responseModel = createResponseModel(400, "Bad Request", "The file name must not contain spaces.", DateTime.Now);
-                    return BadRequest(responseModel);
+                    responseModel = createResponseModel(200, "Success", "The file name must not contain spaces.", DateTime.Now);
+                    return Ok(responseModel);
                 }
                 string arguments = $"-n {requestBody.Namespace} -f {requestBody.FileName}";
                 if (!Directory.GetCurrentDirectory().Contains("scripts", StringComparison.OrdinalIgnoreCase))
@@ -315,15 +315,15 @@ namespace StriveAI.Controllers
                     string currentDirectory = Directory.GetCurrentDirectory();
                     string rootDirectory = Directory.GetParent(currentDirectory).FullName;
                     Directory.SetCurrentDirectory(rootDirectory);
-                    responseModel = createResponseModel(400, "Bad Request", $"File type for file {requestBody.FileName} is not supported.", DateTime.Now);
-                    return BadRequest(responseModel);
+                    responseModel = createResponseModel(200, "Success", $"File type for file {requestBody.FileName} is not supported.", DateTime.Now);
+                    return Ok(responseModel);
                 }
                 else if (finalOutput.Contains("File name must include file type."))
                 {
                     string currentDirectory = Directory.GetCurrentDirectory();
                     string rootDirectory = Directory.GetParent(currentDirectory).FullName;
                     Directory.SetCurrentDirectory(rootDirectory);
-                    responseModel = createResponseModel(400, "Bad Request", $"File type must be included for file {requestBody.FileName}.", DateTime.Now);
+                    responseModel = createResponseModel(200, "Success", $"File type must be included for file {requestBody.FileName}.", DateTime.Now);
                     return BadRequest(responseModel);
                 }
                 else if (finalOutput.Contains("File does not exist."))
@@ -331,8 +331,8 @@ namespace StriveAI.Controllers
                     string currentDirectory = Directory.GetCurrentDirectory();
                     string rootDirectory = Directory.GetParent(currentDirectory).FullName;
                     Directory.SetCurrentDirectory(rootDirectory);
-                    responseModel = createResponseModel(404, "Not Found", $"File {requestBody.FileName} does not exist.", DateTime.Now);
-                    return NotFound(responseModel);
+                    responseModel = createResponseModel(200, "Success", $"File {requestBody.FileName} does not exist.", DateTime.Now);
+                    return Ok(responseModel);
                 }
                 else
                 {
@@ -360,7 +360,7 @@ namespace StriveAI.Controllers
         /// <param name="key" type="string"></param>
         /// <param name="values" type="List<string>"></param>
         /// <returns></returns>
-        static string BuildQueryString(string key, List<string> values)
+        private static string BuildQueryString(string key, List<string> values)
         {
             var encodedValues = values.Select(v => HttpUtility.UrlEncode(v));
             return $"{key}={string.Join("&" + key + "=", encodedValues)}";
@@ -372,7 +372,7 @@ namespace StriveAI.Controllers
         /// <param name="command" type="string"></param>
         /// <param name="arguments" type="string"></param>
         /// <returns type="string"></returns>
-        static string RunCommand(string command, string arguments)
+        private static string RunCommand(string command, string arguments)
         {
             try
             {
@@ -417,7 +417,7 @@ namespace StriveAI.Controllers
         /// <param name="timestamp" type="DateTime"></param>
         /// <param name="data" type="Object"></param>
         /// <returns type="APIResponseBodyWrapperModel"></returns>
-        static APIResponseBodyWrapperModel createResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
+        private static APIResponseBodyWrapperModel createResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
         {
             APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
             responseModel.StatusCode = statusCode;

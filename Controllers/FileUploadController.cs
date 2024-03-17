@@ -32,8 +32,12 @@ namespace StriveAI.Controllers
                 var filePath = "";
                 if (currentDirectory.ToLower().EndsWith("\\scripts") || currentDirectory.ToLower().EndsWith("/scripts"))
                 {
-                    var parentDirectory = Directory.GetParent(currentDirectory).FullName;
-                    filePath = Path.Combine(parentDirectory, "UserFiles", formattedFileName);
+                    var parentDirectory = Directory.GetParent(currentDirectory)?.FullName;
+                    if (parentDirectory != null)
+                    {
+                        filePath = Path.Combine(parentDirectory, "UserFiles", formattedFileName);
+
+                    }
                 }
                 else
                 {

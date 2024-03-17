@@ -10,8 +10,6 @@ namespace StriveAI.Controllers
     public class ChatbotController : Controller
     {
         private readonly IConfiguration _configuration;
-        private readonly string _pineconeAPIKey;
-        private readonly string _pineconeHost;
         private readonly string _domain;
         private readonly IHttpClientFactory _httpClientFactory;
 
@@ -23,8 +21,6 @@ namespace StriveAI.Controllers
         public ChatbotController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
             _configuration = configuration;
-            _pineconeAPIKey = _configuration["Pinecone:APIKey"];
-            _pineconeHost = _configuration["Pinecone:Host"];
             _httpClientFactory = httpClientFactory;
             _domain = _configuration["Hosting:Domain"];
         }
@@ -35,25 +31,25 @@ namespace StriveAI.Controllers
         /// <param name="requestBody" type="SendQueryRequestModel"></param>
         /// <returns type="ActionResult"></returns>
         [HttpPost("sendQuery")]
-        public ActionResult SendQuery([FromBody] SendQueryRequestModel requestBody)
+        async public Task<ActionResult> SendQuery([FromBody] SendQueryRequestModel requestBody)
         {
             APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
             SendQueryResponseModel sendQueryResponseModel = new SendQueryResponseModel();
-            if (requestBody.VectorStore == null || requestBody.VectorStore == "" || requestBody.Query == null || requestBody.Query == "")
+            if (string.IsNullOrEmpty(requestBody.VectorStore) || string.IsNullOrEmpty(requestBody.Query))
             {
-                responseModel = createResponseModel(400, "Bad Request", "The 'vectorstore' and/or 'query' field is missing or empty.", DateTime.Now);
-                return BadRequest(responseModel);
+                responseModel = createResponseModel(200, "Success", "The 'vectorstore' and/or 'query' field is missing or empty.", DateTime.Now);
+                return Ok(responseModel);
             }
-            var pineconeDetailsAPIResponse = GetPineconeDetails().Result;
-            var pineconeDetailsAPI = JsonConvert.DeserializeObject<APIResponseBodyWrapperModel>(pineconeDetailsAPIResponse);
-            var pineconeDetailsResponse = pineconeDetailsAPI?.Data?.ToString();
-            if (pineconeDetailsResponse is not null)
+            var pineconeDetailsAPIResponse = await GetPineconeDetails();
+            var pineconeDetailsAPIJson = JsonConvert.DeserializeObject<APIResponseBodyWrapperModel>(pineconeDetailsAPIResponse);
+            var pineconeDetailsResponseString = pineconeDetailsAPIJson?.Data?.ToString();
+            if (pineconeDetailsResponseString is not null)
             {
-                PineconeDetailsResponseModel? pineconeDetails = JsonConvert.DeserializeObject<PineconeDetailsResponseModel>(pineconeDetailsResponse);
+                PineconeDetailsResponseModel? pineconeDetails = JsonConvert.DeserializeObject<PineconeDetailsResponseModel>(pineconeDetailsResponseString);
                 if (pineconeDetails?.Namespaces?.ContainsKey(requestBody.VectorStore) == false)
                 {
-                    responseModel = createResponseModel(404, "Not Found", "Vector store does not match namespace in Pinecone index.", DateTime.Now);
-                    return NotFound(responseModel);
+                    responseModel = createResponseModel(200, "Success", "Vector store does not match namespace in Pinecone index.", DateTime.Now);
+                    return Ok(responseModel);
                 }
             }
             string arguments = $"-v {requestBody.VectorStore} -q \"{requestBody.Query}\"";
