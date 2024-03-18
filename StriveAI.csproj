@@ -27,4 +27,8 @@
   <ItemGroup>
     <None Remove="Scripts\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UserFiles\" />
+  </ItemGroup>
 </Project>

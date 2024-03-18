@@ -150,12 +150,23 @@
             d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
     </svg>
 
-
+    @using System.Security.Cryptography;
+    @using System.Text;
     @{
+        // Get the username from User.Identity
         string username = User.Identity.Name;
+
+        // Hash the username using SHA-256
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(username));
+            string hashedUsername = BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant();
+
+            // Insert the hashed username into sessionStorage
+            <script>
+                sessionStorage.setItem("sessionNamespace","@hashedUsername");
+            </script>
+        }
     }
-    <script>
-        sessionStorage.setItem("sessionNamespace", @Html.Raw(Json.Serialize(username)))
-    </script>
     <script src="/js/fileUpload.js"></script>
 </body>
