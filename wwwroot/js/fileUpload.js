@@ -1,11 +1,11 @@
-function deleteSelectedFile() {
+async function deleteSelectedFile() {
     const selectedFileName = document.getElementById('selected-file-name');
     const deleteFileButton = document.getElementById("delete-button"); 
     deleteFileButton.addEventListener("click", deleteSelectedFile);
     const requestBody = {
         FileName: sessionStorage.getItem("selectedFiles")
     };
-    fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/delete",{
+    await fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/delete",{
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -40,7 +40,7 @@ function deleteSelectedFile() {
     
 }
 
-function uploadDocumentToApplication()
+async function uploadDocumentToApplication()
 {
     const uploadButton = document.getElementById('upload-button');
     const selectedFileName = document.getElementById('selected-file-name');
