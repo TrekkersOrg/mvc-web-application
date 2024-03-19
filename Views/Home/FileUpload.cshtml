@@ -43,7 +43,7 @@
     }
 
     .instructions-list {
-        list-style-type: numbered;
+        list-style-type: decimal;
         position: relative;
     }
 
@@ -154,8 +154,7 @@
     @using System.Text;
     @{
         // Get the username from User.Identity
-        string username = User.Identity.Name;
-
+        string username = User?.Identity?.Name ?? "Unknown";
         // Hash the username using SHA-256
         using (SHA256 sha256 = SHA256.Create())
         {

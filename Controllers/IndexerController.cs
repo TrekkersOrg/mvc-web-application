@@ -36,21 +36,21 @@ namespace StriveAI.Controllers
         [HttpGet("getRecord")]
         public async Task<ActionResult> GetRecord([FromBody] GetRecordRequestModel requestBody)
         {
-            APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
-            GetRecordResponseModel? getRecordResponseModel = new GetRecordResponseModel();
+            APIResponseBodyWrapperModel responseModel = new();
+            GetRecordResponseModel? getRecordResponseModel = new();
             if (requestBody.Namespace == null || requestBody.Ids == null || requestBody.Ids.Any(string.IsNullOrEmpty) == true || requestBody.Ids.Any() == false)
             {
                 responseModel = createResponseModel(200, "Success", "The 'namespace' and/or 'ids' field is missing or empty in the request body.", DateTime.Now);
                 return Ok(responseModel);
             }
             ActionResult? pineconeDetailsResult = await PineconeDetails();
-            List<string> existingNamespaces = new List<string>();
+            List<string> existingNamespaces = new();
             if ((pineconeDetailsResult is OkObjectResult okResult) && (okResult.Value != null) && (okResult.Value is APIResponseBodyWrapperModel apiDetails) && (apiDetails != null) && (apiDetails.Data is PineconeDetailsResponseModel pineconeDetails))
             {
                 Dictionary<string, PineconeDetailsResponseModel.NamespaceModel>? namespaces = pineconeDetails.Namespaces;
                 if (namespaces != null)
                 {
-                    List<string> namespaceKeys = new List<string>(namespaces.Keys);
+                    List<string> namespaceKeys = new(namespaces.Keys);
                     foreach (var key in namespaceKeys)
                     {
                         existingNamespaces.Add(key);
@@ -59,7 +59,7 @@ namespace StriveAI.Controllers
             }
             List<string> idList = requestBody.Ids;
             string idQueryString = BuildQueryString("ids", idList);
-            using (HttpClient httpClient = new HttpClient())
+            using (HttpClient httpClient = new())
             {
                 var requestUri = _pineconeHost + "/vectors/fetch?namespace=" + requestBody.Namespace + '&' + idQueryString;
                 var content = new StringContent(
@@ -89,7 +89,7 @@ namespace StriveAI.Controllers
                         }
                         if (property.Name == "usage")
                         {
-                            GetRecordResponseModel.UsageDetails usage = new GetRecordResponseModel.UsageDetails();
+                            GetRecordResponseModel.UsageDetails usage = new();
                             foreach (var usageProperty in property.Value.EnumerateObject())
                             {
                                 if (usageProperty.Name == "readUnits")
@@ -101,11 +101,11 @@ namespace StriveAI.Controllers
                         }
                         if (property.Name == "vectors")
                         {
-                            GetRecordResponseModel.VectorsDetails vectorsDetails = new GetRecordResponseModel.VectorsDetails();
+                            GetRecordResponseModel.VectorsDetails vectorsDetails = new();
                             vectorsDetails.Vectors = new Dictionary<string, GetRecordResponseModel.VectorDetails>();
                             foreach (var vectorsDetailsProperty in property.Value.EnumerateObject())
                             {
-                                GetRecordResponseModel.VectorDetails vectorDetails = new GetRecordResponseModel.VectorDetails();
+                                GetRecordResponseModel.VectorDetails vectorDetails = new();
                                 foreach (var vectorDetailsProperty in vectorsDetailsProperty.Value.EnumerateObject())
                                 {
                                     if (vectorDetailsProperty.Name == "id")
@@ -128,7 +128,7 @@ namespace StriveAI.Controllers
                                 responseModel = createResponseModel(200, "Success", "Unable to find vectors: " + string.Join(", ", requestBody.Ids), DateTime.Now);
                                 return Ok(responseModel);
                             }
-                            List<String> invalidVectors = new List<String>();
+                            List<String> invalidVectors = new();
                             if (vectorsDetails.Vectors.Count > 0 && vectorsDetails.Vectors.Count < idList.Count)
                             {
                                 foreach (string vector in idList)
@@ -175,14 +175,14 @@ namespace StriveAI.Controllers
                 return Ok(responseModel);
             }
             ActionResult? pineconeDetailsResult = await PineconeDetails();
-            List<string> existingNamespaces = new List<string>();
+            List<string> existingNamespaces = new();
             int namespaceVectorCount = 0;
             if ((pineconeDetailsResult is OkObjectResult okResult) && (okResult.Value != null) && (okResult.Value is APIResponseBodyWrapperModel apiDetails) && (apiDetails != null) && (apiDetails.Data is PineconeDetailsResponseModel pineconeDetails))
             {
                 Dictionary<string, PineconeDetailsResponseModel.NamespaceModel>? namespaces = pineconeDetails.Namespaces;
                 if (namespaces != null)
                 {
-                    List<string> namespaceKeys = new List<string>(namespaces.Keys);
+                    List<string> namespaceKeys = new(namespaces.Keys);
                     foreach (var key in namespaceKeys)
                     {
                         existingNamespaces.Add(key);
@@ -256,7 +256,7 @@ namespace StriveAI.Controllers
                         };
                         namespacesDictionary.Add(namespaceProperty.Name, namespaceModel);
                     }
-                    PineconeDetailsResponseModel pineconeDetailsResponseModel = new PineconeDetailsResponseModel
+                    PineconeDetailsResponseModel pineconeDetailsResponseModel = new()
                     {
                         Namespaces = namespacesDictionary,
                         Dimension = responseBodyElement.GetProperty("dimension").GetInt32(),
@@ -282,7 +282,7 @@ namespace StriveAI.Controllers
         [HttpPost("insertDocument")]
         public ActionResult InsertDocument([FromBody] InsertDocumentRequestModel requestBody)
         {
-            APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
+            APIResponseBodyWrapperModel responseModel = new();
             try
             {
                 if (requestBody.Namespace == null || requestBody.Namespace == "" || requestBody.FileName == null || requestBody.FileName == "")
@@ -305,40 +305,60 @@ namespace StriveAI.Controllers
                 if (finalOutput.Contains("Finished"))
                 {
                     string currentDirectory = Directory.GetCurrentDirectory();
-                    string rootDirectory = Directory.GetParent(currentDirectory).FullName;
-                    Directory.SetCurrentDirectory(rootDirectory);
+                    string? rootDirectory = Directory.GetParent(currentDirectory)?.FullName;
+                    if (rootDirectory != null)
+                    {
+                        Directory.SetCurrentDirectory(rootDirectory);
+
+                    }
                     responseModel = createResponseModel(200, "OK", $"Document successfully inserted into {requestBody.Namespace} namespace.", DateTime.Now);
                     return Ok(responseModel);
                 }
                 else if (finalOutput.Contains("File type not supported."))
                 {
                     string currentDirectory = Directory.GetCurrentDirectory();
-                    string rootDirectory = Directory.GetParent(currentDirectory).FullName;
-                    Directory.SetCurrentDirectory(rootDirectory);
+                    string? rootDirectory = Directory.GetParent(currentDirectory)?.FullName;
+                    if (rootDirectory != null)
+                    {
+                        Directory.SetCurrentDirectory(rootDirectory);
+
+                    }
                     responseModel = createResponseModel(200, "Success", $"File type for file {requestBody.FileName} is not supported.", DateTime.Now);
                     return Ok(responseModel);
                 }
                 else if (finalOutput.Contains("File name must include file type."))
                 {
                     string currentDirectory = Directory.GetCurrentDirectory();
-                    string rootDirectory = Directory.GetParent(currentDirectory).FullName;
-                    Directory.SetCurrentDirectory(rootDirectory);
+                    string? rootDirectory = Directory.GetParent(currentDirectory)?.FullName;
+                    if (rootDirectory != null)
+                    {
+                        Directory.SetCurrentDirectory(rootDirectory);
+
+                    }
                     responseModel = createResponseModel(200, "Success", $"File type must be included for file {requestBody.FileName}.", DateTime.Now);
                     return BadRequest(responseModel);
                 }
                 else if (finalOutput.Contains("File does not exist."))
                 {
                     string currentDirectory = Directory.GetCurrentDirectory();
-                    string rootDirectory = Directory.GetParent(currentDirectory).FullName;
-                    Directory.SetCurrentDirectory(rootDirectory);
+                    string? rootDirectory = Directory.GetParent(currentDirectory)?.FullName;
+                    if (rootDirectory != null)
+                    {
+                        Directory.SetCurrentDirectory(rootDirectory);
+
+                    }
                     responseModel = createResponseModel(200, "Success", $"File {requestBody.FileName} does not exist.", DateTime.Now);
                     return Ok(responseModel);
                 }
                 else
                 {
                     string currentDirectory = Directory.GetCurrentDirectory();
-                    string rootDirectory = Directory.GetParent(currentDirectory).FullName;
-                    Directory.SetCurrentDirectory(rootDirectory);
+                    string? rootDirectory = Directory.GetParent(currentDirectory)?.FullName;
+                    if (rootDirectory != null)
+                    {
+                        Directory.SetCurrentDirectory(rootDirectory);
+
+                    }
                     responseModel = createResponseModel(500, "Internal Server Error", "Error executing script", DateTime.Now);
                     return StatusCode(500, responseModel);
                 }
@@ -346,8 +366,12 @@ namespace StriveAI.Controllers
             catch (Exception ex)
             {
                 string currentDirectory = Directory.GetCurrentDirectory();
-                string rootDirectory = Directory.GetParent(currentDirectory).FullName;
-                Directory.SetCurrentDirectory(rootDirectory);
+                string? rootDirectory = Directory.GetParent(currentDirectory)?.FullName;
+                if (rootDirectory != null)
+                {
+                    Directory.SetCurrentDirectory(rootDirectory);
+
+                }
                 responseModel = createResponseModel(500, "Internal Server Error", ex.Message, DateTime.Now);
                 return StatusCode(500, responseModel);
             }
@@ -419,7 +443,7 @@ namespace StriveAI.Controllers
         /// <returns type="APIResponseBodyWrapperModel"></returns>
         private static APIResponseBodyWrapperModel createResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
         {
-            APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
+            APIResponseBodyWrapperModel responseModel = new();
             responseModel.StatusCode = statusCode;
             responseModel.StatusMessage = statusMessage;
             responseModel.StatusMessageText = statusMessageText;
