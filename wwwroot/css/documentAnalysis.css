@@ -8,20 +8,6 @@
     margin-top: -5vh;
 }
 
-.summary-border {
-    @*border:1pxsolidblack;
-    *@
-}
-
-.summary-title-row {
-    @*border:1pxsolidblack;
-    *@
-}
-
-.text-col {
-    @*border:1pxsolidblack;
-    *@margin-top: 3vh;
-}
 
 .chat-col {
     position: relative;
@@ -70,15 +56,6 @@
     border-radius: 10cqw;
 }
 
-.chatbox-body {
-    @*border:1pxsolidblack;
-    *@
-}
-
-.chatbox-input {
-    @*border:1pxsolidblack;
-    *@
-}
 
 .chatbox-col {
     margin-top: 0.9vh;

@@ -3,158 +3,270 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .top-row {
+        margin-top: 10vh;
+    }
+
+    .summary-col {
+        position: relative;
+        margin-right: 5vw;
+        margin-top: -5vh;
+    }
+
+    .chat-col {
+        position: relative;
+        margin-top: -5vh;
+    }
+
+    .viewdocument-button-row {
+        margin-bottom: 5vh;
+    }
+
+    .viewdocument-button-col {
+        margin-top: 0vh;
+    }
+
+    .btn-warning:hover {
+        background-color: transparent;
+        color: rgb(255, 157, 0);
+    }
+
+    .newupload-btn:hover {
+        background-color: green;
+        color: white;
+    }
+
+    .btn-block {
+        border: 1px solid grey;
+        background-color: grey;
+    }
+
+    .btn-primary-viewdoc {
+        color: green;
+        position: relative;
+        border: 1px solid green;
+        margin-left: 1vw;
+        margin-right: 1vw;
+    }
+
+    .btn-primary-viewdoc:hover {
+        background-color: rgb(68, 64, 64);
+        color: white;
+    }
+
+
+    /* Adjust margin and padding for input */
+    .chatbox-input {
+        border: 1px solid grey;
+        /* Add border */
+        border-radius: 5px;
+        /* Add border radius for rounded corners */
+        padding: 10px;
+        /* Increase padding for better appearance */
+        margin-top: 10px;
+        /* Add margin for spacing */
+    }
+
+    .chatbox-col {
+        margin-top: 0.9vh;
+    }
+
+    .chatbot-response-container {
+        border: 2px solid rgb(142, 0, 0);
+        border-radius: 5px;
+    }
+
+    .chatbot-query-container {
+        margin-top: 1vh;
+        border: 2px solid rgb(0, 99, 12);
+        border-radius: 5px;
+    }
+
+    .chat-messages {
+        margin-right: 0.8vw;
+        text-align: right;
+        margin-bottom: 1vh;
+    }
+
+    .chat-responses {
+        margin-left: 1vw;
+
+    }
+
+    .newuploadbtn-col {
+        margin-left: -3vw;
+    }
+
+    .loader-spinner {
+        width: 300px;
+        z-index: 9999;
+        top: 50%;
+        left: 37%;
+        position: fixed;
+    }
+
+    .loader-spinner path {
+        --total-length: 136px;
+        stroke-linecap: round;
+        stroke-width: 6;
+        stroke: #000000;
+        fill: none;
+        stroke-dasharray: var(--total-length) var(--total-length);
+        animation: animate 2s linear infinite;
+    }
+</style>
 
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
 <link rel="stylesheet" href="~/css/documentAnalysis.css">
 
 <body>
-<div id="page-container" class="container-fluid bg-color">
-    <div class="row top-row">
-        <div class="col summary-col summary-border">
-            <div class="row summary-title-row">
-                <h4>Sample Marital Settlement Agreement</h4>
-            </div>
-            <div class="col text-col">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!
-                </p>
-            </div>
-            <div class="row viewdocumentbtn-row">
-                <div class="col viewdocument-button-col">
-                    <a class="btn btn-warning btn-lg savebtn-btn">Save</a>
-                    <a class="btn btn-primary-viewdoc btn-lg">View Document</a>
-                    <a class="btn btn-lg newupload-btn btn-block" onclick="newUploadFlow()">New Upload</a>
+    <div id="page-container" class="container-fluid bg-color">
+        <div class="row top-row">
+            <div class="col summary-col summary-border">
+                <div class="row summary-title-row">
+                    <h4>Sample Marital Settlement Agreement</h4>
+                </div>
+                <div class="col text-col">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
+                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                        explicabo omnis corporis dignissimos!
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
+                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                        explicabo omnis corporis dignissimos!
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
+                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                        explicabo omnis corporis dignissimos!Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        Ipsa praesentium, at, fugit quasi est
+                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                        explicabo omnis corporis dignissimos!
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
+                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                        explicabo omnis corporis dignissimos!
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
+                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
+                        explicabo omnis corporis dignissimos!
+                    </p>
+                </div>
+                <div class="row viewdocumentbtn-row">
+                    <div class="col viewdocument-button-col">
+                        <a class="btn btn-warning btn-lg savebtn-btn">Save</a>
+                        <a class="btn btn-primary-viewdoc btn-lg">View Document</a>
+                        <a class="btn btn-lg newupload-btn btn-block" onclick="newUploadFlow()">New Upload</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col chat-col chat-border">
-            <div class="col chatbox-col">
-                <div class="row chat-header-row">
-                    <h4>Ask Donna</h4>
-                </div>
-                <div class="row savebtn-row">
+            <div class="col chat-col chat-border">
+                <div class="col chatbox-col">
+                    <div class="row chat-header-row">
+                        <h4>Ask Donna</h4>
+                    </div>
 
-                </div>
-                <div class="chatbot-container border rounded shadow bg-light">
-                    <div class="chatbox-body flex-grow-1 overflow-auto p-3">
-                        <ul id="response-output" class="chat-messages list-unstyled m-0 p-0">
-                        </ul>
-                    </div>
-                    <div class="chatbox-input d-flex align-items-center p-3">
-                        <input type="text" class="form-control flex-grow-1" id="queryInput"
-                            placeholder="e.g. Explain this contract in plain English">
-                        <button class="btn btn-primary ml-3 send-button" onclick="sendQuery()">?</button>
-                    </div>
-                    <div class="row btn-row">
+                    <div class="chatbot-container border rounded shadow bg-light">
+                        <div class="chatbox-body flex-grow-1 overflow-auto p-3">
+                            <div class="chatbody-image">
+                                <h5>&#9963;</h5>
+                            </div>
+                            <div class="chatbot-response-container container-flex">
+                                <p class="chat-responses list-unstyled" id="response-output">Ask me anything!
+                                </p>
+                            </div>
+                            <div class="chatbot-query-container container-flex">
+                                <ul id="response-output" class="chat-messages list-unstyled">Tell me about this document
+                                </ul>
+                            </div>
+
+                        </div>
+                        <div class="chatbox-input d-flex align-items-center p-3">
+                            <input type="text" class="form-control flex-grow-1" id="queryInput"
+                                placeholder="e.g. Explain this contract in plain English">
+                            <button class="btn btn-primary ml-3 send-button" onclick="sendQuery()">&gt;</button>
+                        </div>
+
+                        <div class="row btn-row">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<svg class="loader-spinner" id="loader-spinner" version=" 1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 59">
-    <path d="M55.42 25.14C55.64 26.48 55.75 27.85 55.75 29.25C55.75 43.27 44.46 54.61 30.5 54.61C16.54 54.61 5.25 43.27 5.25 29.25C5.25 15.23 16.54 3.89 30.5 3.89 C34.8 3.89 38.84 4.97 42.38 6.86" />
-    <path d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
-</svg>
+    <svg class="loader-spinner" id="loader-spinner" version=" 1.2" xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 100 59">
+        <path
+            d="M55.42 25.14C55.64 26.48 55.75 27.85 55.75 29.25C55.75 43.27 44.46 54.61 30.5 54.61C16.54 54.61 5.25 43.27 5.25 29.25C5.25 15.23 16.54 3.89 30.5 3.89 C34.8 3.89 38.84 4.97 42.38 6.86" />
+        <path
+            d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
+    </svg>
 
-<script src="/js/documentAnalysis.js"></script>
+    <script src="/js/documentAnalysis.js"></script>
 
     <script>
         const ws = new WebSocket('ws://localhost:3000');
 
-        ws.onopen = () =>
-        {
+        ws.onopen = () => {
             console.log('WebSocket connection established');
         };
 
-        ws.onmessage = (event) =>
-        {
+        ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            if (data.response)
-            {
+            if (data.response) {
                 document.getElementById('response-output').innerText = `Response: ${data.response.response}`;
-            } else if (data.error)
-            {
+            } else if (data.error) {
                 document.getElementById('response-output').innerText = `Error: ${data.error}`;
             }
         };
 
-        function sendQuery()
-        {
+        function sendQuery() {
             const query = document.getElementById('queryInput').value;
             const vectorstore = sessionStorage.getItem("sessionNamespace");
-            ws.send(JSON.stringify({ query,vectorstore }));
+            ws.send(JSON.stringify({ query, vectorstore }));
         }
 
-        async function purgePinecone()
-        {
+        async function purgePinecone() {
             const purgePineconeRequestBody = {
                 Namespace: sessionStorage.getItem("sessionNamespace")
             }
             showLoader();
-            await fetch("/api/indexer/purgePinecone",{
+            await fetch("/api/indexer/purgePinecone", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(purgePineconeRequestBody)
             })
-                .then(response =>
-                {
+                .then(response => {
                     hideLoader();
-                    if (!response.ok)
-                    {
-                        sessionStorage.setItem("purgePineconeStatus","fail");
+                    if (!response.ok) {
+                        sessionStorage.setItem("purgePineconeStatus", "fail");
                         displayError("System is under maintenance. Please try again later.")
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
-                    sessionStorage.setItem("purgePineconeStatus","success");
+                    sessionStorage.setItem("purgePineconeStatus", "success");
                     return response.json();
                 })
-                .then(data =>
-                {
+                .then(data => {
                     hideLoader();
-                    sessionStorage.setItem("purgePineconeStatus","success");
+                    sessionStorage.setItem("purgePineconeStatus", "success");
                     console.log(data);
                 })
-                .catch(error =>
-                {
-                    sessionStorage.setItem("purgePineconeStatus","fail");
+                .catch(error => {
+                    sessionStorage.setItem("purgePineconeStatus", "fail");
                     hideLoader();
                     displayError("System is under maintenance. Please try again later.")
-                    console.error('Fetch error:',error);
+                    console.error('Fetch error:', error);
                 });
             return Promise.resolve();
         }
 
-        function routeToFileUpload()
-        {
+        function routeToFileUpload() {
             var fileUploadUrl = window.location.protocol + "//" + window.location.host + '/Home/FileUpload';
             window.location.href = fileUploadUrl;
             return Promise.resolve();
         }
 
-        async function newUploadFlow()
-        {
+        async function newUploadFlow() {
             await purgePinecone();
-            if (sessionStorage.getItem("purgePineconeStatus") == "success")
-            {
+            if (sessionStorage.getItem("purgePineconeStatus") == "success") {
                 await routeToFileUpload();
             }
         }
