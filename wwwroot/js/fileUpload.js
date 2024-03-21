@@ -8,7 +8,8 @@ async function deleteSelectedFile() {
     await fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/delete",{
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         },
         body: JSON.stringify(requestBody)
     })
@@ -69,7 +70,8 @@ async function uploadDocumentToApplication()
             fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/getFile", {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(getFileRequestBody)
             })
@@ -153,7 +155,8 @@ async function uploadDocumentToPinecone()
     await fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/insertDocument",{
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         },
         body: JSON.stringify(requestBody)
     })
