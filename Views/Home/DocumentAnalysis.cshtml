@@ -56,25 +56,38 @@
     }
 
 
-    /* Adjust margin and padding for input */
-    .chatbox-input {
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        /* Align items with space between them */
+        height: calc(100% - 20px);
+        /* Adjust height to accommodate chatInput-container */
+    }
+
+    .chatbot-input {
         border: 1px solid grey;
-        /* Add border */
         border-radius: 5px;
-        /* Add border radius for rounded corners */
         padding: 10px;
-        /* Increase padding for better appearance */
         margin-top: 10px;
-        /* Add margin for spacing */
+        overflow-y: auto;
     }
 
-    .chatbox-col {
+    .chatbot-col {
         margin-top: 0.9vh;
+        height: 50vh;
     }
 
-    .chatbot-response-container {
+    .response-container {
         border: 2px solid rgb(142, 0, 0);
         border-radius: 5px;
+        
+    }
+
+    .input-container {
+        border-radius: 5px;
+        overflow-y: auto;
+        width:100%;
     }
 
     .chatbot-query-container {
@@ -89,9 +102,15 @@
         margin-bottom: 1vh;
     }
 
-    .chat-responses {
-        margin-left: 1vw;
+    .chatbot-responses {
+        overflow-y: auto !important;
+        border: 1px solid black;
+    }
 
+    .chatInput-container{
+        margin-top: auto;
+        border-radius: 5px;
+        padding: 10px;
     }
 
     .newuploadbtn-col {
@@ -125,28 +144,10 @@
         <div class="row top-row">
             <div class="col summary-col summary-border">
                 <div class="row summary-title-row">
-                    <h4>Sample Marital Settlement Agreement</h4>
+                    <h4 id="title-box"></h4>
                 </div>
                 <div class="col text-col">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                        explicabo omnis corporis dignissimos!
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                        explicabo omnis corporis dignissimos!
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                        explicabo omnis corporis dignissimos!Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        Ipsa praesentium, at, fugit quasi est
-                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                        explicabo omnis corporis dignissimos!
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                        explicabo omnis corporis dignissimos!
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                        dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                        explicabo omnis corporis dignissimos!
-                    </p>
+                    <p id="summary-box"></p>
                 </div>
                 <div class="row viewdocumentbtn-row">
                     <div class="col viewdocument-button-col">
@@ -156,40 +157,50 @@
                     </div>
                 </div>
             </div>
-            <div class="col chat-col chat-border">
-                <div class="col chatbox-col">
-                    <div class="row chat-header-row">
+            <div class="col chatbot-col">
+                <div class="row header">
+                    <div class="header-container">
                         <h4>Ask Donna</h4>
                     </div>
+                </div>
 
-                    <div class="chatbot-container border rounded shadow bg-light">
-                        <div class="chatbox-body flex-grow-1 overflow-auto p-3">
-                            <div class="chatbody-image">
-                                <h5>&#9963;</h5>
-                            </div>
-                            <div class="chatbot-response-container container-flex">
-                                <p class="chat-responses list-unstyled" id="response-output">Ask me anything!
-                                </p>
-                            </div>
-                            <div class="chatbot-query-container container-flex">
-                                <ul id="response-output" class="chat-messages list-unstyled">Tell me about this document
-                                </ul>
-                            </div>
-
+                <div class="chat-container border rounded shadow bg-light">
+                    <div class="chatbot-responses flex-grow-1 overflow-auto p-3">
+                        <div class="response-container container-flex">
+                            <p class="chat-reponses list-unstyled" id="response-output">Lorem ipsum dolor sit amet
+                                consectetur adipisicing elit. Maiores enim libero quidem dolorum, iusto sint architecto
+                                inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
+                                Possimus, voluptatum!Lorem ipsum dolor sit amet
+                                consectetur adipisicing elit. Maiores enim libero quidem dolorum, iusto sint architecto
+                                inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
+                                Possimus, voluptatum!Lorem ipsum dolor sit amet
+                                consectetur adipisicing elit. Maiores enim libero quidem dolorum, iusto sint architecto
+                                inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
+                                Possimus, voluptatum!Lorem ipsum dolor sit amet
+                                consectetur adipisicing elit. Maiores enim libero quidem dolorum, iusto sint architecto
+                                inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
+                                Possimus, voluptatum!</p>
                         </div>
-                        <div class="chatbox-input d-flex align-items-center p-3">
+                        <div class="chatbot-query-container container-flex">
+                            <ul id="response-input" class="chat-messages list-unstyled">Tell me about this document
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="chatInput-container d-flex align-items-center">
+                        <div class="input-container container-flex">
                             <input type="text" class="form-control flex-grow-1" id="queryInput"
                                 placeholder="e.g. Explain this contract in plain English">
-                            <button class="btn btn-primary ml-3 send-button" onclick="sendQuery()">&gt;</button>
                         </div>
-
-                        <div class="row btn-row">
+                        <div class="sendButton-container">
+                            <button class="btn btn-primary ml-3 send-button" onclick="sendQuery()">&gt;</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
     <svg class="loader-spinner" id="loader-spinner" version=" 1.2" xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 100 59">
         <path

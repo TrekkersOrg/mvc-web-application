@@ -217,7 +217,7 @@ function hideLoader()
 }
 
 
-
+// Generate document summary
 async function generateSummary()
 {
     const summaryParagraph = document.querySelector(".insert-summary p");
@@ -260,6 +260,53 @@ async function generateSummary()
         });
     return Promise.resolve();
 }
+
+// Generate document title
+
+async function generateTitle()
+{
+    const requestBody = {
+        Vectorstore: sessionStorage.getItem("sessionNamespace"),
+        Query: "Generate a title for this document. The title should be less than 5 words but should detail what the document is."
+    };
+    showLoader();
+    await fetch(window.location.protocol + "//" + window.location.host + "/api/chatbot/sendQuery",{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
+        .then(response =>
+        {
+            if (!response.ok)
+            {
+                sessionStorage.setItem("generateTitleStatus","fail");
+                displayError("System is under maintenance. Please try again later.")
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            sessionStorage.setItem("generateTitleStatus","success");
+
+            return response.json();
+        })
+        .then(data =>
+        {
+            sessionStorage.setItem("generateTitleStatus","success");
+            sessionStorage.setItem("documentTitle",data["data"]["response"]);
+            hideLoader();
+        })
+        .catch(error =>
+        {
+            sessionStorage.setItem("generateTitleStatus","fail");
+            hideLoader();
+            displayError("System is under maintenance. Please try again later.");
+            console.error('Fetch error:',error);
+        });
+    return Promise.resolve();
+}
+
+
+
 
 function routeToDocumentAnalysis()
 {
