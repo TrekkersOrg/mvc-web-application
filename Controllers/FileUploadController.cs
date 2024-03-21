@@ -1,5 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StriveAI.Models;
+using System.Diagnostics;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Cors;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System;
+using System.Threading.Tasks;
 
 namespace StriveAI.Controllers
 {
@@ -15,6 +23,7 @@ namespace StriveAI.Controllers
         /// <param name="targetFile" type="IFormFile"></param>
         /// <returns type="ActionResult"></returns>
         [HttpPost("upload")]
+        [EnableCors("AllowAll")]
         public ActionResult Upload(IFormFile targetFile)
         {
             APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();
@@ -63,6 +72,7 @@ namespace StriveAI.Controllers
         /// <param name="requestBody" type="DeleteFileRequestModel"></param>
         /// <returns type="ActionResult"></returns>
         [HttpDelete("delete")]
+        [EnableCors("AllowAll")]
         public ActionResult Delete([FromBody] DeleteFileRequestModel requestBody)
         {
             APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();
@@ -99,6 +109,7 @@ namespace StriveAI.Controllers
         /// <param name="requestBody" type="GetFileRequestModel"></param>
         /// <returns type="ActionResult"></returns>
         [HttpPost("getFile")]
+        [EnableCors("AllowAll")]
         public ActionResult Get([FromBody] GetFileRequestModel requestBody)
         {
             APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();
