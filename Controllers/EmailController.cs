@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Cors;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using StriveAI.Models;
-using System;
-using System.Threading.Tasks;
 
 namespace StriveAI.Controllers
 {

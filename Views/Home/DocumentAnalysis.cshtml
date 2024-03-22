@@ -220,17 +220,35 @@
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            if (data.response) {
-                document.getElementById('response-output').innerText = `Response: ${data.response.response}`;
-            } else if (data.error) {
-                document.getElementById('response-output').innerText = `Error: ${data.error}`;
+            console.log("DATA: " + JSON.stringify(data.response));
+            console.log(JSON.stringify(data.type));
+            if (data.type == "chat") {
+                if (data.response)
+                {
+                    document.getElementById('response-output').innerText = `Response: ${data.response.response}`;
+                } else if (data.error)
+                {
+                    document.getElementById('response-output').innerText = `Error: ${data.error}`;
+                }
+            }
+            else if (data.type == "summary") {
+                document.getElementById('summary-box').innerText = data.response.response;
             }
         };
 
         function sendQuery() {
             const query = document.getElementById('queryInput').value;
             const vectorstore = sessionStorage.getItem("sessionNamespace");
-            ws.send(JSON.stringify({ query, vectorstore }));
+            const type = "chat";
+            console.log(type);
+            ws.send(JSON.stringify({ query, vectorstore, type }));
+        }
+
+        function generateSummary() {
+            var query = "Generate a brief yet informative summary about this especially the critical details (e.g., dates, people, references). Make sure your summary does not exceed 250 words.";
+            var vectorstore = sessionStorage.getItem("sessionNamespace");
+            var type = "summary";
+            ws.send(JSON.stringify({ query, vectorstore, type }));
         }
 
         async function purgePinecone() {
@@ -281,6 +299,13 @@
             if (sessionStorage.getItem("purgePineconeStatus") == "success") {
                 await routeToFileUpload();
             }
+        }
+
+        window.onload = function() {
+            setTimeout(function() {
+                generateSummary();
+            }, 20000);
+            hideLoader();
         }
     </script>
 </body>

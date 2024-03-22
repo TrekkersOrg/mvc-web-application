@@ -13,12 +13,13 @@ server.on('connection', (socket) =>
         try
         {
             const data = JSON.parse(message);
-            if (data["query"] && data["vectorstore"])
+            console.log("SERVER DATA: " + data);
+            if (data["query"] && data["vectorstore"] && data["type"])
             {
                 executeQuery(data.query,data.vectorstore,(response) =>
                 {
-                    console.log(response);
-                    socket.send(JSON.stringify({ response }));
+                    var type = data["type"];
+                    socket.send(JSON.stringify({ response, type: data["type"] }));
                 });
             } else
             {

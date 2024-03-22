@@ -185,9 +185,50 @@ async function uploadDocumentToPinecone()
             displayError("System is under maintenance. Please try again later.")
             console.error('Fetch error:',error);
         });
+    setTimeout(function ()
+    {
+        console.log("Idle for 10 seconds");
+    },10000);
     return Promise.resolve();
+}
 
-
+async function verifyPineconeNamespace()
+{
+    showLoader();
+    await fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/PineconeDetails",{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response =>
+        {
+            hideLoader();
+            if (!response.ok)
+            {
+                sessionStorage.setItem("pineconeDetailsStatus","fail");
+                displayError("System is under maintenance. Please try again later.")
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            sessionStorage.setItem("pineconeDetailsStatus","success");
+            return response.json();
+        })
+        .then(data =>
+        {
+            hideLoader();
+            sessionStorage.setItem("pineconeDetailsStatus","success");
+            console.log(data);
+            var namespaceExistence = data.data && data.data.namespaces && data.data.namespaces[sessionStorage.getItem("sessionNamespace")];
+            return namespaceExistence;
+        })
+        .catch(error =>
+        {
+            sessionStorage.setItem("pineconeDetailsStatus","fail");
+            hideLoader();
+            displayError("System is under maintenance. Please try again later.")
+            console.error('Fetch error:',error);
+        });
+    return Promise.resolve();
 }
 
 function displayError(errorMessage)
@@ -214,51 +255,6 @@ function hideLoader()
     document.getElementById("loader-spinner").style.display = "none";
     document.getElementById("page-container").style.opacity = 1;
 
-}
-
-
-// Generate document summary
-async function generateSummary()
-{
-    const summaryParagraph = document.querySelector(".insert-summary p");
-    const requestBody = {
-        Vectorstore: sessionStorage.getItem("sessionNamespace"),
-        Query: "Generate a brief yet informative summary about this especially the critical details (e.g., dates, people, references). Make sure your summary does not exceed 250 words."
-    };
-    showLoader();
-    await fetch(window.location.protocol + "//" + window.location.host + "/api/chatbot/sendQuery",{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-    })
-        .then(response =>
-        {
-            if (!response.ok)
-            {
-                sessionStorage.setItem("generateSummaryStatus","fail");
-                displayError("System is under maintenance. Please try again later.")
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            sessionStorage.setItem("generateSummaryStatus","success");
-
-            return response.json();
-        })
-        .then(data =>
-        {
-            sessionStorage.setItem("generateSummaryStatus","success");
-            sessionStorage.setItem("documentSummary",data["data"]["response"]);
-            hideLoader();
-        })
-        .catch(error =>
-        {
-            sessionStorage.setItem("generateSummaryStatus","fail");
-            hideLoader();
-            displayError("System is under maintenance. Please try again later.");
-            console.error('Fetch error:',error);
-        });
-    return Promise.resolve();
 }
 
 // Generate document title
@@ -305,9 +301,6 @@ async function generateTitle()
     return Promise.resolve();
 }
 
-
-
-
 function routeToDocumentAnalysis()
 {
     var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentAnalysis';
@@ -324,16 +317,15 @@ async function uploadFileFlow()
     }
     else
     {
-        await routeToDocumentAnalysis();
-        /*await generateSummary();
-        if (sessionStorage.getItem("generateSummaryStatus") == "fail")
+        await verifyPineconeNamespace();
+        if (sessionStorage.getItem("pineconeDetailsStatus") == "fail")
         {
             return;
         }
         else
         {
             await routeToDocumentAnalysis();
-        }*/
+        }
     }
 }
 window.onload = function ()

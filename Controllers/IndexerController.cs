@@ -5,13 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Web;
-using Newtonsoft.Json;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Cors;
-using SendGrid;
-using SendGrid.Helpers.Mail;
-using System;
-using System.Threading.Tasks;
 
 namespace StriveAI.Controllers
 {
