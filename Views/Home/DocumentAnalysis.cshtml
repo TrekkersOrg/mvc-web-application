@@ -177,6 +177,10 @@
         border-color: #ccc;
         background-color: #ddd;
     }
+
+    .action-buttons {
+        width: 7vw;
+    }
    
 </style>
 
@@ -194,26 +198,26 @@
                     <div class="col text-col">
                         <p id="summary-box"></p>
                     </div>
-                    <div id="summary-loader-container"></div>
+                    <div id="summary-loader-container" style="top: 150px; left: 325px; position: fixed"></div>
                 </div>
                 
-                <div class="row viewdocumentbtn-row" style="position: fixed;float: left;top: 84px;left: 68px;">
+                <div class="row viewdocumentbtn-row" style="position: fixed;float: left;top: 100px;left: 60px;">
                     <div class="col viewdocument-button-col">
-                        <a class="btn btn-warning btn-lg savebtn-btn">Save</a>
-                        <a class="btn btn-primary-viewdoc btn-lg" style="margin-left: 0px; margin-top: 10px;">View Document</a>
-                        <a class="btn btn-primary-viewdoc btn-lg" style="margin-left: 0px; margin-top: 10px;" onclick="newUploadFlow()">New Upload</a>
+                        <a class="btn btn-warning btn-lg savebtn-btn action-buttons">Save</a>
+                        <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px; margin-top: 10px;">View Document</a>
+                        <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px; margin-top: 10px;" onclick="newUploadFlow()">New Upload</a>
                         @* <a class="btn btn-lg newupload-btn btn-block" onclick="newUploadFlow()">New Upload</a> *@
                     </div>
                 </div>
             </div>
-            <div class="col chatbot-col">
+            <div class="col chatbot-col" style="margin-top: -2.2vw;">
                 <div class="row header">
                     <div class="header-container">
                         <h4>Ask Donna</h4>
                     </div>
                 </div>
 
-                <div class="chat-container border rounded shadow bg-light">
+                <div class="chat-container border rounded shadow bg-light" style="height: 75vh;">
                     <div class="chatbot-responses flex-grow-1 overflow-auto p-3" id="chat-window">
                         <div class="response-container container-flex">
                             <p style="display: none !important" class="chat-reponses list-unstyled" id="response-output">&#8594;Lorem ipsum dolor sit
