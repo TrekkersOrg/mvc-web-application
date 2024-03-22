@@ -132,6 +132,24 @@
     .save-col {
         margin-top: 5vh;
     }
+
+    .system-bubble p {
+        background: #f1f1f1;
+        color: #000 !important;
+        border-radius: 20px 20px 20px 3px;
+        display: block;
+        max-width: 75%;
+        padding: 7px 13px 7px 13px;
+    }
+
+    .user-bubble p {
+        background: #42a5f5;
+        color: #000 !important;
+        border-radius: 20px 20px 3px 20px;
+        display: block;
+        max-width: 75%;
+        padding: 7px 13px 7px 13px;
+    }
 </style>
 
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
@@ -164,9 +182,9 @@
                 </div>
 
                 <div class="chat-container border rounded shadow bg-light">
-                    <div class="chatbot-responses flex-grow-1 overflow-auto p-3">
+                    <div class="chatbot-responses flex-grow-1 overflow-auto p-3" id="chat-window">
                         <div class="response-container container-flex">
-                            <p class="chat-reponses list-unstyled" id="response-output">&#8594;Lorem ipsum dolor sit
+                            <p style="display: none !important" class="chat-reponses list-unstyled" id="response-output">&#8594;Lorem ipsum dolor sit
                                 amet
                                 consectetur adipisicing elit. Maiores enim libero quidem dolorum, iusto sint architecto
                                 inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
@@ -181,7 +199,7 @@
                                 inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
                                 Possimus, voluptatum!</p>
                         </div>
-                        <div class="chatbot-query-container container-flex">
+                        <div style="display: none !important" class="chatbot-query-container container-flex">
                             <ul id="response-input" class="chat-messages list-unstyled">Tell me about this document
                             </ul>
                         </div>
@@ -189,10 +207,11 @@
                     <div class="chatInput-container d-flex align-items-center">
                         <div class="input-container container-flex">
                             <input type="text" class="form-control flex-grow-1" id="queryInput"
-                                placeholder="e.g. Explain this contract in plain English">
+                                placeholder="e.g. Explain this contract in plain English"
+                                   onkeypress="submitChat(event)">
                         </div>
                         <div class="sendButton-container">
-                            <button class="btn btn-primary ml-3 send-button" onclick="sendQuery()">&gt;</button>
+                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()">&gt;</button>
                         </div>
                     </div>
                 </div>
@@ -225,7 +244,7 @@
             if (data.type == "chat") {
                 if (data.response)
                 {
-                    document.getElementById('response-output').innerText = `Response: ${data.response.response}`;
+                    generateSystemBubble(data.response.response);
                 } else if (data.error)
                 {
                     document.getElementById('response-output').innerText = `Error: ${data.error}`;
@@ -236,12 +255,67 @@
             }
         };
 
+        function submitChat(event)
+        {
+            if (event.keyCode === 13)
+            {
+                document.getElementById("send-button").click();
+            }
+        }
+
+        function addLoader() {
+            var bubble = document.createElement('div');
+            bubble.classList.add('system-bubble');
+            bubble.setAttribute("id", "chat-loader");
+            bubble.style.float = "left";
+            bubble.style.paddingRight = "10vw";
+            var text = document.createElement('p');
+            text.innerText = "...";
+            var window = document.getElementById('chat-window');
+            bubble.appendChild(text);
+            window.appendChild(bubble);
+        }
+
+        function removeLoader() {
+            var loader = document.getElementById('chat-loader').remove();
+        }
+
+        function generateSystemBubble(message) {
+            removeLoader();
+            var bubble = document.createElement('div');
+            bubble.classList.add('system-bubble');
+            bubble.style.float = "left";
+            bubble.style.paddingRight = "5vw";
+            var text = document.createElement('p');
+            text.innerText = message;
+            var window = document.getElementById('chat-window');
+            bubble.appendChild(text);
+            window.appendChild(bubble);
+        }
+
+        function generateUserBubble(message)
+        {
+            var bubble = document.createElement('div');
+            bubble.classList.add('user-bubble');
+            bubble.style.float = "right";
+            bubble.style.paddingLeft = "5vw";
+            var text = document.createElement('p');
+            text.innerText = message;
+            var window = document.getElementById('chat-window');
+            bubble.appendChild(text);
+            window.appendChild(bubble);
+            window.scrollTop = window.scrollHeight;
+            addLoader();
+        }
+
         function sendQuery() {
             const query = document.getElementById('queryInput').value;
             const vectorstore = sessionStorage.getItem("sessionNamespace");
             const type = "chat";
-            console.log(type);
+            generateUserBubble(document.getElementById('queryInput').value);
+            document.getElementById('queryInput').value = "";
             ws.send(JSON.stringify({ query, vectorstore, type }));
+            window.scrollTop = window.scrollHeight;
         }
 
         function generateSummary() {
