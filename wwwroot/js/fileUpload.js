@@ -23,7 +23,6 @@ async function deleteSelectedFile() {
         })
         .then(data =>
         {
-            console.log(data);
 
             const uploadFileDisplay = document.getElementById('uploadFileDisplayPanel');
             if (uploadFileDisplay.classList.contains('d-none')) {
@@ -176,7 +175,6 @@ async function uploadDocumentToPinecone()
         {
             hideLoader();
             sessionStorage.setItem("insertDocumentStatus","success");
-            console.log(data);
         })
         .catch(error =>
         {
@@ -217,7 +215,6 @@ async function verifyPineconeNamespace()
         {
             hideLoader();
             sessionStorage.setItem("pineconeDetailsStatus","success");
-            console.log(data);
             var namespaceExistence = data.data && data.data.namespaces && data.data.namespaces[sessionStorage.getItem("sessionNamespace")];
             return namespaceExistence;
         })

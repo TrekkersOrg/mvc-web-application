@@ -150,6 +150,34 @@
         max-width: 75%;
         padding: 7px 13px 7px 13px;
     }
+
+   .chat-output {
+        border: 2px solid #dedede;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+        .chat-output img {
+            float: left;
+            max-width: 60px;
+            width: 100%;
+            margin-right: 20px;
+            border-radius: 50%;
+        }
+
+            .chat-output img.right {
+                float: right;
+                margin-left: 20px;
+                margin-right: 0;
+            }
+
+    .darker {
+        border-color: #ccc;
+        background-color: #ddd;
+    }
+   
 </style>
 
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
@@ -159,17 +187,21 @@
     <div id="page-container" class="container-fluid bg-color">
         <div class="row top-row">
             <div class="col summary-col summary-border">
-                <div class="row summary-title-row">
-                    <h4 id="title-box"></h4>
+                <div id="document-details">
+                    <div class="row summary-title-row">
+                        <h4 id="title-box"></h4>
+                    </div>
+                    <div class="col text-col">
+                        <p id="summary-box"></p>
+                    </div>
+                    <div id="summary-loader-container"></div>
                 </div>
-                <div class="col text-col">
-                    <p id="summary-box"></p>
-                </div>
-                <div class="row viewdocumentbtn-row">
+                
+                <div class="row viewdocumentbtn-row" style="position: fixed;float: left;top: 84px;left: 68px;">
                     <div class="col viewdocument-button-col">
                         <a class="btn btn-warning btn-lg savebtn-btn">Save</a>
-                        <a class="btn btn-primary-viewdoc btn-lg">View Document</a>
-                        <a class="btn btn-primary-viewdoc btn-lg" onclick="newUploadFlow()">New Upload</a>
+                        <a class="btn btn-primary-viewdoc btn-lg" style="margin-left: 0px; margin-top: 10px;">View Document</a>
+                        <a class="btn btn-primary-viewdoc btn-lg" style="margin-left: 0px; margin-top: 10px;" onclick="newUploadFlow()">New Upload</a>
                         @* <a class="btn btn-lg newupload-btn btn-block" onclick="newUploadFlow()">New Upload</a> *@
                     </div>
                 </div>
@@ -239,8 +271,6 @@
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log("DATA: " + JSON.stringify(data.response));
-            console.log(JSON.stringify(data.type));
             if (data.type == "chat") {
                 if (data.response)
                 {
@@ -253,6 +283,10 @@
             else if (data.type == "summary") {
                 document.getElementById('summary-box').innerText = data.response.response;
             }
+            else if (data.type == "title")
+            {
+                document.getElementById('title-box').innerText = data.response.response;
+            }
         };
 
         function submitChat(event)
@@ -263,49 +297,36 @@
             }
         }
 
-        function addLoader() {
-            var bubble = document.createElement('div');
-            bubble.classList.add('system-bubble');
-            bubble.setAttribute("id", "chat-loader");
-            bubble.style.float = "left";
-            bubble.style.paddingRight = "10vw";
-            var text = document.createElement('p');
-            text.innerText = "...";
-            var window = document.getElementById('chat-window');
-            bubble.appendChild(text);
-            window.appendChild(bubble);
-        }
-
-        function removeLoader() {
-            var loader = document.getElementById('chat-loader').remove();
-        }
-
         function generateSystemBubble(message) {
-            removeLoader();
             var bubble = document.createElement('div');
-            bubble.classList.add('system-bubble');
-            bubble.style.float = "left";
-            bubble.style.paddingRight = "5vw";
+            bubble.classList.add('chat-output');
+            var image = document.createElement('img');
+            image.src = '/img/chatbot-avatar.png';
+            image.style.width = '9%';
+            bubble.appendChild(image);
             var text = document.createElement('p');
             text.innerText = message;
-            var window = document.getElementById('chat-window');
             bubble.appendChild(text);
+            var window = document.getElementById('chat-window');
             window.appendChild(bubble);
         }
 
         function generateUserBubble(message)
         {
+            var window = document.getElementById('chat-window');
             var bubble = document.createElement('div');
-            bubble.classList.add('user-bubble');
-            bubble.style.float = "right";
-            bubble.style.paddingLeft = "5vw";
+            bubble.classList.add('chat-output');
+            bubble.classList.add('darker');
+            var image = document.createElement('img');
+            image.classList.add('right');
+            image.src = '/img/user-icon.png';
+            image.style.width = '9%';
+            bubble.appendChild(image);
             var text = document.createElement('p');
             text.innerText = message;
-            var window = document.getElementById('chat-window');
             bubble.appendChild(text);
             window.appendChild(bubble);
             window.scrollTop = window.scrollHeight;
-            addLoader();
         }
 
         function sendQuery() {
@@ -323,6 +344,14 @@
             var vectorstore = sessionStorage.getItem("sessionNamespace");
             var type = "summary";
             ws.send(JSON.stringify({ query, vectorstore, type }));
+        }
+
+        function generateTitle()
+        {
+            var query = "Generate a title for this document. The title should be less than 5 words but should detail what the document is.";
+            var vectorstore = sessionStorage.getItem("sessionNamespace");
+            var type = "title";
+            ws.send(JSON.stringify({ query,vectorstore,type }));
         }
 
         async function purgePinecone() {
@@ -351,13 +380,53 @@
                 .then(data => {
                     hideLoader();
                     sessionStorage.setItem("purgePineconeStatus", "success");
-                    console.log(data);
                 })
                 .catch(error => {
                     sessionStorage.setItem("purgePineconeStatus", "fail");
                     hideLoader();
                     displayError("System is under maintenance. Please try again later.")
                     console.error('Fetch error:', error);
+                });
+            return Promise.resolve();
+        }
+
+        async function deleteFile()
+        {
+            const deleteFileRequestBody = {
+                FileName: sessionStorage.getItem("selectedFiles")
+            }
+            showLoader();
+            await fetch("/api/fileupload/delete",{
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(deleteFileRequestBody)
+            })
+                .then(response =>
+                {
+                    hideLoader();
+                    if (!response.ok)
+                    {
+                        sessionStorage.setItem("deleteFileStatus","fail");
+                        displayError("System is under maintenance. Please try again later.")
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    sessionStorage.setItem("deleteFileStatus","success");
+                    return response.json();
+                })
+                .then(data =>
+                {
+                    hideLoader();
+                    sessionStorage.setItem("deleteFileStatus","success");
+                })
+                .catch(error =>
+                {
+                    sessionStorage.setItem("deleteFileStatus","fail");
+                    hideLoader();
+                    displayError("System is under maintenance. Please try again later.")
+                    console.error('Fetch error:',error);
                 });
             return Promise.resolve();
         }
@@ -371,15 +440,38 @@
         async function newUploadFlow() {
             await purgePinecone();
             if (sessionStorage.getItem("purgePineconeStatus") == "success") {
-                await routeToFileUpload();
+                await deleteFile();
+                if (sessionStorage.getItem("deleteFileStatus") == "success") {
+                    await routeToFileUpload();
+                }
             }
         }
 
+        function addSummaryLoader() {
+            var container = document.getElementById('summary-loader-container');
+            console.log(container);
+            var loader = document.createElement('span');
+            loader.setAttribute('id', 'summary-loader')
+            loader.classList.add('loader');
+            container.appendChild(loader);
+        }
+        
+        function removeSummaryLoader() {
+            document.getElementById('summary-loader-container').remove();
+        }
+
         window.onload = function() {
+            hideLoader();
+            addSummaryLoader();
+            generateSystemBubble("Ask me anything about the uploaded document!");
+            setTimeout(function ()
+            {
+                generateTitle();
+            },20000);
             setTimeout(function() {
                 generateSummary();
+                removeSummaryLoader();
             }, 20000);
-            hideLoader();
         }
     </script>
 </body>

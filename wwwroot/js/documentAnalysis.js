@@ -34,7 +34,5 @@ function loadTitle() {
 
 window.onload = function ()
 {
-    console.log("HI");
-    // loadSummary();
     hideLoader();
 };

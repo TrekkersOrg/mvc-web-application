@@ -38,7 +38,6 @@ async function sendContactUsEmail()
         .then(data =>
         {
             sessionStorage.setItem("sendEmailStatus","success");
-            console.log(data);
         })
         .catch(error =>
         {
