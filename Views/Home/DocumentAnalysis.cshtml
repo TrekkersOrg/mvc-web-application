@@ -181,6 +181,8 @@
     .action-buttons {
         width: 7vw;
     }
+
+
    
 </style>
 
@@ -278,6 +280,7 @@
             if (data.type == "chat") {
                 if (data.response)
                 {
+                    removeChatbotLoader();
                     generateSystemBubble(data.response.response);
                 } else if (data.error)
                 {
@@ -330,6 +333,7 @@
             text.innerText = message;
             bubble.appendChild(text);
             window.appendChild(bubble);
+            addChatbotLoader();
             window.scrollTop = window.scrollHeight;
         }
 
@@ -462,6 +466,37 @@
         
         function removeSummaryLoader() {
             document.getElementById('summary-loader-container').remove();
+        }
+
+        function addChatbotLoader(){
+            var parent = document.createElement('div');
+            parent.classList.add('chat-output');
+            parent.setAttribute('id','chat-loader');
+            var image = document.createElement('img');
+            image.src = '/img/chatbot-avatar.png';
+            image.style.width = '9%';
+            parent.appendChild(image);
+            var bubble = document.createElement('div');
+            bubble.classList.add('typing');
+            var circle1 = document.createElement('span');
+            circle1.classList.add('circle');
+            circle1.classList.add('scaling');
+            var circle2 = document.createElement('span');
+            circle2.classList.add('circle');
+            circle2.classList.add('scaling');
+            var circle3 = document.createElement('span');
+            circle3.classList.add('circle');
+            circle3.classList.add('scaling');
+            bubble.appendChild(circle1);
+            bubble.appendChild(circle2);
+            bubble.appendChild(circle3);
+            parent.appendChild(bubble);
+            var window = document.getElementById('chat-window');
+            window.appendChild(parent);
+        }
+
+        function removeChatbotLoader() {
+            document.getElementById('chat-loader').remove();
         }
 
         window.onload = function() {
