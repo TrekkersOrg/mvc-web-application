@@ -179,10 +179,8 @@
     }
 
     .action-buttons {
-        width: 7vw;
+        width: 11vw;
     }
-
-
    
 </style>
 
@@ -192,24 +190,23 @@
 <body>
     <div id="page-container" class="container-fluid bg-color">
         <div class="row top-row">
-            <div class="col summary-col summary-border">
-                <div id="document-details">
-                    <div class="row summary-title-row">
-                        <h4 id="title-box"></h4>
-                    </div>
-                    <div class="col text-col">
-                        <p id="summary-box"></p>
-                    </div>
-                    <div id="summary-loader-container" style="top: 150px; left: 325px; position: fixed"></div>
-                </div>
-                
-                <div class="row viewdocumentbtn-row" style="position: fixed;float: left;top: 100px;left: 60px;">
+            <div class="col summary-col summary-border" style="display: flex;">
+                <div class="row viewdocumentbtn-row" id="action-buttons" style="position: sticky; margin-right: 13vw;">
                     <div class="col viewdocument-button-col">
                         <a class="btn btn-warning btn-lg savebtn-btn action-buttons">Save</a>
                         <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px; margin-top: 10px;">View Document</a>
                         <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px; margin-top: 10px;" onclick="newUploadFlow()">New Upload</a>
                         @* <a class="btn btn-lg newupload-btn btn-block" onclick="newUploadFlow()">New Upload</a> *@
                     </div>
+                </div>
+                <div id="document-details" style="left: 2vw; position: relative;">
+                    <div class="row summary-title-row">
+                        <h4 id="title-box"></h4>
+                    </div>
+                    <div class="col text-col">
+                        <p id="summary-box"></p>
+                    </div>
+                    <div id="summary-loader-container" style="top: 20vh; left: 35vw; position: fixed"></div>
                 </div>
             </div>
             <div class="col chatbot-col" style="margin-top: -2.2vw;">
@@ -249,7 +246,11 @@
                                    onkeypress="submitChat(event)">
                         </div>
                         <div class="sendButton-container">
-                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()">&gt;</button>
+                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -506,6 +507,7 @@
             setTimeout(function ()
             {
                 generateTitle();
+                removeSummaryLoader();
             },20000);
             setTimeout(function() {
                 generateSummary();
