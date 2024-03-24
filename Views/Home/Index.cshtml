@@ -4,8 +4,7 @@
 }
 
 <style>
-
-    body{
+    body {
         font-family: 'Roboto', sans-serif;
         background-color: #f7f7f7;
     }
@@ -18,12 +17,12 @@
         background-color: white;
     }
 
-    ..btn-primary.rounded-pill.btn-lg:hover{
-        background-color:grey;
+    ..btn-primary.rounded-pill.btn-lg:hover {
+        background-color: grey;
     }
 
-    .btn-primary:hover{
-        background-color:grey;
+    .btn-primary:hover {
+        background-color: grey;
     }
 
 
@@ -37,7 +36,7 @@
 
     .btn-primary-demo {
         color: transparent;
-        position:relative;
+        position: relative;
     }
 
     .btn-primary-demo:hover {
@@ -109,13 +108,13 @@
     }
 
     .name-col {
-        padding-left: 31.4vw;
+        padding-left: 31.3vw;
         flex: 1;
-        padding-right: 2.7vw;
+        @*padding-right:2.7vw;*@
     }
 
     .email-col {
-        margin-left: -31vw;
+        margin-left: -31.1vw;
         flex: 1;
     }
 
@@ -146,6 +145,7 @@
     .usecase-box {
         padding-left: 31.2vw;
         margin-top: 1.6vh;
+        width: 50vw;
     }
 
     .submit-btn {
@@ -176,6 +176,19 @@
 
     .submit-btn:hover {
         background-color: rgb(51, 48, 48);
+    }
+
+    .company-col {
+        margin-left: -0.7vw;
+    }
+
+    .phone-col {
+        margin-left: -31.1vw;
+    }
+
+    .company-phone-frame {
+        padding-left: 31.2vw;
+        margin-top: 1.6vh;
     }
 </style>
 
@@ -210,9 +223,7 @@
                         <a class="btn btn-primary-demo rounded-pill btn-lg text-white text-decoration-none"
                             asp-area="Identity" asp-page="/Account/Register">Demo &#8594</a>
                     </div>
-
                 </div>
-
             </div>
             <div class="col">
                 <img class="wireframe-img" src="../img/Wireframe.png" alt="Wireframe">
@@ -236,13 +247,22 @@
                         aria-describedby="emailHelp">
                 </div>
             </div>
+            <div class="row company-phone-frame">
+                <div class="col company-col company-box">
+                    <input type="text" placeholder="Company" class="form-control name-box" id="company"
+                        aria-describedby="companyHelp">
+                </div>
+                <div class="col phone-col phoneNumber-box">
+                    <input type="tel" placeholder="(555) 123-4444" class="form-control name-box" id="phoneNumber"
+                        aria-describedby="phoneNumberHelp">
+                </div>
+            </div>
             <div class="row usecase-frame">
                 <div class="col usecase-box">
                     <textarea id="usecase" class="usecase-col expandable-input" placeholder="Use Case"
                         rows="4"></textarea>
                 </div>
             </div>
-
             <div class="row send-button-frame">
                 <div class="col send-button-box">
                     <button type="submit" class="submit-btn" onclick="sendContactUsEmail()">Send</button>
