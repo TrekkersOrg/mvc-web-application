@@ -21,12 +21,12 @@ namespace StriveAI.Controllers
         {
             APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();
             UploadFileResponseModel uploadFileResponseBody = new UploadFileResponseModel();
-            long maxFileSize = 100 * 1024;
+            long maxFileSize = 500 * 1024;
             if (targetFile != null && targetFile.Length > 0)
             {
                 if (targetFile.Length > maxFileSize)
                 {
-                    responseBody = createResponseModel(200, "Success", "File must be smaller than 100 KB.", DateTime.Now, null);
+                    responseBody = createResponseModel(200, "Success", "File must be smaller than 500 KB.", DateTime.Now, null);
                     return Ok(responseBody);
                 }
                 var formattedFileName = targetFile.FileName.Replace(" ", "_");

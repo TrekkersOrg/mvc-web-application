@@ -45,16 +45,9 @@
     }
 
     .btn-primary-viewdoc {
-        color: green;
         position: relative;
-        border: 1px solid green;
         margin-left: 1vw;
         margin-right: 0vw !important;
-    }
-
-    .btn-primary-viewdoc:hover {
-        background-color: rgb(68, 64, 64);
-        color: white;
     }
 
 
@@ -157,6 +150,7 @@
         border-radius: 5px;
         padding: 10px;
         margin: 10px 0;
+        min-height: 6vh;
     }
 
         .chat-output img {
@@ -178,9 +172,11 @@
         background-color: #ddd;
     }
 
-    .action-buttons {
+   /* .action-buttons {
         width: 11vw;
-    }
+    }*/
+
+
    
 </style>
 
@@ -188,28 +184,28 @@
 <link rel="stylesheet" href="~/css/documentAnalysis.css">
 
 <body>
-    <div id="page-container" class="container-fluid bg-color">
+    <div id="page-container" class="container-fluid bg-color" style="width: 76vw;position: relative;left: -8vw;padding-right:0;">
         <div class="row top-row">
             <div class="col summary-col summary-border" style="display: flex;">
-                <div class="row viewdocumentbtn-row" id="action-buttons" style="position: sticky; margin-right: 13vw;">
+                <div class="row viewdocumentbtn-row" id="action-buttons" style="position: sticky; margin-right: 12vw;">
                     <div class="col viewdocument-button-col">
-                        <a class="btn btn-warning btn-lg savebtn-btn action-buttons">Save</a>
-                        <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px; margin-top: 10px;">View Document</a>
+                        <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px;">Save</a>
+                        <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px; margin-top: 10px;display:none;">View Document</a>
                         <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px; margin-top: 10px;" onclick="newUploadFlow()">New Upload</a>
                         @* <a class="btn btn-lg newupload-btn btn-block" onclick="newUploadFlow()">New Upload</a> *@
                     </div>
                 </div>
-                <div id="document-details" style="left: 2vw; position: relative;">
+                <div id="document-details" style="left: 2vw; position: relative;width: 24vw;">
                     <div class="row summary-title-row">
-                        <h4 id="title-box"></h4>
+                        <h4 id="title-box" style="font-weight: 700;"></h4>
                     </div>
                     <div class="col text-col">
-                        <p id="summary-box"></p>
+                        <p id="summary-box" style="font-size: 16px;"></p>
                     </div>
-                    <div id="summary-loader-container" style="top: 20vh; left: 35vw; position: fixed"></div>
+                    <div id="summary-loader-container" style="top: 2vh; left: 5vw; position: relative;z-index:500"></div>
                 </div>
             </div>
-            <div class="col chatbot-col" style="margin-top: -2.2vw;">
+            <div class="col chatbot-col" style="margin-top: -2.5vw;margin-left: 2vw;">
                 <div class="row header">
                     <div class="header-container">
                         <h4>Ask Donna</h4>
@@ -349,7 +345,7 @@
         }
 
         function generateSummary() {
-            var query = "Generate a brief yet informative summary about this especially the critical details (e.g., dates, people, references). Make sure your summary does not exceed 250 words.";
+            var query = "Generate an informative summary about this especially the critical details (e.g., dates, people, references). Make first paragraph be high-level summary. Make subsequent paragraphs a little more detailed. Make sure your summary does not exceed 250 words.";
             var vectorstore = sessionStorage.getItem("sessionNamespace");
             var type = "summary";
             ws.send(JSON.stringify({ query, vectorstore, type }));
