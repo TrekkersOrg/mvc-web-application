@@ -275,6 +275,7 @@
                 {
                     removeChatbotLoader();
                     generateSystemBubble(data.response.response);
+                    document.getElementById('send-button').disabled = false;
                 } else if (data.error)
                 {
                     document.getElementById('response-output').innerText = `Error: ${data.error}`;
@@ -282,6 +283,7 @@
             }
             else if (data.type == "summary") {
                 document.getElementById('summary-box').innerText = data.response.response;
+                document.getElementById('send-button').disabled = false;
             }
             else if (data.type == "title")
             {
@@ -336,6 +338,7 @@
             const type = "chat";
             generateUserBubble(document.getElementById('queryInput').value);
             document.getElementById('queryInput').value = "";
+            document.getElementById('send-button').disabled = true;
             ws.send(JSON.stringify({ query, vectorstore, type }));
             window.scrollTop = window.scrollHeight;
         }
@@ -352,6 +355,7 @@
             var query = "Generate a title for this document. The title should be less than 5 words but should detail what the document is.";
             var vectorstore = sessionStorage.getItem("sessionNamespace");
             var type = "title";
+            document.getElementById('send-button').disabled = true;
             ws.send(JSON.stringify({ query,vectorstore,type }));
         }
 
@@ -496,6 +500,7 @@
             hideLoader();
             addSummaryLoader();
             generateSystemBubble("Ask me anything about the uploaded document!");
+            document.getElementById('send-button').disabled = true;
             setTimeout(function ()
             {
                 generateTitle();
