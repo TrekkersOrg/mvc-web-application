@@ -36,6 +36,7 @@
                                     asp-action="DocumentAnalysis">Document Analysis</a>
                         </li>
 
+
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
@@ -52,6 +53,10 @@
                             <li class="nav-item">
                                 <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
                                     asp-action="DocumentAnalysis">Document Analysis</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
+                                   asp-action="IssueReport">Issue Report</a>
                             </li>
                         }
                     </ul>
