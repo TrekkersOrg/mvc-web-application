@@ -48,6 +48,9 @@
         position: relative;
         margin-left: 1vw;
         margin-right: 0vw !important;
+        background-color: blue;
+        width: 12vw;
+        height: 5vh;
     }
 
 
@@ -153,41 +156,47 @@
         min-height: 6vh;
     }
 
-        .chat-output img {
-            float: left;
-            max-width: 60px;
-            width: 100%;
-            margin-right: 20px;
-            border-radius: 50%;
-        }
+    .chat-output img {
+        float: left;
+        max-width: 60px;
+        width: 100%;
+        margin-right: 20px;
+        border-radius: 50%;
+    }
 
-            .chat-output img.right {
-                float: right;
-                margin-left: 20px;
-                margin-right: 0;
-            }
+    .chat-output img.right {
+        float: right;
+        margin-left: 20px;
+        margin-right: 0;
+    }
 
     .darker {
         border-color: #ccc;
         background-color: #ddd;
     }
 
-
-   
+    .save-btn {
+        width: 12vw;
+        height: 5vh;
+        margin-bottom: 2vh;
+    }
 </style>
 
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
 <link rel="stylesheet" href="~/css/documentAnalysis.css">
 
 <body>
-    <div id="page-container" class="container-fluid bg-color" style="width: 76vw;position: relative;left: -8vw;padding-right:0;">
+    <div id="page-container" class="container-fluid bg-color"
+        style="width: 76vw;position: relative;left: -8vw;padding-right:0;">
         <div class="row top-row">
             <div class="col summary-col summary-border" style="display: flex;">
                 <div class="row viewdocumentbtn-row" id="action-buttons" style="position: sticky; margin-right: 12vw;">
                     <div class="col viewdocument-button-col">
-                        <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px;">Save</a>
-                        <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px; margin-top: 10px;display:none;">View Document</a>
-                        <a class="btn btn-primary-viewdoc btn-lg action-buttons" style="margin-left: 0px; margin-top: 10px;" onclick="newUploadFlow()">New Upload</a>
+                        <a class="btn btn-warning save-btn btn-lg" style="margin-left: 0px;">Save</a>
+                        <a class="btn btn-primary-viewdoc btn-lg"
+                            style="margin-left: 0px; margin-top: 10px;display:none;">View Document</a>
+                        <a class="btn btn-primary-viewdoc btn-lg" style="margin-left: 0px; margin-top: 10px;"
+                            onclick="newUploadFlow()">New Upload</a>
                         @* <a class="btn btn-lg newupload-btn btn-block" onclick="newUploadFlow()">New Upload</a> *@
                     </div>
                 </div>
@@ -198,7 +207,8 @@
                     <div class="col text-col">
                         <p id="summary-box" style="font-size: 16px;"></p>
                     </div>
-                    <div id="summary-loader-container" style="top: 2vh; left: 5vw; position: relative;z-index:500"></div>
+                    <div id="summary-loader-container" style="top: 2vh; left: 5vw; position: relative;z-index:500">
+                    </div>
                 </div>
             </div>
             <div class="col chatbot-col" style="margin-top: -2.5vw;margin-left: 2vw;">
@@ -211,7 +221,8 @@
                 <div class="chat-container border rounded shadow bg-light" style="height: 75vh;">
                     <div class="chatbot-responses flex-grow-1 overflow-auto p-3" id="chat-window">
                         <div class="response-container container-flex">
-                            <p style="display: none !important" class="chat-reponses list-unstyled" id="response-output">&#8594;Lorem ipsum dolor sit
+                            <p style="display: none !important" class="chat-reponses list-unstyled"
+                                id="response-output">&#8594;Lorem ipsum dolor sit
                                 amet
                                 consectetur adipisicing elit. Maiores enim libero quidem dolorum, iusto sint architecto
                                 inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
@@ -235,12 +246,14 @@
                         <div class="input-container container-flex">
                             <input type="text" class="form-control flex-grow-1" id="queryInput"
                                 placeholder="e.g. Explain this contract in plain English"
-                                   onkeypress="submitChat(event)">
+                                onkeypress="submitChat(event)">
                         </div>
                         <div class="sendButton-container">
                             <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-send" viewBox="0 0 16 16">
+                                    <path
+                                        d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
                                 </svg>
                             </button>
                         </div>
@@ -271,13 +284,11 @@
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.type == "chat") {
-                if (data.response)
-                {
+                if (data.response) {
                     removeChatbotLoader();
                     generateSystemBubble(data.response.response);
                     document.getElementById('send-button').disabled = false;
-                } else if (data.error)
-                {
+                } else if (data.error) {
                     document.getElementById('response-output').innerText = `Error: ${data.error}`;
                 }
             }
@@ -285,16 +296,13 @@
                 document.getElementById('summary-box').innerText = data.response.response;
                 document.getElementById('send-button').disabled = false;
             }
-            else if (data.type == "title")
-            {
+            else if (data.type == "title") {
                 document.getElementById('title-box').innerText = data.response.response;
             }
         };
 
-        function submitChat(event)
-        {
-            if (event.keyCode === 13)
-            {
+        function submitChat(event) {
+            if (event.keyCode === 13) {
                 document.getElementById("send-button").click();
             }
         }
@@ -313,8 +321,7 @@
             window.appendChild(bubble);
         }
 
-        function generateUserBubble(message)
-        {
+        function generateUserBubble(message) {
             var window = document.getElementById('chat-window');
             var bubble = document.createElement('div');
             bubble.classList.add('chat-output');
@@ -350,13 +357,12 @@
             ws.send(JSON.stringify({ query, vectorstore, type }));
         }
 
-        function generateTitle()
-        {
+        function generateTitle() {
             var query = "Generate a title for this document. The title should be less than 5 words but should detail what the document is.";
             var vectorstore = sessionStorage.getItem("sessionNamespace");
             var type = "title";
             document.getElementById('send-button').disabled = true;
-            ws.send(JSON.stringify({ query,vectorstore,type }));
+            ws.send(JSON.stringify({ query, vectorstore, type }));
         }
 
         async function purgePinecone() {
@@ -395,13 +401,12 @@
             return Promise.resolve();
         }
 
-        async function deleteFile()
-        {
+        async function deleteFile() {
             const deleteFileRequestBody = {
                 FileName: sessionStorage.getItem("selectedFiles")
             }
             showLoader();
-            await fetch("/api/fileupload/delete",{
+            await fetch("/api/fileupload/delete", {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -409,29 +414,25 @@
                 },
                 body: JSON.stringify(deleteFileRequestBody)
             })
-                .then(response =>
-                {
+                .then(response => {
                     hideLoader();
-                    if (!response.ok)
-                    {
-                        sessionStorage.setItem("deleteFileStatus","fail");
+                    if (!response.ok) {
+                        sessionStorage.setItem("deleteFileStatus", "fail");
                         displayError("System is under maintenance. Please try again later.")
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
-                    sessionStorage.setItem("deleteFileStatus","success");
+                    sessionStorage.setItem("deleteFileStatus", "success");
                     return response.json();
                 })
-                .then(data =>
-                {
+                .then(data => {
                     hideLoader();
-                    sessionStorage.setItem("deleteFileStatus","success");
+                    sessionStorage.setItem("deleteFileStatus", "success");
                 })
-                .catch(error =>
-                {
-                    sessionStorage.setItem("deleteFileStatus","fail");
+                .catch(error => {
+                    sessionStorage.setItem("deleteFileStatus", "fail");
                     hideLoader();
                     displayError("System is under maintenance. Please try again later.")
-                    console.error('Fetch error:',error);
+                    console.error('Fetch error:', error);
                 });
             return Promise.resolve();
         }
@@ -460,15 +461,15 @@
             loader.classList.add('loader');
             container.appendChild(loader);
         }
-        
+
         function removeSummaryLoader() {
             document.getElementById('summary-loader-container').remove();
         }
 
-        function addChatbotLoader(){
+        function addChatbotLoader() {
             var parent = document.createElement('div');
             parent.classList.add('chat-output');
-            parent.setAttribute('id','chat-loader');
+            parent.setAttribute('id', 'chat-loader');
             var image = document.createElement('img');
             image.src = '/img/chatbot-avatar.png';
             image.style.width = '9%';
@@ -496,17 +497,16 @@
             document.getElementById('chat-loader').remove();
         }
 
-        window.onload = function() {
+        window.onload = function () {
             hideLoader();
             addSummaryLoader();
             generateSystemBubble("Ask me anything about the uploaded document!");
             document.getElementById('send-button').disabled = true;
-            setTimeout(function ()
-            {
+            setTimeout(function () {
                 generateTitle();
                 removeSummaryLoader();
-            },20000);
-            setTimeout(function() {
+            }, 20000);
+            setTimeout(function () {
                 generateSummary();
                 removeSummaryLoader();
             }, 20000);
