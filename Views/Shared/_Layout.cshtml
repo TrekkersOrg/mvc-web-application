@@ -27,11 +27,15 @@
                             <a class="nav-link font btn btn-lg text-white" asp-area="" asp-controller="Home"
                                 asp-action="AboutUs">Demo</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link font btn btn-lg text-white" asp-area="" asp-controller="Home"
+                               asp-action="DocumentDashboard">Document Dashboard</a>
+                        </li>
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
                                 <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
-                                    asp-action="OurProducts">Try Strive free</a>
+                                    asp-action="OurProducts" style="display: none;">Try Strive free</a>
                             </li>
                         }
                         @if (User?.Identity?.IsAuthenticated ?? false)
