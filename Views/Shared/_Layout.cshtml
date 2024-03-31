@@ -27,16 +27,6 @@
                             <a class="nav-link font btn btn-lg text-white" asp-area="" asp-controller="Home"
                                 asp-action="AboutUs">Demo</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
-                                asp-action="FileUpload">File Upload</a>
-                        </li>
-                        <li class="nav-item">
-                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
-                                    asp-action="DocumentAnalysis">Document Analysis</a>
-                        </li>
-
-
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
@@ -52,7 +42,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
-                                    asp-action="DocumentAnalysis">Document Analysis</a>
+                                    asp-action="DocumentAnalysis" style="display: none;">Document Analysis</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
