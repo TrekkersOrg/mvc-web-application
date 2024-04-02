@@ -28,19 +28,14 @@
                                 asp-action="AboutUs">Demo</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
-                                asp-action="FileUpload">File Upload</a>
+                            <a class="nav-link font btn btn-lg text-white" asp-area="" asp-controller="Home"
+                               asp-action="DocumentDashboard">Document Dashboard</a>
                         </li>
-                        <li class="nav-item">
-                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
-                                    asp-action="DocumentAnalysis">Document Analysis</a>
-                        </li>
-
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
                                 <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
-                                    asp-action="OurProducts">Try Strive free</a>
+                                    asp-action="OurProducts" style="display: none;">Try Strive free</a>
                             </li>
                         }
                         @if (User?.Identity?.IsAuthenticated ?? false)
@@ -51,7 +46,11 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
-                                    asp-action="DocumentAnalysis">Document Analysis</a>
+                                    asp-action="DocumentAnalysis" style="display: none;">Document Analysis</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
+                                   asp-action="IssueReport">Issue Report</a>
                             </li>
                         }
                     </ul>

@@ -3,160 +3,513 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f7f7f7;
+    }
+
+    .top-row {
+        margin-top: 10vh;
+    }
+
+    .summary-col {
+        position: relative;
+        margin-right: 5vw;
+        margin-top: -5vh;
+    }
+
+    .chat-col {
+        position: relative;
+        margin-top: -5vh;
+    }
+
+    .viewdocument-button-row {
+        margin-bottom: 5vh;
+    }
+
+
+    .btn-warning:hover {
+        background-color: transparent;
+        color: rgb(255, 157, 0);
+    }
+
+    .newupload-btn:hover {
+        background-color: rgb(68, 64, 64);
+        color: white;
+    }
+
+    .btn-block {
+        border: 1px solid grey;
+        background-color: grey;
+    }
+
+    .btn-primary-viewdoc {
+        position: relative;
+        margin-left: 1vw;
+        margin-right: 0vw !important;
+        background-color: blue;
+        width: 12vw;
+        height: 5vh;
+    }
+
+
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: calc(100% - 20px);
+    }
+
+    .chatbot-input {
+        border: 1px solid grey;
+        border-radius: 5px;
+        padding: 10px;
+        margin-top: 10px;
+        overflow-y: auto;
+    }
+
+    .chatbot-col {
+        margin-top: 0.9vh;
+        height: 50vh;
+    }
+
+    .response-container {
+        margin-left: 0.4vw;
+    }
+
+    .input-container {
+        border-radius: 5px;
+        overflow-y: auto;
+        width: 100%;
+    }
+
+    .chatbot-query-container {
+        margin-top: 1vh;
+        border: 2px solid rgb(0, 99, 12);
+        border-radius: 5px;
+    }
+
+    .chat-messages {
+        margin-right: 0.8vw;
+        text-align: right;
+        margin-bottom: 1vh;
+    }
+
+    .chatbot-responses {
+        overflow-y: auto !important;
+        border: 1px solid black;
+    }
+
+    .chatInput-container {
+        margin-top: auto;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .loader-spinner {
+        width: 300px;
+        z-index: 9999;
+        top: 50%;
+        left: 37%;
+        position: fixed;
+    }
+
+    .loader-spinner path {
+        --total-length: 136px;
+        stroke-linecap: round;
+        stroke-width: 6;
+        stroke: #000000;
+        fill: none;
+        stroke-dasharray: var(--total-length) var(--total-length);
+        animation: animate 2s linear infinite;
+    }
+
+    .save-col {
+        margin-top: 5vh;
+    }
+
+    .system-bubble p {
+        background: #f1f1f1;
+        color: #000 !important;
+        border-radius: 20px 20px 20px 3px;
+        display: block;
+        max-width: 75%;
+        padding: 7px 13px 7px 13px;
+    }
+
+    .user-bubble p {
+        background: #42a5f5;
+        color: #000 !important;
+        border-radius: 20px 20px 3px 20px;
+        display: block;
+        max-width: 75%;
+        padding: 7px 13px 7px 13px;
+    }
+
+    .chat-output {
+        border: 2px solid #dedede;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 0;
+        min-height: 6vh;
+    }
+
+    .chat-output img {
+        float: left;
+        max-width: 60px;
+        width: 100%;
+        margin-right: 20px;
+        border-radius: 50%;
+    }
+
+    .chat-output img.right {
+        float: right;
+        margin-left: 20px;
+        margin-right: 0;
+    }
+
+    .darker {
+        border-color: #ccc;
+        background-color: #ddd;
+    }
+
+    .save-btn {
+        width: 12vw;
+        height: 5vh;
+        margin-bottom: 2vh;
+    }
+</style>
 
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
 <link rel="stylesheet" href="~/css/documentAnalysis.css">
 
 <body>
-<div id="page-container" class="container-fluid bg-color">
-    <div class="row top-row">
-        <div class="col summary-col summary-border">
-            <div class="row summary-title-row">
-                <h4>Sample Marital Settlement Agreement</h4>
-            </div>
-            <div class="col text-col">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa praesentium, at, fugit quasi est
-                    dicta beatae vel laborum sint obcaecati itaque, nemo voluptates accusamus quas expedita
-                    explicabo omnis corporis dignissimos!
-                </p>
-            </div>
-            <div class="row viewdocumentbtn-row">
-                <div class="col viewdocument-button-col">
-                    <a class="btn btn-warning btn-lg savebtn-btn">Save</a>
-                    <a class="btn btn-primary-viewdoc btn-lg">View Document</a>
-                    <a class="btn btn-lg newupload-btn btn-block" onclick="newUploadFlow()">New Upload</a>
+    <div id="page-container" class="container-fluid bg-color"
+        style="width: 76vw;position: relative;left: -8vw;padding-right:0;">
+        <div class="row top-row">
+            <div class="col summary-col summary-border" style="display: flex;">
+                <div class="row viewdocumentbtn-row" id="action-buttons" style="position: sticky; margin-right: 12vw;">
+                    <div class="col viewdocument-button-col">
+                        <a class="btn btn-warning save-btn btn-lg" style="margin-left: 0px;">Save</a>
+                        <a class="btn btn-primary-viewdoc btn-lg"
+                            style="margin-left: 0px; margin-top: 10px;display:none;">View Document</a>
+                        <a class="btn btn-primary-viewdoc btn-lg" style="margin-left: 0px; margin-top: 10px;"
+                            onclick="newUploadFlow()">New Upload</a>
+                        @* <a class="btn btn-lg newupload-btn btn-block" onclick="newUploadFlow()">New Upload</a> *@
+                    </div>
+                </div>
+                <div id="document-details" style="left: 2vw; position: relative;width: 24vw;">
+                    <div class="row summary-title-row">
+                        <h4 id="title-box" style="font-weight: 700;"></h4>
+                    </div>
+                    <div class="col text-col">
+                        <p id="summary-box" style="font-size: 16px;"></p>
+                    </div>
+                    <div id="summary-loader-container" style="top: 2vh; left: 5vw; position: relative;z-index:500">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col chat-col chat-border">
-            <div class="col chatbox-col">
-                <div class="row chat-header-row">
-                    <h4>Ask Donna</h4>
+            <div class="col chatbot-col" style="margin-top: -2.5vw;margin-left: 2vw;">
+                <div class="row header">
+                    <div class="header-container">
+                        <h4>Ask Donna</h4>
+                    </div>
                 </div>
-                <div class="row savebtn-row">
 
-                </div>
-                <div class="chatbot-container border rounded shadow bg-light">
-                    <div class="chatbox-body flex-grow-1 overflow-auto p-3">
-                        <ul id="response-output" class="chat-messages list-unstyled m-0 p-0">
-                        </ul>
+                <div class="chat-container border rounded shadow bg-light" style="height: 75vh;">
+                    <div class="chatbot-responses flex-grow-1 overflow-auto p-3" id="chat-window">
+                        <div class="response-container container-flex">
+                            <p style="display: none !important" class="chat-reponses list-unstyled"
+                                id="response-output">&#8594;Lorem ipsum dolor sit
+                                amet
+                                consectetur adipisicing elit. Maiores enim libero quidem dolorum, iusto sint architecto
+                                inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
+                                Possimus, voluptatum!Lorem ipsum dolor sit amet
+                                consectetur adipisicing elit. Maiores enim libero quidem dolorum, iusto sint architecto
+                                inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
+                                Possimus, voluptatum!Lorem ipsum dolor sit amet
+                                consectetur adipisicing elit. Maiores enim libero quidem dolorum, iusto sint architecto
+                                inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
+                                Possimus, voluptatum!Lorem ipsum dolor sit amet
+                                consectetur adipisicing elit. Maiores enim libero quidem dolorum, iusto sint architecto
+                                inventore eligendi recusandae cumque quod aperiam ut ea nostrum ex, similique molestias.
+                                Possimus, voluptatum!</p>
+                        </div>
+                        <div style="display: none !important" class="chatbot-query-container container-flex">
+                            <ul id="response-input" class="chat-messages list-unstyled">Tell me about this document
+                            </ul>
+                        </div>
                     </div>
-                    <div class="chatbox-input d-flex align-items-center p-3">
-                        <input type="text" class="form-control flex-grow-1" id="queryInput"
-                            placeholder="e.g. Explain this contract in plain English">
-                        <button class="btn btn-primary ml-3 send-button" onclick="sendQuery()">?</button>
-                    </div>
-                    <div class="row btn-row">
+                    <div class="chatInput-container d-flex align-items-center">
+                        <div class="input-container container-flex">
+                            <input type="text" class="form-control flex-grow-1" id="queryInput"
+                                placeholder="e.g. Explain this contract in plain English"
+                                onkeypress="submitChat(event)">
+                        </div>
+                        <div class="sendButton-container">
+                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-send" viewBox="0 0 16 16">
+                                    <path
+                                        d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<svg class="loader-spinner" id="loader-spinner" version=" 1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 59">
-    <path d="M55.42 25.14C55.64 26.48 55.75 27.85 55.75 29.25C55.75 43.27 44.46 54.61 30.5 54.61C16.54 54.61 5.25 43.27 5.25 29.25C5.25 15.23 16.54 3.89 30.5 3.89 C34.8 3.89 38.84 4.97 42.38 6.86" />
-    <path d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
-</svg>
 
-<script src="/js/documentAnalysis.js"></script>
+
+    <svg class="loader-spinner" id="loader-spinner" version=" 1.2" xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 100 59">
+        <path
+            d="M55.42 25.14C55.64 26.48 55.75 27.85 55.75 29.25C55.75 43.27 44.46 54.61 30.5 54.61C16.54 54.61 5.25 43.27 5.25 29.25C5.25 15.23 16.54 3.89 30.5 3.89 C34.8 3.89 38.84 4.97 42.38 6.86" />
+        <path
+            d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
+    </svg>
+
+    <script src="/js/documentAnalysis.js"></script>
 
     <script>
         const ws = new WebSocket('ws://localhost:3000');
 
-        ws.onopen = () =>
-        {
+        ws.onopen = () => {
             console.log('WebSocket connection established');
         };
 
-        ws.onmessage = (event) =>
-        {
+        ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            if (data.response)
-            {
-                document.getElementById('response-output').innerText = `Response: ${data.response.response}`;
-            } else if (data.error)
-            {
-                document.getElementById('response-output').innerText = `Error: ${data.error}`;
+            if (data.type == "chat") {
+                if (data.response) {
+                    removeChatbotLoader();
+                    generateSystemBubble(data.response.response);
+                    document.getElementById('send-button').disabled = false;
+                } else if (data.error) {
+                    document.getElementById('response-output').innerText = `Error: ${data.error}`;
+                }
+            }
+            else if (data.type == "summary") {
+                document.getElementById('summary-box').innerText = data.response.response;
+                document.getElementById('send-button').disabled = false;
+            }
+            else if (data.type == "title") {
+                document.getElementById('title-box').innerText = data.response.response;
             }
         };
 
-        function sendQuery()
-        {
-            const query = document.getElementById('queryInput').value;
-            const vectorstore = sessionStorage.getItem("sessionNamespace");
-            ws.send(JSON.stringify({ query,vectorstore }));
+        function submitChat(event) {
+            if (event.keyCode === 13) {
+                document.getElementById("send-button").click();
+            }
         }
 
-        async function purgePinecone()
-        {
+        function generateSystemBubble(message) {
+            var bubble = document.createElement('div');
+            bubble.classList.add('chat-output');
+            var image = document.createElement('img');
+            image.src = '/img/chatbot-avatar.png';
+            image.style.width = '7%';
+            bubble.appendChild(image);
+            var text = document.createElement('p');
+            text.innerText = message;
+            bubble.appendChild(text);
+            var window = document.getElementById('chat-window');
+            window.appendChild(bubble);
+        }
+
+        function generateUserBubble(message) {
+            var window = document.getElementById('chat-window');
+            var bubble = document.createElement('div');
+            bubble.classList.add('chat-output');
+            bubble.classList.add('darker');
+            var image = document.createElement('img');
+            image.classList.add('right');
+            image.src = '/img/user-icon.png';
+            image.style.width = '7%';
+            bubble.appendChild(image);
+            var text = document.createElement('p');
+            text.innerText = message;
+            bubble.appendChild(text);
+            window.appendChild(bubble);
+            addChatbotLoader();
+            window.scrollTop = window.scrollHeight;
+        }
+
+        function sendQuery() {
+            const query = document.getElementById('queryInput').value;
+            const vectorstore = sessionStorage.getItem("sessionNamespace");
+            const type = "chat";
+            generateUserBubble(document.getElementById('queryInput').value);
+            document.getElementById('queryInput').value = "";
+            document.getElementById('send-button').disabled = true;
+            ws.send(JSON.stringify({ query, vectorstore, type }));
+            window.scrollTop = window.scrollHeight;
+        }
+
+        function generateSummary() {
+            var query = "Generate an informative summary about this especially the critical details (e.g., dates, people, references). Make first paragraph be high-level summary. Make subsequent paragraphs a little more detailed. Make sure your summary does not exceed 250 words.";
+            var vectorstore = sessionStorage.getItem("sessionNamespace");
+            var type = "summary";
+            ws.send(JSON.stringify({ query, vectorstore, type }));
+        }
+
+        function generateTitle() {
+            var query = "Generate a title for this document. The title should be less than 5 words but should detail what the document is.";
+            var vectorstore = sessionStorage.getItem("sessionNamespace");
+            var type = "title";
+            document.getElementById('send-button').disabled = true;
+            ws.send(JSON.stringify({ query, vectorstore, type }));
+        }
+
+        async function purgePinecone() {
             const purgePineconeRequestBody = {
                 Namespace: sessionStorage.getItem("sessionNamespace")
             }
             showLoader();
-            await fetch("/api/indexer/purgePinecone",{
+            await fetch("/api/indexer/purgePinecone", {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(purgePineconeRequestBody)
             })
-                .then(response =>
-                {
+                .then(response => {
                     hideLoader();
-                    if (!response.ok)
-                    {
-                        sessionStorage.setItem("purgePineconeStatus","fail");
+                    if (!response.ok) {
+                        sessionStorage.setItem("purgePineconeStatus", "fail");
                         displayError("System is under maintenance. Please try again later.")
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
-                    sessionStorage.setItem("purgePineconeStatus","success");
+                    sessionStorage.setItem("purgePineconeStatus", "success");
                     return response.json();
                 })
-                .then(data =>
-                {
+                .then(data => {
                     hideLoader();
-                    sessionStorage.setItem("purgePineconeStatus","success");
-                    console.log(data);
+                    sessionStorage.setItem("purgePineconeStatus", "success");
                 })
-                .catch(error =>
-                {
-                    sessionStorage.setItem("purgePineconeStatus","fail");
+                .catch(error => {
+                    sessionStorage.setItem("purgePineconeStatus", "fail");
                     hideLoader();
                     displayError("System is under maintenance. Please try again later.")
-                    console.error('Fetch error:',error);
+                    console.error('Fetch error:', error);
                 });
             return Promise.resolve();
         }
 
-        function routeToFileUpload()
-        {
+        async function deleteFile() {
+            const deleteFileRequestBody = {
+                FileName: sessionStorage.getItem("selectedFiles")
+            }
+            showLoader();
+            await fetch("/api/fileupload/delete", {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(deleteFileRequestBody)
+            })
+                .then(response => {
+                    hideLoader();
+                    if (!response.ok) {
+                        sessionStorage.setItem("deleteFileStatus", "fail");
+                        displayError("System is under maintenance. Please try again later.")
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    sessionStorage.setItem("deleteFileStatus", "success");
+                    return response.json();
+                })
+                .then(data => {
+                    hideLoader();
+                    sessionStorage.setItem("deleteFileStatus", "success");
+                })
+                .catch(error => {
+                    sessionStorage.setItem("deleteFileStatus", "fail");
+                    hideLoader();
+                    displayError("System is under maintenance. Please try again later.")
+                    console.error('Fetch error:', error);
+                });
+            return Promise.resolve();
+        }
+
+        function routeToFileUpload() {
             var fileUploadUrl = window.location.protocol + "//" + window.location.host + '/Home/FileUpload';
             window.location.href = fileUploadUrl;
             return Promise.resolve();
         }
 
-        async function newUploadFlow()
-        {
+        async function newUploadFlow() {
             await purgePinecone();
-            if (sessionStorage.getItem("purgePineconeStatus") == "success")
-            {
-                await routeToFileUpload();
+            if (sessionStorage.getItem("purgePineconeStatus") == "success") {
+                await deleteFile();
+                if (sessionStorage.getItem("deleteFileStatus") == "success") {
+                    await routeToFileUpload();
+                }
             }
+        }
+
+        function addSummaryLoader() {
+            var container = document.getElementById('summary-loader-container');
+            console.log(container);
+            var loader = document.createElement('span');
+            loader.setAttribute('id', 'summary-loader')
+            loader.classList.add('loader');
+            container.appendChild(loader);
+        }
+
+        function removeSummaryLoader() {
+            document.getElementById('summary-loader-container').remove();
+        }
+
+        function addChatbotLoader() {
+            var parent = document.createElement('div');
+            parent.classList.add('chat-output');
+            parent.setAttribute('id', 'chat-loader');
+            var image = document.createElement('img');
+            image.src = '/img/chatbot-avatar.png';
+            image.style.width = '9%';
+            parent.appendChild(image);
+            var bubble = document.createElement('div');
+            bubble.classList.add('typing');
+            var circle1 = document.createElement('span');
+            circle1.classList.add('circle');
+            circle1.classList.add('scaling');
+            var circle2 = document.createElement('span');
+            circle2.classList.add('circle');
+            circle2.classList.add('scaling');
+            var circle3 = document.createElement('span');
+            circle3.classList.add('circle');
+            circle3.classList.add('scaling');
+            bubble.appendChild(circle1);
+            bubble.appendChild(circle2);
+            bubble.appendChild(circle3);
+            parent.appendChild(bubble);
+            var window = document.getElementById('chat-window');
+            window.appendChild(parent);
+        }
+
+        function removeChatbotLoader() {
+            document.getElementById('chat-loader').remove();
+        }
+
+        window.onload = function () {
+            hideLoader();
+            addSummaryLoader();
+            generateSystemBubble("Ask me anything about the uploaded document!");
+            document.getElementById('send-button').disabled = true;
+            setTimeout(function () {
+                generateTitle();
+                removeSummaryLoader();
+            }, 20000);
+            setTimeout(function () {
+                generateSummary();
+                removeSummaryLoader();
+            }, 20000);
         }
     </script>
 </body>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StriveAI.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace StriveAI.Controllers
 {
@@ -15,16 +16,17 @@ namespace StriveAI.Controllers
         /// <param name="targetFile" type="IFormFile"></param>
         /// <returns type="ActionResult"></returns>
         [HttpPost("upload")]
+        [EnableCors("AllowAll")]
         public ActionResult Upload(IFormFile targetFile)
         {
             APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();
             UploadFileResponseModel uploadFileResponseBody = new UploadFileResponseModel();
-            long maxFileSize = 100 * 1024;
+            long maxFileSize = 500 * 1024;
             if (targetFile != null && targetFile.Length > 0)
             {
                 if (targetFile.Length > maxFileSize)
                 {
-                    responseBody = createResponseModel(200, "Success", "File must be smaller than 100 KB.", DateTime.Now, null);
+                    responseBody = createResponseModel(200, "Success", "File must be smaller than 500 KB.", DateTime.Now, null);
                     return Ok(responseBody);
                 }
                 var formattedFileName = targetFile.FileName.Replace(" ", "_");
@@ -63,6 +65,7 @@ namespace StriveAI.Controllers
         /// <param name="requestBody" type="DeleteFileRequestModel"></param>
         /// <returns type="ActionResult"></returns>
         [HttpDelete("delete")]
+        [EnableCors("AllowAll")]
         public ActionResult Delete([FromBody] DeleteFileRequestModel requestBody)
         {
             APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();
@@ -99,6 +102,7 @@ namespace StriveAI.Controllers
         /// <param name="requestBody" type="GetFileRequestModel"></param>
         /// <returns type="ActionResult"></returns>
         [HttpPost("getFile")]
+        [EnableCors("AllowAll")]
         public ActionResult Get([FromBody] GetFileRequestModel requestBody)
         {
             APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();

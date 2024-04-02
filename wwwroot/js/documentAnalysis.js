@@ -27,10 +27,12 @@ function loadSummary()
 {
     document.getElementById("summary-box").innerText = sessionStorage.getItem("documentSummary");
 }
+// Load title to title-box element
+function loadTitle() {
+    document.getElementById("title-box").innerText = sessionStorage.getItem("documentTitle");
+}
 
 window.onload = function ()
 {
-    console.log("HI");
-    // loadSummary();
     hideLoader();
 };

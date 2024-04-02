@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Web;
+using Microsoft.AspNetCore.Cors;
 
 namespace StriveAI.Controllers
 {
@@ -34,14 +35,20 @@ namespace StriveAI.Controllers
         /// <param name="requestBody" type="GetRecordRequestModel"></param>
         /// <returns type="Task<ActionResult>"></returns>
         [HttpGet("getRecord")]
+        [EnableCors("AllowAll")]
         public async Task<ActionResult> GetRecord([FromBody] GetRecordRequestModel requestBody)
         {
             APIResponseBodyWrapperModel responseModel = new();
             GetRecordResponseModel? getRecordResponseModel = new();
+            const int maximumRequestLimit = 100;
             if (requestBody.Namespace == null || requestBody.Ids == null || requestBody.Ids.Any(string.IsNullOrEmpty) == true || requestBody.Ids.Any() == false)
             {
                 responseModel = createResponseModel(200, "Success", "The 'namespace' and/or 'ids' field is missing or empty in the request body.", DateTime.Now);
                 return Ok(responseModel);
+            }
+            if (requestBody.Ids.Count > maximumRequestLimit)
+            {
+                responseModel = createResponseModel(200, "Success", "The number of IDs entered exceeded the limit of 100.", DateTime.Now);
             }
             ActionResult? pineconeDetailsResult = await PineconeDetails();
             List<string> existingNamespaces = new();
@@ -165,6 +172,7 @@ namespace StriveAI.Controllers
         /// <param name="requestBody" type="PurgePineconeRequestModel"></param>
         /// <returns type="Task<ActionResult>"></returns>
         [HttpPost("purgePinecone")]
+        [EnableCors("AllowAll")]
         public async Task<ActionResult> PurgePinecone([FromBody] PurgePineconeRequestModel requestBody)
         {
             var responseModel = new APIResponseBodyWrapperModel();
@@ -234,6 +242,7 @@ namespace StriveAI.Controllers
         /// </summary>
         /// <returns type="Task<ActionResult>"></returns>
         [HttpPost("pineconeDetails")]
+        [EnableCors("AllowAll")]
         public async Task<ActionResult> PineconeDetails()
         {
             using (var httpClient = new HttpClient())
@@ -280,6 +289,7 @@ namespace StriveAI.Controllers
         /// <param name="requestBody" type="InsertDocumentRequestModel"></param>
         /// <returns type="ActionResult"></returns>
         [HttpPost("insertDocument")]
+        [EnableCors("AllowAll")]
         public ActionResult InsertDocument([FromBody] InsertDocumentRequestModel requestBody)
         {
             APIResponseBodyWrapperModel responseModel = new();

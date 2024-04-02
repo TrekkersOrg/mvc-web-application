@@ -8,7 +8,8 @@ async function deleteSelectedFile() {
     await fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/delete",{
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         },
         body: JSON.stringify(requestBody)
     })
@@ -22,7 +23,6 @@ async function deleteSelectedFile() {
         })
         .then(data =>
         {
-            console.log(data);
 
             const uploadFileDisplay = document.getElementById('uploadFileDisplayPanel');
             if (uploadFileDisplay.classList.contains('d-none')) {
@@ -69,7 +69,8 @@ async function uploadDocumentToApplication()
             fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/getFile", {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(getFileRequestBody)
             })
@@ -153,7 +154,8 @@ async function uploadDocumentToPinecone()
     await fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/insertDocument",{
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         },
         body: JSON.stringify(requestBody)
     })
@@ -173,7 +175,6 @@ async function uploadDocumentToPinecone()
         {
             hideLoader();
             sessionStorage.setItem("insertDocumentStatus","success");
-            console.log(data);
         })
         .catch(error =>
         {
@@ -182,9 +183,49 @@ async function uploadDocumentToPinecone()
             displayError("System is under maintenance. Please try again later.")
             console.error('Fetch error:',error);
         });
+    setTimeout(function ()
+    {
+        console.log("Idle for 10 seconds");
+    },10000);
     return Promise.resolve();
+}
 
-
+async function verifyPineconeNamespace()
+{
+    showLoader();
+    await fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/PineconeDetails",{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response =>
+        {
+            hideLoader();
+            if (!response.ok)
+            {
+                sessionStorage.setItem("pineconeDetailsStatus","fail");
+                displayError("System is under maintenance. Please try again later.")
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            sessionStorage.setItem("pineconeDetailsStatus","success");
+            return response.json();
+        })
+        .then(data =>
+        {
+            hideLoader();
+            sessionStorage.setItem("pineconeDetailsStatus","success");
+            var namespaceExistence = data.data && data.data.namespaces && data.data.namespaces[sessionStorage.getItem("sessionNamespace")];
+            return namespaceExistence;
+        })
+        .catch(error =>
+        {
+            sessionStorage.setItem("pineconeDetailsStatus","fail");
+            hideLoader();
+            displayError("System is under maintenance. Please try again later.")
+            console.error('Fetch error:',error);
+        });
+    return Promise.resolve();
 }
 
 function displayError(errorMessage)
@@ -213,14 +254,13 @@ function hideLoader()
 
 }
 
+// Generate document title
 
-
-async function generateSummary()
+async function generateTitle()
 {
-    const summaryParagraph = document.querySelector(".insert-summary p");
     const requestBody = {
         Vectorstore: sessionStorage.getItem("sessionNamespace"),
-        Query: "Generate a brief yet informative summary about this especially the critical details (e.g., dates, people, references). Make sure your summary does not exceed 250 words."
+        Query: "Generate a title for this document. The title should be less than 5 words but should detail what the document is."
     };
     showLoader();
     await fetch(window.location.protocol + "//" + window.location.host + "/api/chatbot/sendQuery",{
@@ -234,23 +274,23 @@ async function generateSummary()
         {
             if (!response.ok)
             {
-                sessionStorage.setItem("generateSummaryStatus","fail");
+                sessionStorage.setItem("generateTitleStatus","fail");
                 displayError("System is under maintenance. Please try again later.")
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            sessionStorage.setItem("generateSummaryStatus","success");
+            sessionStorage.setItem("generateTitleStatus","success");
 
             return response.json();
         })
         .then(data =>
         {
-            sessionStorage.setItem("generateSummaryStatus","success");
-            sessionStorage.setItem("documentSummary",data["data"]["response"]);
+            sessionStorage.setItem("generateTitleStatus","success");
+            sessionStorage.setItem("documentTitle",data["data"]["response"]);
             hideLoader();
         })
         .catch(error =>
         {
-            sessionStorage.setItem("generateSummaryStatus","fail");
+            sessionStorage.setItem("generateTitleStatus","fail");
             hideLoader();
             displayError("System is under maintenance. Please try again later.");
             console.error('Fetch error:',error);
@@ -274,16 +314,15 @@ async function uploadFileFlow()
     }
     else
     {
-        await routeToDocumentAnalysis();
-        /*await generateSummary();
-        if (sessionStorage.getItem("generateSummaryStatus") == "fail")
+        await verifyPineconeNamespace();
+        if (sessionStorage.getItem("pineconeDetailsStatus") == "fail")
         {
             return;
         }
         else
         {
             await routeToDocumentAnalysis();
-        }*/
+        }
     }
 }
 window.onload = function ()

@@ -2,6 +2,7 @@
 using StriveAI.Models;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Cors;
 
 namespace StriveAI.Controllers
 {
@@ -31,6 +32,7 @@ namespace StriveAI.Controllers
         /// <param name="requestBody" type="SendQueryRequestModel"></param>
         /// <returns type="ActionResult"></returns>
         [HttpPost("sendQuery")]
+        [EnableCors("AllowAll")]
         async public Task<ActionResult> SendQuery([FromBody] SendQueryRequestModel requestBody)
         {
             APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();

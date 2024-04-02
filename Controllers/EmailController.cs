@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using StriveAI.Models;
@@ -30,6 +31,7 @@ namespace StriveAI.Controllers
         /// <param name="requestBody" type="SendEmailRequestModel"></param>
         /// <returns type="Task<ActionResult>"></returns>
         [HttpPost("sendEmail")]
+        [EnableCors("AllowAll")]
         public async Task<ActionResult> SendEmail(SendEmailRequestModel requestBody)
         {
             APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();

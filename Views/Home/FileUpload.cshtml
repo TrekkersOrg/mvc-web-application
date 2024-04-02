@@ -4,8 +4,9 @@
 }
 
 <style>
-    .font {
+    body {
         font-family: 'Roboto', sans-serif;
+        background-color: #f7f7f7;
     }
 
     .btn-primary {
@@ -77,6 +78,14 @@
     .close:hover {
         color: red;
     }
+
+    li {
+        font-weight: normal;
+    }
+
+    li>div {
+        font-weight: bold;
+    }
 </style>
 
 
@@ -86,6 +95,13 @@
 <link rel="stylesheet" href="~/css/fileUpload.css">
 
 <body class="font">
+    <div class="error-background" id="error-background">
+        <div class="error-container">
+            <span class="error-close" id="error-close">&times;</span>
+            <h2 class="error-title">Error</h2>
+            <p id="error-message"></p>
+        </div>
+    </div>
     <div class="container-fluid" id="page-container">
         <div class="row mt-5">
             <div class="col-12 h-100 text-center header-container">
@@ -121,22 +137,21 @@
         onclick="deleteSelectedFile()" type="button" id="delete-button">Delete</button>
         </div> *@
 
-        <div class="error-background" id="error-background">
-            <div class="error-container">
-                <span class="error-close" id="error-close">&times;</span>
-                <h2 class="error-title">Error</h2>
-                <p id="error-message"></p>
-            </div>
-        </div>
     </div>
     <div class="container-fluid" id="page-container">
         <div class="row mt-4 justify-content-center">
             <div class="col-md-6 instructions-box">
                 <h3 class="mb-3">Instructions</h3>
                 <ul class="instructions-list">
-                    <li>Select a file: Click "Browse files" and choose the file you want to upload.</li>
-                    <li>Review and decide: Your file will appear below. Click the 'X' to remove it.</li>
-                    <li>Proceed to analyze: Click "Next" to continue.</li>
+                    <li>
+                        <div>Select a file:</div> Click "Browse files" and choose the file you want to upload.
+                    </li>
+                    <li>
+                        <div>Review and decide:</div> Your file will appear below. Click the 'X' to remove it.
+                    </li>
+                    <li>
+                        <div>Proceed to analyze:</div> Click "Next" to continue.
+                    </li>
                 </ul>
             </div>
         </div>
@@ -163,7 +178,7 @@
 
             // Insert the hashed username into sessionStorage
             <script>
-                sessionStorage.setItem("sessionNamespace","@hashedUsername");
+                sessionStorage.setItem("sessionNamespace", "@hashedUsername");
             </script>
         }
     }

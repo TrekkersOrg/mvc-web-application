@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <title>Feedback Form</title>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>Feedback Form</h2>
+        <form>
+            <div class="form-group">
+                <label>Feedback Type:</label>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="options" id="option1"> Bug report
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="options" id="option2"> Feedback
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="options" id="option3"> Suggestion
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter your name">
+            </div> 
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="issue">Issue:</label>
+                <textarea class="form-control" id="issue" rows="3" placeholder="Describe your issue"></textarea>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+</body>
+
+</html>
