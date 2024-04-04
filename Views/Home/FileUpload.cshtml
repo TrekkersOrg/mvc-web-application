@@ -76,13 +76,10 @@
 
 @{
     string username = User?.Identity?.Name ?? "Unknown";
-    using (SHA256 sha256 = SHA256.Create())
+    using (var sha256 = SHA256.Create())
     {
-        byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(username));
-        string hashedUsername = BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant();
-        <script>
-            sessionStorage.setItem("sessionNamespace","@hashedUsername");
-        </script>
+        string hashedUsername = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(username))).Replace("-", "").ToLowerInvariant();
+        <script>sessionStorage.setItem("sessionNamespace","@hashedUsername");</script>
     }
 }
 <script src="/js/fileUpload.js"></script>
