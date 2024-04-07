@@ -23,7 +23,7 @@ namespace StriveAI.Controllers
             return View();
         }
 
-        public IActionResult AboutUs()
+        public IActionResult Demo()
         {
             return View();
         }

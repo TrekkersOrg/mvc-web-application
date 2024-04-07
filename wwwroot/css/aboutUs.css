@@ -1,1 +1,49 @@
-﻿
+﻿body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f7f7;
+}
+
+.btn-primary.rounded-pill.btn-lg {
+    color: white;
+    border: transparent;
+    position: relative;
+    background-color: black;
+}
+
+    .btn-primary.rounded-pill.btn-lg:hover {
+        background-color: purple;
+    }
+
+.bg-color {
+    min-height: 100vh;
+    margin-bottom: 10vh;
+    position: relative;
+    width: 75vw;
+    left: -5vw;
+}
+
+.embed-responsive-item {
+    height: auto;
+    width: 37vw;
+}
+
+.header-container {
+    padding-top: 5vh;
+}
+
+.container-fluid {
+    color: #f7f7f7;
+}
+
+.font {
+    font-family: 'Roboto', sans-serif;
+}
+
+.btn-container {
+    margin-left: 30vw;
+    margin-right: 30vw;
+}
+
+.text-row {
+    margin-top: 10vh;
+}
