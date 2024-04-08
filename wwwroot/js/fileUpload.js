@@ -300,7 +300,7 @@ async function generateTitle()
 
 function routeToDocumentAnalysis()
 {
-    var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentAnalysis';
+    var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
     window.location.href = documentAnalysisUrl;
     return Promise.resolve();
 }

@@ -1,9 +1,60 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/documentAnalysis.css">
-<!--PUT CODE HERE-->
+
+<link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
+<link rel="stylesheet" href="~/css/documentDashboard.css">
+
+<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div class="container page-container">
+        <div class="row chatbot-row">
+            <div class="col chatbot-col">
+                <div class="chat-container">
+                    <div class="chatbot-topFrame container d-flex">
+                        <div class="chatbot-name-container container">
+                            <h3 class="title-shadow">Strive LLC. Term Sheet - 2024</h3>
+                        </div>
+                    </div>
+                    <div class="chatbot-messages-container rounded flex-grow-1 overflow-auto p-3" id="chat-window">
+                        <div class="response-container container-flex">
+                            <ul id="chatbot-response" class="chatbot-response-messages list-unstyled">I am a helpful
+                                assistant! Just ask me anything about this document.
+                            </ul>
+                        </div>
+                        <div class="chatbot-query-container container-flex">
+                            <ul id="response-input" class="chat-messages list-unstyled">Tell me about this document.
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="chatInput-container d-flex align-items-center">
+                        <div class="input-container container-flex">
+                            <input type="text" class="form-control flex-grow-1" id="queryInput"
+                                placeholder="e.g. Explain this contract in plain English"
+                                onkeypress="submitChat(event)">
+                        </div>
+                        <div class="sendButton-container">
+                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-send" viewBox="0 0 16 16">
+                                    <path
+                                        d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* <div class="column chart-col">
+            <h2>Chart column</h2>
+            </div> *@
+        </div>
+    </div>
+
+</body>
+
+
 <script src="/js/documentDashboard.js"></script>
