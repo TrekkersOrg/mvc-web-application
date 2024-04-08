@@ -47170,3 +47170,5 @@ site-packages/yarl-1.9.4.dist-info/top_level.txt
 site-packages/yarl-1.9.4.dist-info/WHEEL
 .DS_Store
 
+.vscode/launch.json
+.vscode/tasks.json
