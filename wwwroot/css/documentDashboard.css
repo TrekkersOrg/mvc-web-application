@@ -91,9 +91,10 @@ body {
     border-radius: 5px;
     background-color: #f7f7f7;
     height: 85vh;
-    box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.2); */
     width: 110%;
     margin-left: -1.5vw;
+    overflow-y: hidden;
 }
 
 .chatbot-input {
@@ -101,7 +102,7 @@ body {
     border-radius: 5px;
     padding: 10px;
     margin-top: 10px;
-    overflow-y: auto;
+    /* overflow-y: auto; */
 }
 
 .chatbot-col {
@@ -113,14 +114,14 @@ body {
 
 .input-container {
     border-radius: 5px;
-    overflow-y: auto;
+    /* overflow-y: auto; */
     width: 100%;
 }
 
 
 .response-container {
     border: 2px solid black;
-    border-radius: 300rem 30rem 200rem 0rem;
+    border-radius: 30rem 30rem 30rem 0rem;
     background-color: #dda9dd;
     position: relative;
     word-wrap: break-word;
@@ -140,7 +141,7 @@ body {
 .chatbot-query-container {
     margin-top: 1vh;
     border: 2px solid black;
-    border-radius: 30rem 300rem 0rem 200rem;
+    border-radius: 30rem 30rem 0rem 30rem;
     background-color: #f7f7f7;
     padding: 10px;
     position: relative;
@@ -160,12 +161,27 @@ body {
     text-align: left;
     margin-bottom: 1vh;
     margin-top: 0.5vh;
-    margin-left: 2.4vw;
+    margin-left: 2.8vw;
+    overflow-y: scroll !important;
 }
 
 .chatbot-messages-container {
-    overflow-y: auto !important;
-    /* border: 1px solid black; */
+    overflow-y: scroll !important;
+    overflow-x: hidden;
+    height: 70vh;
+    flex-grow: 1;
+}
+
+.chatbot-messages-container::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+.chatbot-messages-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the scrollbar thumb */
+    border-radius: 5px;
+    /* Roundness of the scrollbar thumb */
 }
 
 .sendButton-container {
@@ -182,7 +198,7 @@ body {
 .system-bubble p {
     background: #f1f1f1;
     color: #000 !important;
-    border-radius: 20px 20px 20px 3px;
+    border-radius: 20px 20px 20px 0px;
     display: block;
     max-width: 75%;
     padding: 7px 13px 7px 13px;
