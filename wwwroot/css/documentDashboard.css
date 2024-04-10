@@ -162,13 +162,12 @@ body {
     margin-bottom: 1vh;
     margin-top: 0.5vh;
     margin-left: 2.8vw;
-    overflow-y: scroll !important;
 }
 
 .chatbot-messages-container {
     overflow-y: scroll !important;
     overflow-x: hidden;
-    height: 70vh;
+    height: 100%;
     flex-grow: 1;
 }
 
