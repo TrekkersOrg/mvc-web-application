@@ -7,25 +7,32 @@ function submitChat(event) {
 function sendQuery() {
     const query = document.getElementById('queryInput').value;
     const type = "chat";
-    
-    generateUserBubble(document.getElementById('queryInput').value);
+
+    appendChatBubble(query, 'user');
+
     document.getElementById('queryInput').value = "";
     document.getElementById('send-button').disabled = true;
-    ws.send(JSON.stringify({ query, vectorstore, type }));
-    window.scrollTop = window.scrollHeight;
+
+    var chatWindow = document.getElementById('chat-window');
+    chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-
-function generateUserBubble(message) {
-    var window = document.getElementById('chat-window');
-    var container = document.getElementById('chatbot-query-container');
+function appendChatBubble(message, sender) {
+    var chatContainer = document.getElementById('chat-window');
     var bubble = document.createElement('div');
-
     bubble.classList.add('chat-output');
+
+    if (sender === 'user'){
+        bubble.classList.add('darker');
+    }
+
     var text = document.createElement('p');
     text.innerText = message;
     bubble.appendChild(text);
-    container.appendChild(bubble);
-    addChatbotLoader();
-    window.scrollTop = window.scrollHeight;
+    chatContainer.appendChild(bubble);
+
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
+
+
+///
