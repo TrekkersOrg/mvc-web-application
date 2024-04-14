@@ -58,10 +58,55 @@
 
 <script src="/js/documentDashboard.js"></script>
 <script>
+    const ws = new WebSocket('ws://localhost:3000');
+    ws.onopen = () =>
+    {
+        console.log('WebSocket connection established');
+    };
+    ws.onmessage = (event) =>
+    {
+        const data = JSON.parse(event.data);
+        if (data.type == "chat")
+        {
+            if (data.response)
+            {
+                appendSystemBubble(data.response.response);
+                document.getElementById('send-button').disabled = false;
+            } else if (data.error)
+            {
+                document.getElementById('response-output').innerText = `Error: ${data.error}`;
+            }
+        }
+        else if (data.type == "summary")
+        {
+            document.getElementById('summary-box').innerText = data.response.response;
+            document.getElementById('send-button').disabled = false;
+        }
+        else if (data.type == "title")
+        {
+            document.getElementById('title-box').innerText = data.response.response;
+        }
+    };
+
     function submitChat(event) {
         if (event.keyCode === 13) {
             document.getElementById("send-button").click();
         }
+    }
+
+    function appendSystemBubble(message)
+    {
+        var chatContainer = document.getElementById('chat-window');
+        var bubble = document.createElement('div');
+        bubble.classList.add('container-flex');
+        bubble.classList.add('response-container');
+        var text = document.createElement('ul');
+        text.classList.add('chatbot-response-messages');
+        text.classList.add('list-unstyled');
+        text.innerText = message;
+        bubble.appendChild(text);
+        chatContainer.appendChild(bubble);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
 
