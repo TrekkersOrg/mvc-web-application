@@ -4,10 +4,21 @@ using StriveAI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configuration = new ConfigurationBuilder()
+if (builder.Environment.IsDevelopment())
+{
+    var configuration = new ConfigurationBuilder()
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.Development.json")
     .Build();
+}
+else
+{
+    var configuration = new ConfigurationBuilder()
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json")
+    .Build();
+}
+
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
