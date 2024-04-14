@@ -72,7 +72,6 @@ body {
 
 .chatbot-row {
     width: 50% !important;
-    margin-left: -5vw;
 }
 
 .chat-col {
@@ -124,7 +123,7 @@ body {
 .input-container {
     border-radius: 5px;
     /* overflow-y: auto; */
-    width: 100%;
+    width: 425vw;
 }
 
 
@@ -178,6 +177,7 @@ body {
     overflow-x: hidden;
     height: 100%;
     flex-grow: 1;
+    padding-right: 0.6vw;
 }
 
 .chatbot-messages-container::-webkit-scrollbar {
@@ -194,12 +194,18 @@ body {
 
 .sendButton-container {
     height: 5vh;
+    width: 100%
+}
+
+.send-button {
+    height: inherit;
+    width: inherit;
 }
 
 .chatInput-container {
     margin-top: auto;
     border-radius: 5px;
-    padding: 1px;
+    padding: 4px;
     border: 1px solid rgb(202, 201, 201);
 }
 
@@ -222,8 +228,8 @@ body {
 }
 
 .chat-output {
-    border: 2px solid #dedede;
-    background-color: #f1f1f1;
+    border: 2px solid #890089;
+    background-color: #dda9dd;
     border-radius: 5px;
     padding: 10px;
     margin: 10px 0;
@@ -245,8 +251,8 @@ body {
 }
 
 .darker {
-    border-color: #ccc;
-    background-color: #ddd;
+    border-color: #000000;
+    background-color: #dddddd;
 }
 
 .save-btn {
@@ -270,4 +276,48 @@ body {
 
 .response-content {
     word-wrap: break-word;
+}
+
+.typing {
+    display: block;
+    width: 60px;
+    height: 40px;
+    border-radius: 20px;
+    margin: 0 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.circle {
+    display: block;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: #890089;
+    margin: 3px;
+}
+
+.scaling {
+    animation: typing 1000ms ease-in-out infinite;
+    animation-delay: 3600ms;
+}
+
+@keyframes typing {
+    0% {
+        transform: scale(1);
+    }
+
+    33% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.4);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
