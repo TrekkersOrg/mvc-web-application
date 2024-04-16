@@ -20,12 +20,12 @@
                     </div>
                     <div class="chatbot-messages-container rounded flex-grow-1 overflow-y" id="chat-window">
                         @*<div class="response-container container-flex">
-                            <ul id="chatbot-responses" class="chatbot-response-messages list-unstyled">I am a helpful
-                                assistant! Just ask me anything about this document.
+                        <ul id="chatbot-responses" class="chatbot-response-messages list-unstyled">I am a helpful
+                        assistant! Just ask me anything about this document.
                         </div>
                         <div class="chatbot-query-container container-flex">
-                            <ul id="response-input" class="chat-messages list-unstyled">Tell me about this document.
-                            </ul>
+                        <ul id="response-input" class="chat-messages list-unstyled">Tell me about this document.
+                        </ul>
                         </div>*@
                     </div>
                     <div class="chatInput-container d-flex align-items-center">
@@ -36,10 +36,22 @@
                         </div>
                         <div class="sendButton-container">
                             <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-send" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="send-icon" width="16" height="16"
+                                    fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                     <path
                                         d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                                </svg>
+                            </button>
+
+                            <button class="btn btn-primary ml-3 stop-button" id="stop-button" onclick="stopQuery()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M12 21C10.22 21 8.47991 20.4722 6.99987 19.4832C5.51983 18.4943 4.36628 17.0887 3.68509 15.4442C3.0039 13.7996 2.82567 11.99 3.17294 10.2442C3.5202 8.49836 4.37737 6.89472 5.63604 5.63604C6.89472 4.37737 8.49836 3.5202 10.2442 3.17294C11.99 2.82567 13.7996 3.0039 15.4442 3.68509C17.0887 4.36628 18.4943 5.51983 19.4832 6.99987C20.4722 8.47991 21 10.22 21 12C21 14.387 20.0518 16.6761 18.364 18.364C16.6761 20.0518 14.387 21 12 21ZM12 4.5C10.5166 4.5 9.0666 4.93987 7.83323 5.76398C6.59986 6.58809 5.63856 7.75943 5.07091 9.12988C4.50325 10.5003 4.35473 12.0083 4.64411 13.4632C4.9335 14.918 5.64781 16.2544 6.6967 17.3033C7.7456 18.3522 9.08197 19.0665 10.5368 19.3559C11.9917 19.6453 13.4997 19.4968 14.8701 18.9291C16.2406 18.3614 17.4119 17.4001 18.236 16.1668C19.0601 14.9334 19.5 13.4834 19.5 12C19.5 10.0109 18.7098 8.10323 17.3033 6.6967C15.8968 5.29018 13.9891 4.5 12 4.5Z"
+                                        fill="#000000" />
+                                    <path
+                                        d="M14.5 8H9.5C8.67157 8 8 8.67157 8 9.5V14.5C8 15.3284 8.67157 16 9.5 16H14.5C15.3284 16 16 15.3284 16 14.5V9.5C16 8.67157 15.3284 8 14.5 8Z"
+                                        fill="#000000" />
                                 </svg>
                             </button>
                         </div>
@@ -54,9 +66,11 @@
     </div>
 
     <svg class="loader-spinner" id="loader-spinner" version=" 1.2" xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 100 59">
-        <path d="M55.42 25.14C55.64 26.48 55.75 27.85 55.75 29.25C55.75 43.27 44.46 54.61 30.5 54.61C16.54 54.61 5.25 43.27 5.25 29.25C5.25 15.23 16.54 3.89 30.5 3.89 C34.8 3.89 38.84 4.97 42.38 6.86" />
-        <path d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
+        viewBox="0 0 100 59">
+        <path
+            d="M55.42 25.14C55.64 26.48 55.75 27.85 55.75 29.25C55.75 43.27 44.46 54.61 30.5 54.61C16.54 54.61 5.25 43.27 5.25 29.25C5.25 15.23 16.54 3.89 30.5 3.89 C34.8 3.89 38.84 4.97 42.38 6.86" />
+        <path
+            d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
     </svg>
 
 </body>
@@ -65,46 +79,36 @@
 <script src="/js/documentDashboard.js"></script>
 <script>
     const ws = new WebSocket('ws://localhost:3000');
-    ws.onopen = () =>
-    {
+    ws.onopen = () => {
         console.log('WebSocket connection established');
     };
-    ws.onmessage = (event) =>
-    {
+    ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        if (data.type == "chat")
-        {
-            if (data.response)
-            {
+        if (data.type == "chat") {
+            if (data.response) {
                 removeChatbotLoader();
                 generateSystemBubble(data.response.response);
                 document.getElementById('send-button').disabled = false;
-            } else if (data.error)
-            {
+            } else if (data.error) {
                 document.getElementById('response-output').innerText = `Error: ${data.error}`;
             }
         }
-        else if (data.type == "summary")
-        {
+        else if (data.type == "summary") {
             document.getElementById('summary-box').innerText = data.response.response;
             document.getElementById('send-button').disabled = false;
         }
-        else if (data.type == "title")
-        {
+        else if (data.type == "title") {
             document.getElementById('title-box').innerText = data.response.response;
         }
     };
 
-    function submitChat(event)
-    {
-        if (event.keyCode === 13)
-        {
+    function submitChat(event) {
+        if (event.keyCode === 13) {
             document.getElementById("send-button").click();
         }
     }
 
-    function generateUserBubble(message)
-    {
+    function generateUserBubble(message) {
         var window = document.getElementById('chat-window');
         var bubble = document.createElement('div');
         bubble.classList.add('chat-output');
@@ -117,8 +121,7 @@
         window.scrollTop = window.scrollHeight;
     }
 
-    function generateSystemBubble(message)
-    {
+    function generateSystemBubble(message) {
         var bubble = document.createElement('div');
         bubble.classList.add('chat-output');
         var text = document.createElement('p');
@@ -129,25 +132,36 @@
         document.getElementById('send-button').disabled = false;
     }
 
-    function sendQuery()
-    {
+    function stopQuery() {
+        const query = document.getElementById('queryInput').value;
+        
+    }
+
+    function sendQuery() {
         const query = document.getElementById('queryInput').value;
         const vectorstore = sessionStorage.getItem("sessionNamespace");
         const type = "chat";
         //appendChatBubble(query,'user');
+
+        document.getElementById('send-icon').innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 21C10.22 21 8.47991 20.4722 6.99987 19.4832C5.51983 18.4943 4.36628 17.0887 3.68509 15.4442C3.0039 13.7996 2.82567 11.99 3.17294 10.2442C3.5202 8.49836 4.37737 6.89472 5.63604 5.63604C6.89472 4.37737 8.49836 3.5202 10.2442 3.17294C11.99 2.82567 13.7996 3.0039 15.4442 3.68509C17.0887 4.36628 18.4943 5.51983 19.4832 6.99987C20.4722 8.47991 21 10.22 21 12C21 14.387 20.0518 16.6761 18.364 18.364C16.6761 20.0518 14.387 21 12 21ZM12 4.5C10.5166 4.5 9.0666 4.93987 7.83323 5.76398C6.59986 6.58809 5.63856 7.75943 5.07091 9.12988C4.50325 10.5003 4.35473 12.0083 4.64411 13.4632C4.9335 14.918 5.64781 16.2544 6.6967 17.3033C7.7456 18.3522 9.08197 19.0665 10.5368 19.3559C11.9917 19.6453 13.4997 19.4968 14.8701 18.9291C16.2406 18.3614 17.4119 17.4001 18.236 16.1668C19.0601 14.9334 19.5 13.4834 19.5 12C19.5 10.0109 18.7098 8.10323 17.3033 6.6967C15.8968 5.29018 13.9891 4.5 12 4.5Z" fill="#000000"/>
+            <path d="M14.5 8H9.5C8.67157 8 8 8.67157 8 9.5V14.5C8 15.3284 8.67157 16 9.5 16H14.5C15.3284 16 16 15.3284 16 14.5V9.5C16 8.67157 15.3284 8 14.5 8Z" fill="#000000"/>
+        </svg>
+    `;
+
         generateUserBubble(query);
         document.getElementById('queryInput').value = "";
-        ws.send(JSON.stringify({ query,vectorstore,type }));
-        document.getElementById('send-button').disabled = true;
+        ws.send(JSON.stringify({ query, vectorstore, type }));
+        @* document.getElementById('send-button').disabled = true; *@
         var chatWindow = document.getElementById('chat-window');
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
-    function addChatbotLoader()
-    {
+    function addChatbotLoader() {
         var parent = document.createElement('div');
         parent.classList.add('chat-output');
-        parent.setAttribute('id','chat-loader');
+        parent.setAttribute('id', 'chat-loader');
         var bubble = document.createElement('div');
         bubble.classList.add('typing');
         var circle1 = document.createElement('span');
@@ -167,20 +181,17 @@
         window.appendChild(parent);
     }
 
-    function removeChatbotLoader()
-    {
+    function removeChatbotLoader() {
         document.getElementById('chat-loader').remove();
     }
 
-    function hideLoader()
-    {
+    function hideLoader() {
         document.getElementById("loader-spinner").style.display = "none";
         document.getElementById("page-container").style.opacity = 1;
 
     }
 
-    window.onload = function ()
-    {
+    window.onload = function () {
         hideLoader();
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
     }
