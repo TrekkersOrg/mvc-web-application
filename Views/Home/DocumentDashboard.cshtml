@@ -125,17 +125,32 @@
         window.scrollTop = window.scrollHeight;
     }
 
+
     function generateSystemBubble(message) {
         var bubble = document.createElement('div');
         bubble.classList.add('chat-output');
         var text = document.createElement('p');
-        text.innerText = message;
         bubble.appendChild(text);
         var window = document.getElementById('chat-window');
         window.appendChild(bubble);
+
+        var words = message.split(' '); // Split the message into an array of words
+        console.log("Words array: ", words)
+        var index = 0;
+
+        // Use a setInterval to add each word with a space
+        var typingEffect = setInterval(function() {
+            if (index < words.length) {
+                text.innerText += words[index] + ' '; // Append the word with a space
+                index++;
+            } else {
+                clearInterval(typingEffect); // Stop when all words are displayed
+            }
+        }, 50);
+
         document.getElementById('send-button').disabled = false;
-        
     }
+
 
     function sendQuery() {
         if (!stopButton) {
@@ -181,15 +196,12 @@
         parent.setAttribute('id', 'chat-loader');
         var bubble = document.createElement('div');
         bubble.classList.add('typing');
-        var circle1 = document.createElement('span');
+        var circle1 = document.createElement( 'span');
         circle1.classList.add('circle');
         circle1.classList.add('scaling');
         var circle2 = document.createElement('span');
         circle2.classList.add('circle');
         circle2.classList.add('scaling');
-        var circle3 = document.createElement('span');
-        circle3.classList.add('circle');
-        circle3.classList.add('scaling');
         bubble.appendChild(circle1);
         parent.appendChild(bubble);
         var window = document.getElementById('chat-window');
