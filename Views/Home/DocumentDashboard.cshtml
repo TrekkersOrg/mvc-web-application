@@ -35,7 +35,7 @@
                                 onkeypress="submitChat(event)">
                         </div>
                         <div class="sendButton-container">
-                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()">
+                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()" oninput="checkInput()">
                                 <svg xmlns="http://www.w3.org/2000/svg" id="send-icon" width="16" height="16"
                                     fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                     <path
@@ -92,6 +92,19 @@
         }
     };
 
+    function checkInput() {
+        var input = document.getElementById('queryInput').value.trim();
+        var sendButton = document.getElementById('send-button');
+        if (input === '' && stopButton==false) {
+            sendButton.disabled = true ;
+            console.log("Checked");
+        } else {
+            sendButton.disabled = false;
+        }
+        
+    }
+    document.getElementById('queryInput').addEventListener('input', checkInput);
+
 
     function submitChat(event) {
         if (event.keyCode === 13) {
@@ -121,6 +134,7 @@
         var window = document.getElementById('chat-window');
         window.appendChild(bubble);
         document.getElementById('send-button').disabled = false;
+        
     }
 
     function sendQuery() {
@@ -130,6 +144,7 @@
             const type = "chat";
             generateUserBubble(query);
             document.getElementById('queryInput').value = "";
+            checkInput();
             ws.send(JSON.stringify({ query, vectorstore, type }));
             @* document.getElementById('send-button').disabled = true; *@
             var chatWindow = document.getElementById('chat-window');
@@ -143,6 +158,7 @@
             `;
 
             stopButton = true; // Update the button state
+            checkInput();
         } else {
             // Toggle the button icon
             document.getElementById('send-icon').innerHTML = `
@@ -154,7 +170,9 @@
             `;
 
             stopButton = false; // Update the button state
+            checkInput();
         }
+
     }
 
     function addChatbotLoader() {
@@ -173,11 +191,10 @@
         circle3.classList.add('circle');
         circle3.classList.add('scaling');
         bubble.appendChild(circle1);
-        bubble.appendChild(circle2);
-        bubble.appendChild(circle3);
         parent.appendChild(bubble);
         var window = document.getElementById('chat-window');
         window.appendChild(parent);
+        checkInput();
     }
 
     function removeChatbotLoader() {
@@ -187,12 +204,16 @@
     function hideLoader() {
         document.getElementById("loader-spinner").style.display = "none";
         document.getElementById("page-container").style.opacity = 1;
+        checkInput();
 
     }
+
+    
 
     window.onload = function () {
         hideLoader();
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
+        checkInput();
     }
 
 
