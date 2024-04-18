@@ -146,8 +146,10 @@
                 index++;
             } else {
                 clearInterval(typingEffect); // Stop when all words are displayed
+                text.innerText = message;
+                checkInput();
             }
-        }, 17);
+        }, 10);
         document.getElementById('send-button').disabled = true;
     }
 
