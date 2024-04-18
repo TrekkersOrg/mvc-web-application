@@ -35,7 +35,8 @@
                                 onkeypress="submitChat(event)">
                         </div>
                         <div class="sendButton-container">
-                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()" oninput="checkInput()">
+                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()"
+                                oninput="checkInput()">
                                 <svg xmlns="http://www.w3.org/2000/svg" id="send-icon" width="16" height="16"
                                     fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                     <path
@@ -95,13 +96,13 @@
     function checkInput() {
         var input = document.getElementById('queryInput').value.trim();
         var sendButton = document.getElementById('send-button');
-        if (input === '' && stopButton==false) {
-            sendButton.disabled = true ;
+        if (input === '' && stopButton == false) {
+            sendButton.disabled = true;
             console.log("Checked");
         } else {
             sendButton.disabled = false;
         }
-        
+
     }
     document.getElementById('queryInput').addEventListener('input', checkInput);
 
@@ -146,8 +147,8 @@
             } else {
                 clearInterval(typingEffect); // Stop when all words are displayed
             }
-        }, 50);
-        document.getElementById('send-button').disabled = false;
+        }, 17);
+        document.getElementById('send-button').disabled = true;
     }
 
 
@@ -171,7 +172,7 @@
                 </svg>
             `;
 
-            stopButton = true; // Update the button state
+            stopButton = false; // Update the button state
             checkInput();
         } else {
             // Toggle the button icon
@@ -195,7 +196,7 @@
         parent.setAttribute('id', 'chat-loader');
         var bubble = document.createElement('div');
         bubble.classList.add('typing');
-        var circle1 = document.createElement( 'span');
+        var circle1 = document.createElement('span');
         circle1.classList.add('circle');
         circle1.classList.add('scaling');
         var circle2 = document.createElement('span');
@@ -219,7 +220,7 @@
 
     }
 
-    
+
 
     window.onload = function () {
         hideLoader();
@@ -229,6 +230,3 @@
 
 
 </script>
-
-
-
