@@ -134,20 +134,19 @@
         var window = document.getElementById('chat-window');
         window.appendChild(bubble);
 
-        var words = message.split(' '); // Split the message into an array of words
-        console.log("Words array: ", words)
+        //var words = message.split(' '); // Split the message into an array of words
+        //console.log("Words array: ", words)
         var index = 0;
 
         // Use a setInterval to add each word with a space
-        var typingEffect = setInterval(function() {
-            if (index < words.length) {
-                text.innerText += words[index] + ' '; // Append the word with a space
+        var typingEffect = setInterval(function () {
+            if (index < message.length) {
+                text.innerText = message.slice(0, index);
                 index++;
             } else {
                 clearInterval(typingEffect); // Stop when all words are displayed
             }
         }, 50);
-
         document.getElementById('send-button').disabled = false;
     }
 
@@ -230,3 +229,6 @@
 
 
 </script>
+
+
+
