@@ -68,9 +68,9 @@
 <script src="/js/documentDashboard.js"></script>
 <script>
     const ws = new WebSocket('ws://localhost:3000');
-    let stopButton = false;
+    var generatingResponse = false;
 
-    ws.onopen = () => {
+    /*ws.onopen = () => {
         console.log('WebSocket connection established');
     };
     ws.onmessage = (event) => {
@@ -91,19 +91,36 @@
         else if (data.type == "title") {
             document.getElementById('title-box').innerText = data.response.response;
         }
-    };
+    };*/
 
     function checkInput() {
         var input = document.getElementById('queryInput').value.trim();
         var sendButton = document.getElementById('send-button');
-        if (input === '' && stopButton == false) {
+        /*if (input === '') {
             sendButton.disabled = true;
-            console.log("Checked");
-        } else {
+        }
+        if (generatingResponse) {
+            sendButton.disabled = true;
+        }
+        if (input !== '' && generatingResponse == true) {
+            sendButton.disabled = true;
+        }
+        if (input === '' && generatingResponse == true)
+        {
+            sendButton.disabled = true;
+        }*/
+        if (input !== '' && generatingResponse == false) {
+            console.log("Check");
             sendButton.disabled = false;
+        }
+        else
+        {
+            sendButton.disabled = true;
         }
 
     }
+
+
     document.getElementById('queryInput').addEventListener('input', checkInput);
 
 
@@ -114,6 +131,7 @@
     }
 
     function generateUserBubble(message) {
+        checkInput();
         var window = document.getElementById('chat-window');
         var bubble = document.createElement('div');
         bubble.classList.add('chat-output');
@@ -124,37 +142,93 @@
         window.appendChild(bubble);
         addChatbotLoader();
         window.scrollTop = window.scrollHeight;
+        checkInput();
     }
 
 
     function generateSystemBubble(message) {
+        checkInput();
         var bubble = document.createElement('div');
         bubble.classList.add('chat-output');
         var text = document.createElement('p');
         bubble.appendChild(text);
         var window = document.getElementById('chat-window');
+        removeChatbotLoader();
         window.appendChild(bubble);
 
         //var words = message.split(' '); // Split the message into an array of words
         //console.log("Words array: ", words)
         var index = 0;
 
+        var sendButton = document.getElementById('send-button');
+        sendButton.disabled = true;
         // Use a setInterval to add each word with a space
         var typingEffect = setInterval(function () {
             if (index < message.length) {
                 text.innerText = message.slice(0, index);
                 index++;
+                sendButton.disabled = true;
             } else {
                 clearInterval(typingEffect); // Stop when all words are displayed
                 text.innerText = message;
-                checkInput();
             }
         }, 10);
         document.getElementById('send-button').disabled = true;
+        document.getElementById('send-icon').innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" id="send-icon" width="16" height="16"
+                                fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                <path
+                                    d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                            </svg>
+                        `;
+        //checkInput();
+        document.getElementById('send-button').disabled = false;
     }
 
+    async function sendQuery() {
+        generatingResponse = true;
+        checkInput();
+        var query = document.getElementById('queryInput').value;
+        document.getElementById('queryInput').value = "";
+        generateUserBubble(query);
+        try
+        {
+            var sendButton = document.getElementById('send-button');
+            sendButton.disabled = true;
+            const response = await fetch('/api/striveml/chatbot',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    namespace: 'TestSuite',
+                    query: query
+                })
+            });
 
-    function sendQuery() {
+            var data = await response.json();
+            if (response.ok)
+            {
+                generateSystemBubble(data["data"]["response"]);
+                generatingResponse = false;
+                checkInput();
+            }
+            else
+            {
+                generateSystemBubble('ERROR GENERATING RESPONSE');
+                generatingResponse = false;
+                checkInput();
+            }
+        } catch (error)
+        {
+            console.error('Error: ',error.message);
+            generateSystemBubble('ERROR GENERATING RESPONSE');
+            generatingResponse = false;
+            checkInput();
+        }
+    }
+
+    function sesndQuery() {
         if (!stopButton) {
             const query = document.getElementById('queryInput').value;
             const vectorstore = sessionStorage.getItem("sessionNamespace");
