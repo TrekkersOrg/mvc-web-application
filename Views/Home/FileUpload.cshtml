@@ -21,8 +21,6 @@
         padding: 5%;
         width: 66%;
         height: 100%;
-        margin: 10;
-        margin-left: -10%;
         margin-right: 10%;
     }
 
@@ -41,6 +39,11 @@
         font-weight: bold;
         margin-bottom: 5px;
         /* Add spacing between label and input */
+    }
+
+    .selected-file-name {
+        margin-top: 2%;
+
     }
 
     .chooseFile {}
@@ -68,7 +71,7 @@
                     onclick="uploadDocumentToApplication()">
                     Browse files
                 </button>
-
+                <span class="selected-file-name" id="selected-file-name"></span>
                 <div id="uploadStatus"></div>
             </div>
             <div class="col-lg-4 bg-primary text-white border description-container">
