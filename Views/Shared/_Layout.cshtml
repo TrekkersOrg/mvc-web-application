@@ -28,8 +28,12 @@
                                 asp-action="Demo">Demo</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
+                                asp-action="FileUpload">File Upload</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link font btn btn-lg text-white" asp-area="" asp-controller="Home"
-                               asp-action="DocumentDashboard">Document Dashboard</a>
+                                asp-action="DocumentDashboard">Document Dashboard</a>
                         </li>
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
@@ -50,7 +54,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
-                                   asp-action="IssueReport">Issue Report</a>
+                                    asp-action="IssueReport">Issue Report</a>
                             </li>
                         }
                     </ul>

@@ -2,6 +2,26 @@
     ViewData["Title"] = "";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@using System.Security.Cryptography;
+@using System.Text;
+@{
+    // Get the username from User.Identity
+    string username = User?.Identity?.Name ?? "Unknown";
+    // Hash the username using SHA-256
+    using (SHA256 sha256 = SHA256.Create())
+    {
+        byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(username));
+        string hashedUsername = BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant();
+
+        <script>
+            sessionStorage.setItem("sessionNamespace", "133393fcd8d64c1308c7deaacbb98f049506b7775cb26e18edf4cec6298d57c0");
+            @* sessionStorage.setItem("sessionNamespace", "@hashedUsername"); *@
+        </script>
+    }
+}
+
+
+
 <link rel="stylesheet" href="~/css/fileUpload.css">
 
 <style>
@@ -22,11 +42,14 @@
         width: 66%;
         height: 100%;
         margin-right: 10%;
+        margin-left: 0.6%;
+        background-color: #c7c7c7;
     }
 
     .description-container {
         padding: 5%;
         display: flex;
+        background-color: #f7f7f7;
         flex-direction: column;
     }
 
@@ -43,10 +66,19 @@
 
     .selected-file-name {
         margin-top: 2%;
+        padding-bottom: 10%;
 
     }
 
-    .chooseFile {}
+    .next-button {
+        margin-bottom: 10%;
+    }
+
+    .uploadStatus {
+        border: 1px solid black;
+        margin-top: 2%;
+        @*display:none;*@
+    }
 
     .row>.col-lg-8,
     .row,
@@ -74,14 +106,16 @@
                 <span class="selected-file-name" id="selected-file-name"></span>
                 <div id="uploadStatus"></div>
             </div>
-            <div class="col-lg-4 bg-primary text-white border description-container">
-                <h1>For More Context</h1>
+            <div class="col-lg-4 text-white border description-container">
+                <h1 class="text-dark">For More Context</h1>
+                <button type="button" onclick="uploadDocumentToPinecone()" class="btn btn-primary next-button mt-3"
+                    disabled id="nextButton" onclick="saveDocumentDescription()">Next</button>
                 <div class="description-input">
-                    <label for="documentName" class="description-label">Document Name</label>
+                    <label for="documentName" class="description-label text-dark">Document Name</label>
                     <input type="text" id="documentName" class="form-control" required>
                 </div>
                 <div class="description-input">
-                    <label for="documentType" class="description-label">Category</label>
+                    <label for="documentType" class="description-label text-dark">Category</label>
                     <select id="documentType" class="form-select" required>
                         <option value="">Select Document Type</option>
                         <option value="report">Legal</option>
@@ -91,34 +125,80 @@
                     </select>
                 </div>
                 <div class="description-input">
-                    <label for="documentDescription" class="description-label">Brief Description</label>
+                    <label for="documentDescription" class="description-label text-dark">Brief Description</label>
                     <textarea id="documentDescription" rows="5" class="form-control" required></textarea>
                 </div>
-                <button type="button" class="btn btn-primary mt-3">Next</button>
+                @* Enable after document upload successful *@
+
             </div>
         </div>
     </div>
 </body>
 
-<script>
-    const fileInput = document.getElementById('fileInput');
-    const uploadStatus = document.getElementById('uploadStatus');
 
-    fileInput.addEventListener('change', (e) => {
-        const files = e.target.files;
-        // Add logic to process and upload files here
-        uploadStatus.textContent = `Selected ${files.length} files.`;
+<script>
+    const documentNameInput = document.getElementById('documentName');
+    const documentTypeInput = document.getElementById('documentType');
+    const documentDescriptionInput = document.getElementById('documentDescription');
+    const nextButton = document.getElementById('nextButton');
+
+    documentNameInput.addEventListener('keyup', () => {
+        validateForm();
     });
 
+    documentTypeInput.addEventListener('change', () => {
+        validateForm();
+    });
+
+    documentDescriptionInput.addEventListener('keyup', () => {
+        validateForm();
+    });
+
+    function validateForm() {
+        const documentName = documentNameInput.value.trim();
+        const documentType = documentTypeInput.value;
+        const documentDescription = documentDescriptionInput.value.trim();
+
+        // Enable the button only if all fields have a value
+        nextButton.disabled = !(documentName && documentType && documentDescription);
+    }
+
+    // Call validateForm on page load to handle initial state
+    validateForm();
+
+
+    function saveDocumentDescription(documentName, documentType, documentDescription) {
+        const data = {
+            documentName,
+            documentType,
+            documentDescription
+        };
+
+        const jsonData = JSON.stringify(data);
+
+        try {
+            const fs = require('fs');
+            fs.writeFileSync('documentDescription.JSON', jsonData);
+            console.log('Document description saved successfully.');
+        } catch (error) {
+            console.log('Error saving document description:', error);
+        }
+    }
+
+    const fileInput = document.getElementById('fileInput');
+    const uploadStatus = document.getElementById('uploadStatus');
 
     async function uploadDocumentToApplication() {
         const uploadButton = document.getElementById('upload-button');
         const selectedFileName = document.getElementById('selected-file-name');
         const fileInput = document.createElement("input");
+        fileInput.setAttribute("id", "fileInput");
         fileInput.type = "file";
+        fileInput.click();
 
         fileInput.addEventListener("change", (event) => {
             const selectedFile = event.target.files[0];
+            sessionStorage.setItem("selectedFile", selectedFile.name);
             // Check for supported file types
             const allowedExtensions = ['pdf', 'docx', 'doc'];
             const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
@@ -129,76 +209,93 @@
                 displayError("Only PDF, DOCX, DOC files are allowed.");
                 return;
             }
+            sendFileToMongoDB(selectedFile);
 
-            if (selectedFile) {
-                const getFileRequestBody = {
-                    FileName: selectedFile.name
-                }
-                fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/getFile", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(getFileRequestBody)
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            displayError("System is under maintenance. Please try again later.");
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const fileExists = data.data.fileExists;
-                        selectedFileName.textContent = selectedFile.name;
-                        if (fileExists) {
-                            displayError("File is already uploaded, please try another file.");
-                            return;
-                        }
-                        else {
+            selectedFileName.textContent = selectedFile.name;
+        });
+    }
 
+    async function sendFileToMongoDB(selectedFile) {
+        const formData = new FormData();
+        formData.append('targetFile', selectedFile);
 
-                            // Send the selected file to the API for server-side execution
-                            const formData = new FormData();
-                            formData.append('targetFile', selectedFile);
-                            showLoader();
-                            fetch('/api/fileupload/upload', {
-                                method: 'POST',
-                                body: formData
-                            })
-                                .then(response => {
-                                    hideLoader();
-                                    if (!response.ok) {
-                                        displayError("System is under maintenance. Please try again later.")
-                                        throw new Error(`HTTP error! Status: ${response.status}`);
-                                    }
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    sessionStorage.setItem("selectedFiles", data.data.fileName);
-                                    if (sessionStorage.getItem("selectedFiles") !== null) {
-                                        uploadFileDisplay.classList.remove('d-none');
-                                        document.getElementById("next-button").removeAttribute("disabled");
-                                        // Show delete button upon file selection
-                                        deleteButton.classList.remove('d-none');
-                                    }
-                                })
-                                .catch(error => {
-                                    hideLoader();
-                                    displayError("System is under maintenance. Please try again later.")
-                                    console.log('Upload error:', error);
-                                });
-                            hideLoader();
-                        }
-                    })
-                    .catch(error => {
-                        displayError("System is under maintenance. Please try again later.")
-                        console.log('Get error:', error);
-                    });
+        const namespace = sessionStorage.getItem("sessionNamespace");
+        const url = `https://strive-api.azurewebsites.net/api/MongoDB/UploadDocument?collectionName=${namespace}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': '*',
+                    'Access-Control-Allow-Headers': '*'
+                },
+                body: formData
+
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upload file to MongoDB collection.');
             }
 
+
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error('Error uploading file to MongoDB collection:', error.message);
+        }
+    }
+
+    @* async function uploadDocumentToPinecone() {
+        const requestBody = {
+        Namespace: sessionStorage.getItem("sessionNamespace"),
+        FileName: sessionStorage.getItem("selectedFile")
+        };
+        await fetch("https://strive-ml-api.azurewebsites.net/embedder", {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': '*',
+        'Access-Control-Allow-Headers': '*'
+        },
+        body: JSON.stringify(requestBody)
+        })
+        .then(response => {
+        if (!response.ok) {
+        displayError("System is under maintenance. Please try again later.")
+        throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+        })
+        .catch(error => {
+        displayError("System is under maintenance. Please try again later.");
+        console.error('Fetch error:', error);
         });
-        fileInput.click(); // Trigger the file selection dialog
+        } *@
+
+
+        function displayError(errorMessage) {
+            var errorBackground = document.getElementById("error-background");
+            var errorCloseButton = document.getElementById("error-close");
+            var errorText = document.getElementById("error-message");
+            errorText.innerText = errorMessage;
+            errorBackground.style.display = "block";
+            errorCloseButton.onclick = function () {
+                errorBackground.style.display = "none";
+            }
+        }
+
+    function showLoader() {
+        document.getElementById("loader-spinner").style.display = "";
+        document.getElementById("page-container").style.opacity = 0.5;
+    }
+
+    function hideLoader() {
+        document.getElementById("loader-spinner").style.display = "none";
+        document.getElementById("page-container").style.opacity = 1;
+
     }
 
 </script>
