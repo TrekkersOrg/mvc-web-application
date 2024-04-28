@@ -39,11 +39,12 @@
         justify-content: center;
         align-items: center;
         padding: 5%;
-        width: 66%;
+        width: 60%;
         height: 100%;
         margin-right: 10%;
-        margin-left: 0.6%;
+        margin-left: 0.4%;
         background-color: #c7c7c7;
+        margin-top: 5%;
     }
 
     .description-container {
@@ -51,11 +52,17 @@
         display: flex;
         background-color: #f7f7f7;
         flex-direction: column;
+        margin-top: 3%;
+        box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
     }
 
     .description-input {
         margin-bottom: 1rem;
         /* Add some spacing between inputs */
+    }
+
+    .btn-primary:disabled {
+        height: 10% !important;
     }
 
     .description-label {
@@ -85,26 +92,42 @@
     .col-lg-4 {
         margin-right: auto;
         flex: 0 0 auto;
+
     }
 
     .row>.col-lg-4:last-child {
         margin-left: auto;
+    }
+
+    .uploadStatus-table {
+        margin-top: 3%;
     }
 </style>
 
 <body>
     <div class="container site-container p-0">
         <div class="row page-row h-85">
-            <div class="col-lg-8 upload-container bg-light border">
+            <div class="col-lg-8 upload-container bg-light">
                 <h1>File Upload</h1>
-                <p>Drag and drop your files here or browse to select files.</p>
-
+                <p>Browse to select files.</p>
                 <button class="btn btn-primary btn-lg" type="button" id="upload-button"
                     onclick="uploadDocumentToApplication()">
                     Browse files
                 </button>
-                <span class="selected-file-name" id="selected-file-name"></span>
+                @* <span class="selected-file-name display-none" id="selected-file-name"></span> *@
                 <div id="uploadStatus"></div>
+                <div class="uploadStatus-table">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>File Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="col-lg-4 text-white border description-container">
                 <h1 class="text-dark">For More Context</h1>
@@ -128,7 +151,6 @@
                     <label for="documentDescription" class="description-label text-dark">Brief Description</label>
                     <textarea id="documentDescription" rows="5" class="form-control" required></textarea>
                 </div>
-                @* Enable after document upload successful *@
 
             </div>
         </div>
@@ -203,12 +225,36 @@
             const allowedExtensions = ['pdf', 'docx', 'doc'];
             const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
             const deleteButton = document.getElementById('delete-button');
-            const uploadFileDisplay = document.getElementById('uploadFileDisplayPanel');
+            const uploadFileDisplayPanel = document.getElementById('uploadFileDisplayPanel');
 
             if (!allowedExtensions.includes(fileExtension)) {
                 displayError("Only PDF, DOCX, DOC files are allowed.");
                 return;
             }
+            const tableBody = document.querySelector('.uploadStatus-table tbody');
+            const tableRow = document.createElement('tr');
+
+            const statusCell = document.createElement('td');
+            statusCell.textContent = 'Uploading...'; // Update status while uploading
+
+            const fileNameCell = document.createElement('td');
+            fileNameCell.textContent = selectedFile.name;
+
+            tableRow.appendChild(statusCell);
+            tableRow.appendChild(fileNameCell);
+            tableBody.appendChild(tableRow);
+
+            sendFileToMongoDB(selectedFile)
+                .then(() => {
+                    // Update status after successful upload
+                    statusCell.textContent = 'Uploaded';
+                })
+                .catch((error) => {
+                    // Update status in case of error
+                    statusCell.textContent = 'Error';
+                    console.error('Error uploading file:', error);
+                });
+
             sendFileToMongoDB(selectedFile);
 
             selectedFileName.textContent = selectedFile.name;
@@ -246,46 +292,47 @@
         }
     }
 
-    @* async function uploadDocumentToPinecone() {
+    async function uploadDocumentToPinecone() {
         const requestBody = {
-        Namespace: sessionStorage.getItem("sessionNamespace"),
-        FileName: sessionStorage.getItem("selectedFile")
+            Namespace: sessionStorage.getItem("sessionNamespace"),
+            FileName: sessionStorage.getItem("selectedFile")
         };
         await fetch("https://strive-ml-api.azurewebsites.net/embedder", {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': '*',
-        'Access-Control-Allow-Headers': '*'
-        },
-        body: JSON.stringify(requestBody)
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*',
+                'Access-Control-Allow-Headers': '*'
+            },
+            body: JSON.stringify(requestBody)
         })
-        .then(response => {
-        if (!response.ok) {
-        displayError("System is under maintenance. Please try again later.")
-        throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-        })
-        .catch(error => {
-        displayError("System is under maintenance. Please try again later.");
-        console.error('Fetch error:', error);
-        });
-        } *@
+            .then(response => {
+                if (!response.ok) {
+                    displayError("System is under maintenance. Please try again later.")
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .catch(error => {
+                displayError("System is under maintenance. Please try again later.");
+                console.error('Fetch error:', error);
+            });
+
+    }
 
 
-        function displayError(errorMessage) {
-            var errorBackground = document.getElementById("error-background");
-            var errorCloseButton = document.getElementById("error-close");
-            var errorText = document.getElementById("error-message");
-            errorText.innerText = errorMessage;
-            errorBackground.style.display = "block";
-            errorCloseButton.onclick = function () {
-                errorBackground.style.display = "none";
-            }
+    function displayError(errorMessage) {
+        var errorBackground = document.getElementById("error-background");
+        var errorCloseButton = document.getElementById("error-close");
+        var errorText = document.getElementById("error-message");
+        errorText.innerText = errorMessage;
+        errorBackground.style.display = "block";
+        errorCloseButton.onclick = function () {
+            errorBackground.style.display = "none";
         }
+    }
 
     function showLoader() {
         document.getElementById("loader-spinner").style.display = "";
