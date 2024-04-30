@@ -84,3 +84,34 @@
     }
 }
 <script src="/js/fileUpload.js"></script>
+
+
+ async function uploadDocumentToPinecone() {
+        const requestBody = {
+            namespace: sessionStorage.getItem("sessionNamespace"),
+            fileName: sessionStorage.getItem("selectedFile")
+        };
+        await fetch("https://strive-ml-api.azurewebsites.net/embedder", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*',
+                'Access-Control-Allow-Headers': '*'
+            },
+            body: JSON.stringify(requestBody)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    displayError("System is under maintenance. Please try again later.")
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .catch(error => {
+                displayError("System is under maintenance. Please try again later.");
+                console.error('Fetch error:', error);
+            });
+
+    }

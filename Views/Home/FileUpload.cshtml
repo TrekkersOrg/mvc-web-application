@@ -43,7 +43,7 @@
         height: 100%;
         margin-right: 10%;
         margin-left: 0.4%;
-        background-color: #c7c7c7;
+        background-color: rgb(247 247 247) !important;
         margin-top: 5%;
     }
 
@@ -109,10 +109,10 @@
         <div class="row page-row h-85">
             <div class="col-lg-8 upload-container bg-light">
                 <h1>File Upload</h1>
-                <p>Browse to select files.</p>
+                <p>Only PDF and DOCX File Types</p>
                 <button class="btn btn-primary btn-lg" type="button" id="upload-button"
                     onclick="uploadDocumentToApplication()">
-                    Browse files
+                    Browse Files
                 </button>
                 @* <span class="selected-file-name display-none" id="selected-file-name"></span> *@
                 <div id="uploadStatus"></div>
@@ -132,7 +132,7 @@
             <div class="col-lg-4 text-white border description-container">
                 <h1 class="text-dark">For More Context</h1>
                 <button type="button" onclick="uploadDocumentToPinecone()" class="btn btn-primary next-button mt-3"
-                    disabled id="nextButton" onclick="saveDocumentDescription()">Next</button>
+                    disabled id="nextButton">Next</button>
                 <div class="description-input">
                     <label for="documentName" class="description-label text-dark">Document Name</label>
                     <input type="text" id="documentName" class="form-control" required>
@@ -159,6 +159,8 @@
 
 
 <script>
+    const fileInput = document.getElementById('fileInput');
+    const uploadStatus = document.getElementById('uploadStatus');
     const documentNameInput = document.getElementById('documentName');
     const documentTypeInput = document.getElementById('documentType');
     const documentDescriptionInput = document.getElementById('documentDescription');
@@ -188,27 +190,22 @@
     // Call validateForm on page load to handle initial state
     validateForm();
 
-
-    function saveDocumentDescription(documentName, documentType, documentDescription) {
-        const data = {
-            documentName,
-            documentType,
-            documentDescription
-        };
-
-        const jsonData = JSON.stringify(data);
+    async function getDocument(sessionNamespace, selectedFileName) {
+        const url = `https://strive-api.azurewebsites.net/api/MongoDB/GetDocument?collectionName=${sessionNamespace}&fileName=${selectedFileName}`;
 
         try {
-            const fs = require('fs');
-            fs.writeFileSync('documentDescription.JSON', jsonData);
-            console.log('Document description saved successfully.');
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error('Failed to retrieve document from MongoDB collection.');
+            }
+
+            const data = await response.json();
+            console.log('Retrieved document: ', data);
         } catch (error) {
-            console.log('Error saving document description:', error);
+            console.error('Error retrieving document:', error);
         }
     }
-
-    const fileInput = document.getElementById('fileInput');
-    const uploadStatus = document.getElementById('uploadStatus');
 
     async function uploadDocumentToApplication() {
         const uploadButton = document.getElementById('upload-button');
@@ -255,9 +252,9 @@
                     console.error('Error uploading file:', error);
                 });
 
-            sendFileToMongoDB(selectedFile);
+            @* sendFileToMongoDB(selectedFile); *@
 
-            selectedFileName.textContent = selectedFile.name;
+                selectedFileName.textContent = selectedFile.name;
         });
     }
 
@@ -294,8 +291,8 @@
 
     async function uploadDocumentToPinecone() {
         const requestBody = {
-            Namespace: sessionStorage.getItem("sessionNamespace"),
-            FileName: sessionStorage.getItem("selectedFile")
+            namespace: sessionStorage.getItem("sessionNamespace"),
+            fileName: sessionStorage.getItem("selectedFile")
         };
         await fetch("https://strive-ml-api.azurewebsites.net/embedder", {
             method: 'POST',
