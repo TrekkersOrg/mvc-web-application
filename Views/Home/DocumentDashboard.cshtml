@@ -145,7 +145,8 @@
                 },
                 body: JSON.stringify({
                     namespace: 'TestSuite',
-                    query: query
+                    query: query,
+                    context: sessionStorage.getItem('conversationMemory')
                 })
             });
 
