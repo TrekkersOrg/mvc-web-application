@@ -17,7 +17,7 @@ html {
 }
 
 .nav-gradient{
-  background-image: linear-gradient(to left, #63029c, #400d3d) !important;
+  background-image: linear-gradient(to left, #042d8b, #edeced) !important;
 }
 
 @media (min-width: 768px) {

@@ -190,29 +190,16 @@
     // Call validateForm on page load to handle initial state
     validateForm();
 
-    async function getDocument(sessionNamespace, selectedFileName) {
-        const url = `https://strive-api.azurewebsites.net/api/MongoDB/GetDocument?collectionName=${sessionNamespace}&fileName=${selectedFileName}`;
 
-        try {
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error('Failed to retrieve document from MongoDB collection.');
-            }
-
-            const data = await response.json();
-            console.log('Retrieved document: ', data);
-        } catch (error) {
-            console.error('Error retrieving document:', error);
-        }
-    }
 
     async function uploadDocumentToApplication() {
         const uploadButton = document.getElementById('upload-button');
         const selectedFileName = document.getElementById('selected-file-name');
         const fileInput = document.createElement("input");
+
         fileInput.setAttribute("id", "fileInput");
         fileInput.type = "file";
+
         fileInput.click();
 
         fileInput.addEventListener("change", (event) => {
@@ -256,6 +243,23 @@
 
                 selectedFileName.textContent = selectedFile.name;
         });
+    }
+
+    async function checkFileExists(namespace, fileName) {
+        const url = `https://strive-api.azurewebsites.net/api/MongoDB/GetDocument?collectionName=${namespace}&fileName=${fileName}`;
+        const namespace = sessionStorage.getItem("sessionNamespace");
+        const doesExist = await checkFileExists(namespace, selectedFileName.textContent);
+        if (doesExist) {
+            displayError("File already exists in the collection.");
+            return;
+        }
+        try {
+            const response = await fetch(url);
+            return response.ok;
+        } catch (error) {
+            console.error('Error checking file existence:', error);
+            return false;
+        }
     }
 
     async function sendFileToMongoDB(selectedFile) {
