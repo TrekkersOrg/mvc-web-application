@@ -67,7 +67,6 @@
 
 <script src="/js/documentDashboard.js"></script>
 <script>
-    const ws = new WebSocket('ws://localhost:3000');
     var generatingResponse = false;
 
     function checkInput() {
@@ -146,7 +145,8 @@
                 },
                 body: JSON.stringify({
                     namespace: 'TestSuite',
-                    query: query
+                    query: query,
+                    context: sessionStorage.getItem('conversationMemory')
                 })
             });
 
@@ -155,6 +155,12 @@
             {
                 generateSystemBubble(data["data"]["response"]);
                 generatingResponse = false;
+                var newConversation = {
+                    "newQuery": query,
+                    "newResponse": data["data"]["response"]
+                };
+                sessionStorage.setItem("newConversation", JSON.stringify(newConversation));
+                conversationMemoryEntry();
                 checkInput();
             }
             else
@@ -199,7 +205,70 @@
         checkInput();
     }
 
+    function conversationMemoryEntry(){
+        var conversationMemory = JSON.parse(sessionStorage.getItem("conversationMemory"));
+        var newConversation = JSON.parse(sessionStorage.getItem("newConversation"));
+        console.log(conversationMemory);
+        console.log(conversationMemory.length);
+        if (conversationMemory.length == 0) {
+            var conv = {
+                "query1": newConversation["newQuery"],
+                "response1": newConversation["newResponse"]
+            };
+            conversationMemory.push(conv);
+            sessionStorage.setItem("conversationMemory", JSON.stringify(conversationMemory));
+            return;
+        }
+        else if (conversationMemory.length < 5) {
+            var queryKeyLabel = "query" + (conversationMemory.length + 1);
+            var responseKeyLabel = "response" + (conversationMemory.length + 1);
+            var conv = {};
+            conv[queryKeyLabel] = newConversation["newQuery"];
+            conv[responseKeyLabel] = newConversation["newResponse"];
+            conversationMemory.push(conv);
+            sessionStorage.setItem("conversationMemory",JSON.stringify(conversationMemory));
+            return;
+        }
+        else if (conversationMemory.length >= 5) {
+            conversationMemory.shift();
+            var newQueryKeyName = "";
+            var newResponseKeyName = "";
+            conversationMemory.forEach(function (dictionary)
+            {
+                console.log("Dictionary: " + JSON.stringify(dictionary));
+                var keys = Object.keys(dictionary);
+                console.log(keys);
+                keys.forEach(function(key) {
+                    if (key.includes("query")) {
+                        var index = parseInt(key[key.length - 1]);
+                        index++;
+                        newQueryKeyName = "query" + index.toString();
+                        dictionary[newQueryKeyName] = dictionary[key];
+                        delete dictionary[key];
+                    }
+                    if (key.includes("response")) {
+                        var index = parseInt(key[key.length - 1]);
+                        index++;
+                        newResponseKeyName = "response" + index.toString();
+                        dictionary[newResponseKeyName] = dictionary[key];
+                        delete dictionary[key];
+                    }
+                });
+            });
+            newQueryKeyName = "query" + (conversationMemory.length + 1);
+            newResponseKeyName = "response" + (conversationMemory.length + 1);
+            var conv = {};
+            conv[newQueryKeyName] = newConversation["newQuery"];
+            conv[newResponseKeyName] = newConversation["newResponse"];
+            conversationMemory.push(conv);
+            sessionStorage.setItem("conversationMemory",JSON.stringify(conversationMemory));
+            return;
+        }
+        return;
+    }
+
     window.onload = function () {
+        sessionStorage.setItem("conversationMemory", JSON.stringify([]));
         document.getElementById('queryInput').addEventListener('input',checkInput);
         hideLoader();
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
