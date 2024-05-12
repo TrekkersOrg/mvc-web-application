@@ -141,7 +141,7 @@
                     <label for="documentType" class="description-label text-dark">Category</label>
                     <select id="documentType" class="form-select" required>
                         <option value="">Select Document Type</option>
-                        <option value="report">Legal</option>
+                        <option value="legal">Legal</option>
                         <option value="presentation">Financial</option>
                         <option value="operational">Operational</option>
                         <option value="other">Other</option>
@@ -155,195 +155,211 @@
             </div>
         </div>
     </div>
-</body>
 
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const documentNameInput = document.getElementById('documentName');
+        const documentTypeInput = document.getElementById('documentType');
+        const documentDescriptionInput = document.getElementById('documentDescription');
+        const nextButton = document.getElementById('nextButton');
 
-<script>
-    const fileInput = document.getElementById('fileInput');
-    const uploadStatus = document.getElementById('uploadStatus');
-    const documentNameInput = document.getElementById('documentName');
-    const documentTypeInput = document.getElementById('documentType');
-    const documentDescriptionInput = document.getElementById('documentDescription');
-    const nextButton = document.getElementById('nextButton');
+        documentNameInput.addEventListener('keyup', () => {
+            validateForm();
+        });
 
-    documentNameInput.addEventListener('keyup', () => {
+        documentTypeInput.addEventListener('change', () => {
+            validateForm();
+        });
+
+        documentDescriptionInput.addEventListener('keyup', () => {
+            validateForm();
+        });
+
+        function validateForm() {
+            const documentName = documentNameInput.value.trim();
+            const documentType = documentTypeInput.value;
+            const documentDescription = documentDescriptionInput.value.trim();
+
+            // Enable the button only if all fields have a value
+            nextButton.disabled = !(documentName && documentType && documentDescription);
+        }
+
+        // Call validateForm on page load to handle initial state
         validateForm();
-    });
 
-    documentTypeInput.addEventListener('change', () => {
-        validateForm();
-    });
+        async function storeDocumentDescription() {
+            // Get the values of documentName, documentType, and documentDescription
+            const documentName = document.getElementById('documentName').value;
+            const documentType = document.getElementById('documentType').value;
+            const documentDescription = document.getElementById('documentDescription').value;
 
-    documentDescriptionInput.addEventListener('keyup', () => {
-        validateForm();
-    });
+            // Create a JavaScript object with the values
+            const documentData = {
+                documentName: documentName,
+                documentType: documentType,
+                documentDescription: documentDescription
+            };
 
-    function validateForm() {
-        const documentName = documentNameInput.value.trim();
-        const documentType = documentTypeInput.value;
-        const documentDescription = documentDescriptionInput.value.trim();
+            // Convert the object to JSON format
+            const jsonData = JSON.stringify(documentData);
 
-        // Enable the button only if all fields have a value
-        nextButton.disabled = !(documentName && documentType && documentDescription);
-    }
+            // Store the JSON data in local storage under the file name documentDescription.JSON
+            localStorage.setItem('documentDescription.JSON', jsonData);
+        }
 
-    // Call validateForm on page load to handle initial state
-    validateForm();
+        async function uploadDocumentToApplication() {
+            const uploadButton = document.getElementById('upload-button');
+            const selectedFileName = document.getElementById('selected-file-name');
+            const fileInput = document.createElement("input");
 
+            fileInput.setAttribute("id", "fileInput");
+            fileInput.type = "file";
 
+            fileInput.click();
 
-    async function uploadDocumentToApplication() {
-        const uploadButton = document.getElementById('upload-button');
-        const selectedFileName = document.getElementById('selected-file-name');
-        const fileInput = document.createElement("input");
+            fileInput.addEventListener("change", (event) => {
+                const selectedFile = event.target.files[0];
+                sessionStorage.setItem("selectedFile", selectedFile.name);
+                // Check for supported file types
+                const allowedExtensions = ['pdf', 'docx', 'doc'];
+                const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
+                const deleteButton = document.getElementById('delete-button');
+                const uploadFileDisplayPanel = document.getElementById('uploadFileDisplayPanel');
 
-        fileInput.setAttribute("id", "fileInput");
-        fileInput.type = "file";
+                if (!allowedExtensions.includes(fileExtension)) {
+                    displayError("Only PDF, DOCX, DOC files are allowed.");
+                    return;
+                }
+                const tableBody = document.querySelector('.uploadStatus-table tbody');
+                const tableRow = document.createElement('tr');
 
-        fileInput.click();
+                const statusCell = document.createElement('td');
+                statusCell.textContent = 'Uploading...'; // Update status while uploading
 
-        fileInput.addEventListener("change", (event) => {
-            const selectedFile = event.target.files[0];
-            sessionStorage.setItem("selectedFile", selectedFile.name);
-            // Check for supported file types
-            const allowedExtensions = ['pdf', 'docx', 'doc'];
-            const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
-            const deleteButton = document.getElementById('delete-button');
-            const uploadFileDisplayPanel = document.getElementById('uploadFileDisplayPanel');
+                const fileNameCell = document.createElement('td');
+                fileNameCell.textContent = selectedFile.name;
 
-            if (!allowedExtensions.includes(fileExtension)) {
-                displayError("Only PDF, DOCX, DOC files are allowed.");
-                return;
-            }
-            const tableBody = document.querySelector('.uploadStatus-table tbody');
-            const tableRow = document.createElement('tr');
+                tableRow.appendChild(statusCell);
+                tableRow.appendChild(fileNameCell);
+                tableBody.appendChild(tableRow);
 
-            const statusCell = document.createElement('td');
-            statusCell.textContent = 'Uploading...'; // Update status while uploading
-
-            const fileNameCell = document.createElement('td');
-            fileNameCell.textContent = selectedFile.name;
-
-            tableRow.appendChild(statusCell);
-            tableRow.appendChild(fileNameCell);
-            tableBody.appendChild(tableRow);
-
-            sendFileToMongoDB(selectedFile)
-                .then(() => {
-                    // Update status after successful upload
-                    statusCell.textContent = 'Uploaded';
-                })
-                .catch((error) => {
-                    // Update status in case of error
-                    statusCell.textContent = 'Error';
-                    console.error('Error uploading file:', error);
-                });
-
-            @* sendFileToMongoDB(selectedFile); *@
+                sendFileToMongoDB(selectedFile)
+                    .then(() => {
+                        // Update status after successful upload
+                        statusCell.textContent = 'Uploaded';
+                    })
+                    .catch((error) => {
+                        // Update status in case of error
+                        statusCell.textContent = 'Error';
+                        console.error('Error uploading file:', error);
+                    });
 
                 selectedFileName.textContent = selectedFile.name;
-        });
-    }
-
-    async function checkFileExists(namespace, fileName) {
-        const url = `https://strive-api.azurewebsites.net/api/MongoDB/GetDocument?collectionName=${namespace}&fileName=${fileName}`;
-        const namespace = sessionStorage.getItem("sessionNamespace");
-        const doesExist = await checkFileExists(namespace, selectedFileName.textContent);
-        if (doesExist) {
-            displayError("File already exists in the collection.");
-            return;
+            });
         }
-        try {
-            const response = await fetch(url);
-            return response.ok;
-        } catch (error) {
-            console.error('Error checking file existence:', error);
-            return false;
+
+        async function checkFileExists(namespace, fileName) {
+            const url = `https://strive-api.azurewebsites.net/api/MongoDB/GetDocument?collectionName=${namespace}&fileName=${fileName}`;
+            const sessionNamespace = sessionStorage.getItem("sessionNamespace"); // <-- Renamed variable
+            const doesExist = await checkFileExists(sessionNamespace, selectedFileName.textContent);
+            if (doesExist) {
+                displayError("File already exists in the collection.");
+                return;
+            }
+            try {
+                const response = await fetch(url);
+                return response.ok;
+            } catch (error) {
+                console.error('Error checking file existence:', error);
+                return false;
+            }
         }
-    }
 
-    async function sendFileToMongoDB(selectedFile) {
-        const formData = new FormData();
-        formData.append('targetFile', selectedFile);
+        async function sendFileToMongoDB(selectedFile) {
+            const formData = new FormData();
+            formData.append('targetFile', selectedFile);
 
-        const namespace = sessionStorage.getItem("sessionNamespace");
-        const url = `https://strive-api.azurewebsites.net/api/MongoDB/UploadDocument?collectionName=${namespace}`;
+            const namespace = sessionStorage.getItem("sessionNamespace");
+            const url = `https://strive-api.azurewebsites.net/api/MongoDB/UploadDocument?collectionName=${namespace}`;
 
-        try {
-            const response = await fetch(url, {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': '*',
+                        'Access-Control-Allow-Headers': '*'
+                    },
+                    body: formData
+
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to upload file to MongoDB collection.');
+                }
+
+
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.error('Error uploading file to MongoDB collection:', error.message);
+            }
+        }
+
+        async function uploadDocumentToPinecone() {
+            const requestBody = {
+                namespace: sessionStorage.getItem("sessionNamespace"),
+                fileName: sessionStorage.getItem("selectedFile")
+            };
+            await fetch("https://strive-ml-api.azurewebsites.net/embedder", {
                 method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': '*',
                     'Access-Control-Allow-Headers': '*'
                 },
-                body: formData
-
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to upload file to MongoDB collection.');
-            }
-
-
-            const data = await response.json();
-            console.log(data);
-        } catch (error) {
-            console.error('Error uploading file to MongoDB collection:', error.message);
-        }
-    }
-
-    async function uploadDocumentToPinecone() {
-        const requestBody = {
-            namespace: sessionStorage.getItem("sessionNamespace"),
-            fileName: sessionStorage.getItem("selectedFile")
-        };
-        await fetch("https://strive-ml-api.azurewebsites.net/embedder", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-                'Access-Control-Allow-Headers': '*'
-            },
-            body: JSON.stringify(requestBody)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    displayError("System is under maintenance. Please try again later.")
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
+                body: JSON.stringify(requestBody)
             })
-            .catch(error => {
-                displayError("System is under maintenance. Please try again later.");
-                console.error('Fetch error:', error);
-            });
-
-    }
-
-
-    function displayError(errorMessage) {
-        var errorBackground = document.getElementById("error-background");
-        var errorCloseButton = document.getElementById("error-close");
-        var errorText = document.getElementById("error-message");
-        errorText.innerText = errorMessage;
-        errorBackground.style.display = "block";
-        errorCloseButton.onclick = function () {
-            errorBackground.style.display = "none";
+                .then(response => {
+                    if (!response.ok) {
+                        displayError("System is under maintenance. Please try again later.")
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    displayError("System is under maintenance. Please try again later.");
+                    console.error('Fetch error:', error);
+                });
+            storeDocumentDescription();
         }
-    }
 
-    function showLoader() {
-        document.getElementById("loader-spinner").style.display = "";
-        document.getElementById("page-container").style.opacity = 0.5;
-    }
 
-    function hideLoader() {
-        document.getElementById("loader-spinner").style.display = "none";
-        document.getElementById("page-container").style.opacity = 1;
+        function displayError(errorMessage) {
+            var errorBackground = document.getElementById("error-background");
+            var errorCloseButton = document.getElementById("error-close");
+            var errorText = document.getElementById("error-message");
+            errorText.innerText = errorMessage;
+            errorBackground.style.display = "block";
+            errorCloseButton.onclick = function () {
+                errorBackground.style.display = "none";
+            }
+        }
 
-    }
+        function showLoader() {
+            document.getElementById("loader-spinner").style.display = "";
+            document.getElementById("page-container").style.opacity = 0.5;
+        }
 
-</script>
+        function hideLoader() {
+            document.getElementById("loader-spinner").style.display = "none";
+            document.getElementById("page-container").style.opacity = 1;
+
+        }
+
+    </script>
+
+</body>
