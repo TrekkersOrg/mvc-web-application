@@ -14,8 +14,8 @@
         string hashedUsername = BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant();
 
         <script>
-            sessionStorage.setItem("sessionNamespace", "133393fcd8d64c1308c7deaacbb98f049506b7775cb26e18edf4cec6298d57c0");
-            @* sessionStorage.setItem("sessionNamespace", "@hashedUsername"); *@
+            @* sessionStorage.setItem("sessionNamespace", "133393fcd8d64c1308c7deaacbb98f049506b7775cb26e18edf4cec6298d57c0"); *@
+                sessionStorage.setItem("sessionNamespace", "@hashedUsername");
         </script>
     }
 }
@@ -308,6 +308,8 @@
         }
 
         async function uploadDocumentToPinecone() {
+            storeDocumentDescription();
+
             const requestBody = {
                 namespace: sessionStorage.getItem("sessionNamespace"),
                 fileName: sessionStorage.getItem("selectedFile")
@@ -334,7 +336,8 @@
                     displayError("System is under maintenance. Please try again later.");
                     console.error('Fetch error:', error);
                 });
-            storeDocumentDescription();
+
+
         }
 
 
