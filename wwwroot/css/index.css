@@ -100,7 +100,8 @@ body {
 .description-row {
     margin-left: 7%;
     padding-bottom: 2%;
-    margin-top: -8%;
+    /* margin-top: -8%; */
+
     position: relative;
 }
 
@@ -218,7 +219,8 @@ body {
 }
 
 .summary-row {
-    padding-top: 3%;
+    padding-top: 1%;
+    padding-bottom: 2%;
 }
 
 .title-text {

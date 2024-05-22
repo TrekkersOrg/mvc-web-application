@@ -3,7 +3,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
 <link rel="stylesheet" href="~/css/documentDashboard.css">
 
@@ -11,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div class="container page-container" id="page-container">
         <div class="row chatbot-row">
-            <div class="col chatbot-col">
+            <div class="col-md-8 chatbot-col">
                 <div class="chat-container">
                     <div class="chatbot-topFrame container d-flex">
                         <div class="chatbot-name-container container">
@@ -19,14 +18,7 @@
                         </div>
                     </div>
                     <div class="chatbot-messages-container rounded flex-grow-1 overflow-y" id="chat-window">
-                        @*<div class="response-container container-flex">
-                        <ul id="chatbot-responses" class="chatbot-response-messages list-unstyled">I am a helpful
-                        assistant! Just ask me anything about this document.
-                        </div>
-                        <div class="chatbot-query-container container-flex">
-                        <ul id="response-input" class="chat-messages list-unstyled">Tell me about this document.
-                        </ul>
-                        </div>*@
+
                     </div>
                     <div class="chatInput-container d-flex align-items-center">
                         <div class="input-container container-flex">
@@ -48,9 +40,15 @@
                 </div>
             </div>
 
-            @* <div class="column chart-col">
-            <h2>Chart column</h2>
-            </div> *@
+            <div class="col-md-4 chart-col">
+                <h4>Risk Analysis</h4>
+                <canvas id="spiderChart"></canvas>
+                <h4>Risk Meter</h4>
+                <div id="riskMeter">
+                    <div id="riskMeterFill"></div>
+                    <div id="riskMeterLabel">0</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -64,7 +62,7 @@
 
 </body>
 
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/documentDashboard.js"></script>
 <script>
     var generatingResponse = false;
@@ -73,11 +71,8 @@
         var input = document.getElementById('queryInput').value.trim();
         var sendButton = document.getElementById('send-button');
         if (input !== '' && generatingResponse == false) {
-            console.log("Check");
             sendButton.disabled = false;
-        }
-        else
-        {
+        } else {
             sendButton.disabled = true;
         }
     }
@@ -134,11 +129,10 @@
         var query = document.getElementById('queryInput').value;
         document.getElementById('queryInput').value = "";
         generateUserBubble(query);
-        try
-        {
+        try {
             var sendButton = document.getElementById('send-button');
             sendButton.disabled = true;
-            const response = await fetch('/api/striveml/chatbot',{
+            const response = await fetch('/api/striveml/chatbot', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -151,8 +145,7 @@
             });
 
             var data = await response.json();
-            if (response.ok)
-            {
+            if (response.ok) {
                 generateSystemBubble(data["data"]["response"]);
                 generatingResponse = false;
                 var newConversation = {
@@ -162,16 +155,13 @@
                 sessionStorage.setItem("newConversation", JSON.stringify(newConversation));
                 conversationMemoryEntry();
                 checkInput();
-            }
-            else
-            {
+            } else {
                 generateSystemBubble('ERROR GENERATING RESPONSE');
                 generatingResponse = false;
                 checkInput();
             }
-        } catch (error)
-        {
-            console.error('Error: ',error.message);
+        } catch (error) {
+            console.error('Error: ', error.message);
             generateSystemBubble('ERROR GENERATING RESPONSE');
             generatingResponse = false;
             checkInput();
@@ -205,7 +195,7 @@
         checkInput();
     }
 
-    function conversationMemoryEntry(){
+    function conversationMemoryEntry() {
         var conversationMemory = JSON.parse(sessionStorage.getItem("conversationMemory"));
         var newConversation = JSON.parse(sessionStorage.getItem("newConversation"));
         console.log(conversationMemory);
@@ -218,27 +208,24 @@
             conversationMemory.push(conv);
             sessionStorage.setItem("conversationMemory", JSON.stringify(conversationMemory));
             return;
-        }
-        else if (conversationMemory.length < 5) {
+        } else if (conversationMemory.length < 5) {
             var queryKeyLabel = "query" + (conversationMemory.length + 1);
             var responseKeyLabel = "response" + (conversationMemory.length + 1);
             var conv = {};
             conv[queryKeyLabel] = newConversation["newQuery"];
             conv[responseKeyLabel] = newConversation["newResponse"];
             conversationMemory.push(conv);
-            sessionStorage.setItem("conversationMemory",JSON.stringify(conversationMemory));
+            sessionStorage.setItem("conversationMemory", JSON.stringify(conversationMemory));
             return;
-        }
-        else if (conversationMemory.length >= 5) {
+        } else if (conversationMemory.length >= 5) {
             conversationMemory.shift();
             var newQueryKeyName = "";
             var newResponseKeyName = "";
-            conversationMemory.forEach(function (dictionary)
-            {
+            conversationMemory.forEach(function (dictionary) {
                 console.log("Dictionary: " + JSON.stringify(dictionary));
                 var keys = Object.keys(dictionary);
                 console.log(keys);
-                keys.forEach(function(key) {
+                keys.forEach(function (key) {
                     if (key.includes("query")) {
                         var index = parseInt(key[key.length - 1]);
                         index++;
@@ -261,7 +248,7 @@
             conv[newQueryKeyName] = newConversation["newQuery"];
             conv[newResponseKeyName] = newConversation["newResponse"];
             conversationMemory.push(conv);
-            sessionStorage.setItem("conversationMemory",JSON.stringify(conversationMemory));
+            sessionStorage.setItem("conversationMemory", JSON.stringify(conversationMemory));
             return;
         }
         return;
@@ -269,9 +256,47 @@
 
     window.onload = function () {
         sessionStorage.setItem("conversationMemory", JSON.stringify([]));
-        document.getElementById('queryInput').addEventListener('input',checkInput);
+        document.getElementById('queryInput').addEventListener('input', checkInput);
         hideLoader();
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
         checkInput();
+        // Chart.js and risk meter initialization
+        var ctx = document.getElementById('spiderChart').getContext('2d');
+        var spiderChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Operational Risk', 'Financial Risk', 'Reputational Risk', 'Compliance Risk'],
+                datasets: [{
+                    label: 'Risk Levels',
+                    data: [3, 2, 4, 5], // Example data, you can update this with dynamic values
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scale: {
+                    ticks: {
+                        beginAtZero: true,
+                        max: 5
+                    }
+                }
+            }
+        });
+
+        // Risk Meter
+        function updateRiskMeter(value) {
+            var riskMeterFill = document.getElementById('riskMeterFill');
+            var riskMeterLabel = document.getElementById('riskMeterLabel');
+            var percentage = (value / 5) * 100;
+            riskMeterFill.style.width = percentage + '%';
+            riskMeterLabel.innerText = value.toFixed(1);
+        }
+
+        // Example usage with a random value between 1 and 5
+        setInterval(function () {
+            var randomValue = (Math.random() * 4 + 1).toFixed(1);
+            updateRiskMeter(randomValue);
+        }, 2000); // Update every 2 seconds
     }
 </script>
