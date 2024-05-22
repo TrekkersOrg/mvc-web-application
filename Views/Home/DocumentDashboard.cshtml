@@ -18,10 +18,10 @@
                         </div>
                     </div>
                     <div class="chatbot-messages-container rounded flex-grow-1 overflow-y" id="chat-window">
-
+                        <!-- Chat messages will appear here -->
                     </div>
                     <div class="chatInput-container d-flex align-items-center">
-                        <div class="input-container container-flex">
+                        <div class="input-container container-flex flex-grow-1">
                             <input type="text" class="form-control flex-grow-1" id="queryInput"
                                 placeholder="e.g. Explain this contract in plain English"
                                 onkeypress="submitChat(event)">
@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <svg class="loader-spinner" id="loader-spinner" version=" 1.2" xmlns="http://www.w3.org/2000/svg"
+    <svg class="loader-spinner" id="loader-spinner" version="1.2" xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 100 59">
         <path
             d="M55.42 25.14C55.64 26.48 55.75 27.85 55.75 29.25C55.75 43.27 44.46 54.61 30.5 54.61C16.54 54.61 5.25 43.27 5.25 29.25C5.25 15.23 16.54 3.89 30.5 3.89 C34.8 3.89 38.84 4.97 42.38 6.86" />
@@ -260,6 +260,7 @@
         hideLoader();
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
         checkInput();
+
         // Chart.js and risk meter initialization
         var ctx = document.getElementById('spiderChart').getContext('2d');
         var spiderChart = new Chart(ctx, {
@@ -288,15 +289,20 @@
         function updateRiskMeter(value) {
             var riskMeterFill = document.getElementById('riskMeterFill');
             var riskMeterLabel = document.getElementById('riskMeterLabel');
-            var percentage = (value / 5) * 100;
+            var percentage = value * 100; // Percentage of risk meter fill
             riskMeterFill.style.width = percentage + '%';
-            riskMeterLabel.innerText = value.toFixed(1);
+
+            // Adjust label value based on percentage
+            var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
+            riskMeterLabel.innerText = labelValue.toFixed(1);
         }
 
-        // Example usage with a random value between 1 and 5
+        // Example usage with a random value between 0 and 1
         setInterval(function () {
-            var randomValue = (Math.random() * 4 + 1).toFixed(1);
+            var randomValue = Math.random(); // Random value between 0 and 1
             updateRiskMeter(randomValue);
         }, 2000); // Update every 2 seconds
     }
+
+
 </script>

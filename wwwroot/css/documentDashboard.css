@@ -23,7 +23,7 @@ html {
 
 /* Container styles */
 .container {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 20px;
 }
@@ -35,6 +35,7 @@ html {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     padding: 15px;
+    width: 100%;
 }
 
 #chat-window {
@@ -44,14 +45,19 @@ html {
     border-radius: 8px;
     padding: 10px;
     background: #f9f9f9;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    /* Reduced spacing */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Chat input and buttons */
 .input-group {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    /* Reduced spacing */
+    width: 100%;
 }
 
 .form-control {
@@ -59,6 +65,13 @@ html {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    width: 100%;
+}
+
+.input-group-append,
+.input-group-prepend {
+    display: flex;
+    align-items: stretch;
 }
 
 .input-group-append button,
@@ -80,11 +93,13 @@ html {
 
 /* Chat bubbles */
 .chat-output {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    /* Reduced spacing */
     padding: 10px;
     border-radius: 10px;
     background: #e9e9eb;
-    max-width: 70%;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .chat-output.darker {
@@ -159,4 +174,48 @@ html {
         transform: scale(0.5);
         opacity: 0.5;
     }
+}
+
+/* Adjusted for full-width chat bubbles and matching send button height */
+.chatInput-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    width: 100%;
+    /* Set the width to match the chat container */
+}
+
+.input-container {
+    flex-grow: 1;
+    height: 50px;
+    /* Maintain the desired height */
+    width: calc(100% - 75px);
+    /* Adjusted width */
+}
+
+#queryInput {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.sendButton-container {
+    height: 50px;
+    /* Maintain the desired height */
+    width: 75px;
+    /* Adjusted width */
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+    /* Maintain the desired margin */
+}
+
+#send-button {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    box-sizing: border-box;
 }
