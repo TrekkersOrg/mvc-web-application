@@ -124,6 +124,13 @@
     }
 
     async function sendQuery() {
+        var sessionNamespace = '';
+        if (!sessionStorage.getItem('sessionNamespace')) {
+            sessionNamespace = 'TestSuite';
+        }
+        else {
+            sessionNamespace = sessionStorage.getItem('sessionNamespace');
+        }
         generatingResponse = true;
         checkInput();
         var query = document.getElementById('queryInput').value;
@@ -138,7 +145,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    namespace: 'TestSuite',
+                    namespace: sessionNamespace,
                     query: query,
                     context: sessionStorage.getItem('conversationMemory')
                 })
