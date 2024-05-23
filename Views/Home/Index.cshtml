@@ -8,67 +8,68 @@
 <body>
     <div class="container-fluid">
         <div class="row bg-gradient top-row">
-            <div class="col ">
+            <div class="col">
                 <div class="row title-frame">
-                    <header class="animated-text">
-                        <h1 class="text-white display-4">Legal Documents,</h1>
-                        <h1 id="text-container" class="text-white display-4">Decoded</h1>
+                    <header class="title-row justify-content-center">
+                        <h1 class="display-4 title-text">Ontological Risk Management</h1>
+                        <h1 id="text-container" class="text-white display-4"></h1>
                     </header>
                 </div>
-                <div class="row">
-                    <div class="description-row text-white">
-                        <h5> Leverage high-technology to understand complex legal documents in two clicks.
-                        </h5>
-                    </div>
+                <div class="description-row justify-content-center text-dark">
+                    <h5>Your Startup's Holistic Risk Evaluator</h5>
                 </div>
                 <div class="row start-button-frame">
                     <div class="col start-button-col">
                         <a class="btn btn-primary rounded-pill btn-lg text-dark text-decoration-none"
                             asp-area="Identity" asp-page="/Account/Register">Get Started</a>
                     </div>
-                    <div class="col demo-button-frame">
+                    <div class="col justify-content-center demo-button-frame">
                         <a class="btn btn-primary-demo rounded-pill btn-lg text-white text-decoration-none"
                             asp-area="Identity" asp-page="/Account/Register">Demo &#8594</a>
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <img class="wireframe-img" src="../img/Wireframe.png" alt="Wireframe">
+            <div class="col right-col">
+                @* <img src="" alt="Data gif"> *@
             </div>
         </div>
+
         <div class="bottom-row">
-            <div class="row title-row text-center">
+            <div class="row bottom-title text-center">
                 <h1 class="display-3 text-black font-weight-bold">Work With Us</h1>
             </div>
             <div class="row summary-row text-center">
                 <p class="lead text-dark">Strive is currently in closed beta but we would love to work with you.</p>
             </div>
-            <div class="row name-email justify-content-end">
-                <div class="col name-col">
+
+            <div class="row name-email align-items-center justify-content-end">
+                <div class="col-md-6 name-col">
                     <input type="text" placeholder="Name" class="form-control name-box" id="name"
                         aria-describedby="nameHelp">
                 </div>
-                <div class="col email-col">
+                <div class="col-md-6 email-col">
                     <input type="text" placeholder="Email" class="form-control email-box" id="email"
                         aria-describedby="emailHelp">
                 </div>
             </div>
-            <div class="row company-phone-frame">
+
+            <div class="row align-content-center company-phone-frame">
                 <div class="col company-col company-box">
-                    <input type="text" placeholder="Company" class="form-control name-box" id="company"
+                    <input type="text" placeholder="Company Website" class="form-control company-container" id="company"
                         aria-describedby="companyHelp">
                 </div>
                 <div class="col phone-col phoneNumber-box">
-                    <input type="tel" placeholder="(555) 123-4444" class="form-control name-box" id="phoneNumber"
+                    <input type="tel" placeholder="(555) 123-4444" class="form-control phone-container" id="phoneNumber"
                         aria-describedby="phoneNumberHelp">
                 </div>
             </div>
-            <div class="row usecase-frame">
+            <div class="row align-content-center usecase-frame">
                 <div class="col usecase-box">
-                    <textarea id="usecase" class="usecase-col expandable-input" placeholder="Use Case"
+                    <textarea id="usecase" class="form-control usecase-col expandable-input" placeholder="Use Case"
                         rows="4"></textarea>
                 </div>
             </div>
+
             <div class="row send-button-frame">
                 <div class="col send-button-box">
                     <button type="submit" class="submit-btn" onclick="sendContactUsEmail()">Send</button>

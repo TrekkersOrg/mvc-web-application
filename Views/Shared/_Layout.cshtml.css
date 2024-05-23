@@ -24,6 +24,10 @@ a {
   border-color: #f7f7f7 ;
 }
 
+.text-color {
+  color: black;
+}
+
 .border-top {
   border-top: 1px solid #e5e5e5;
 }

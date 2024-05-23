@@ -15,7 +15,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm nav-gradient box-shadow">
             <div class="container-fluid">
-                <a class="navbar-brand font text-white" asp-area="" asp-controller="Home" asp-action="Index">Strive</a>
+                <a class="navbar-brand font text-dark" asp-area="" asp-controller="Home" asp-action="Index">Strive</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -24,33 +24,37 @@
                     <ul class="navbar-nav flex-grow-1">
 
                         <li class="nav-item">
-                            <a class="nav-link font btn btn-lg text-white" asp-area="" asp-controller="Home"
+                            <a class="nav-link font btn btn-lg text-dark" asp-area="" asp-controller="Home"
                                 asp-action="Demo">Demo</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link font btn btn-lg text-white" asp-area="" asp-controller="Home"
-                               asp-action="DocumentDashboard">Document Dashboard</a>
+                            <a class="nav-link font text-dark btn btn-lg" asp-area="" asp-controller="Home"
+                                asp-action="FileUpload">File Upload</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link font btn btn-lg text-dark" asp-area="" asp-controller="Home"
+                                asp-action="DocumentDashboard">Document Dashboard</a>
                         </li>
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
-                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
+                                <a class="nav-link font text-dark btn btn-lg" asp-area="" asp-controller="Home"
                                     asp-action="OurProducts" style="display: none;">Try Strive free</a>
                             </li>
                         }
                         @if (User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
-                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
+                                <a class="nav-link font text-dark btn btn-lg" asp-area="" asp-controller="Home"
                                     asp-action="FileUpload">File Upload</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
+                                <a class="nav-link font text-dark btn btn-lg" asp-area="" asp-controller="Home"
                                     asp-action="DocumentAnalysis" style="display: none;">Document Analysis</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link font text-white btn btn-lg" asp-area="" asp-controller="Home"
-                                   asp-action="IssueReport">Issue Report</a>
+                                <a class="nav-link font text-dark btn btn-lg" asp-area="" asp-controller="Home"
+                                    asp-action="IssueReport">Issue Report</a>
                             </li>
                         }
                     </ul>

@@ -3,7 +3,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
 <link rel="stylesheet" href="~/css/documentDashboard.css">
 
@@ -11,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div class="container page-container" id="page-container">
         <div class="row chatbot-row">
-            <div class="col chatbot-col">
+            <div class="col-md-8 chatbot-col">
                 <div class="chat-container">
                     <div class="chatbot-topFrame container d-flex">
                         <div class="chatbot-name-container container">
@@ -19,25 +18,19 @@
                         </div>
                     </div>
                     <div class="chatbot-messages-container rounded flex-grow-1 overflow-y" id="chat-window">
-                        @*<div class="response-container container-flex">
-                            <ul id="chatbot-responses" class="chatbot-response-messages list-unstyled">I am a helpful
-                                assistant! Just ask me anything about this document.
-                        </div>
-                        <div class="chatbot-query-container container-flex">
-                            <ul id="response-input" class="chat-messages list-unstyled">Tell me about this document.
-                            </ul>
-                        </div>*@
+                        <!-- Chat messages will appear here -->
                     </div>
                     <div class="chatInput-container d-flex align-items-center">
-                        <div class="input-container container-flex">
+                        <div class="input-container container-flex flex-grow-1">
                             <input type="text" class="form-control flex-grow-1" id="queryInput"
                                 placeholder="e.g. Explain this contract in plain English"
                                 onkeypress="submitChat(event)">
                         </div>
                         <div class="sendButton-container">
-                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-send" viewBox="0 0 16 16">
+                            <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()"
+                                oninput="checkInput()">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="send-icon" width="16" height="16"
+                                    fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                     <path
                                         d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
                                 </svg>
@@ -47,64 +40,51 @@
                 </div>
             </div>
 
-            @* <div class="column chart-col">
-            <h2>Chart column</h2>
-            </div> *@
+            <div class="col-md-4 chart-col">
+                <h4>Risk Analysis</h4>
+                <canvas id="spiderChart"></canvas>
+                <h4>Risk Meter</h4>
+                <div id="riskMeter">
+                    <div id="riskMeterFill"></div>
+                    <div id="riskMeterLabel">0</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <svg class="loader-spinner" id="loader-spinner" version=" 1.2" xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 100 59">
-        <path d="M55.42 25.14C55.64 26.48 55.75 27.85 55.75 29.25C55.75 43.27 44.46 54.61 30.5 54.61C16.54 54.61 5.25 43.27 5.25 29.25C5.25 15.23 16.54 3.89 30.5 3.89 C34.8 3.89 38.84 4.97 42.38 6.86" />
-        <path d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
+    <svg class="loader-spinner" id="loader-spinner" version="1.2" xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 100 59">
+        <path
+            d="M55.42 25.14C55.64 26.48 55.75 27.85 55.75 29.25C55.75 43.27 44.46 54.61 30.5 54.61C16.54 54.61 5.25 43.27 5.25 29.25C5.25 15.23 16.54 3.89 30.5 3.89 C34.8 3.89 38.84 4.97 42.38 6.86" />
+        <path
+            d="M44.28 33.78C44.04 32.45 43.9 31.08 43.88 29.68C43.64 15.66 54.73 4.13 68.69 3.9C82.65 3.66 94.13 14.8 94.37 28.82C94.61 42.84 83.52 54.36 69.56 54.6C65.26 54.68 61.19 53.67 57.62 51.84" />
     </svg>
 
 </body>
 
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/documentDashboard.js"></script>
 <script>
-    const ws = new WebSocket('ws://localhost:3000');
-    ws.onopen = () =>
-    {
-        console.log('WebSocket connection established');
-    };
-    ws.onmessage = (event) =>
-    {
-        const data = JSON.parse(event.data);
-        if (data.type == "chat")
-        {
-            if (data.response)
-            {
-                removeChatbotLoader();
-                generateSystemBubble(data.response.response);
-                document.getElementById('send-button').disabled = false;
-            } else if (data.error)
-            {
-                document.getElementById('response-output').innerText = `Error: ${data.error}`;
-            }
-        }
-        else if (data.type == "summary")
-        {
-            document.getElementById('summary-box').innerText = data.response.response;
-            document.getElementById('send-button').disabled = false;
-        }
-        else if (data.type == "title")
-        {
-            document.getElementById('title-box').innerText = data.response.response;
-        }
-    };
+    var generatingResponse = false;
 
-    function submitChat(event)
-    {
-        if (event.keyCode === 13)
-        {
+    function checkInput() {
+        var input = document.getElementById('queryInput').value.trim();
+        var sendButton = document.getElementById('send-button');
+        if (input !== '' && generatingResponse == false) {
+            sendButton.disabled = false;
+        } else {
+            sendButton.disabled = true;
+        }
+    }
+
+    function submitChat(event) {
+        if (event.keyCode === 13) {
             document.getElementById("send-button").click();
         }
     }
 
-    function generateUserBubble(message)
-    {
+    function generateUserBubble(message) {
+        checkInput();
         var window = document.getElementById('chat-window');
         var bubble = document.createElement('div');
         bubble.classList.add('chat-output');
@@ -115,74 +95,220 @@
         window.appendChild(bubble);
         addChatbotLoader();
         window.scrollTop = window.scrollHeight;
+        checkInput();
     }
 
-    function generateSystemBubble(message)
-    {
+    function generateSystemBubble(message) {
+        checkInput();
         var bubble = document.createElement('div');
         bubble.classList.add('chat-output');
         var text = document.createElement('p');
-        text.innerText = message;
         bubble.appendChild(text);
         var window = document.getElementById('chat-window');
+        removeChatbotLoader();
         window.appendChild(bubble);
+        var index = 0;
+        var sendButton = document.getElementById('send-button');
+        sendButton.disabled = true;
+        var typingEffect = setInterval(function () {
+            if (index < message.length) {
+                text.innerText = message.slice(0, index);
+                index++;
+                sendButton.disabled = true;
+            } else {
+                clearInterval(typingEffect);
+                text.innerText = message;
+            }
+        }, 10);
         document.getElementById('send-button').disabled = false;
     }
 
-    function sendQuery()
-    {
-        const query = document.getElementById('queryInput').value;
-        const vectorstore = sessionStorage.getItem("sessionNamespace");
-        const type = "chat";
-        //appendChatBubble(query,'user');
-        generateUserBubble(query);
+    async function sendQuery() {
+        var sessionNamespace = '';
+        if (!sessionStorage.getItem('sessionNamespace')) {
+            sessionNamespace = 'TestSuite';
+        }
+        else {
+            sessionNamespace = sessionStorage.getItem('sessionNamespace');
+        }
+        generatingResponse = true;
+        checkInput();
+        var query = document.getElementById('queryInput').value;
         document.getElementById('queryInput').value = "";
-        ws.send(JSON.stringify({ query,vectorstore,type }));
-        document.getElementById('send-button').disabled = true;
-        var chatWindow = document.getElementById('chat-window');
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+        generateUserBubble(query);
+        try {
+            var sendButton = document.getElementById('send-button');
+            sendButton.disabled = true;
+            const response = await fetch('/api/striveml/chatbot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    namespace: sessionNamespace,
+                    query: query,
+                    context: sessionStorage.getItem('conversationMemory')
+                })
+            });
+
+            var data = await response.json();
+            if (response.ok) {
+                generateSystemBubble(data["data"]["response"]);
+                generatingResponse = false;
+                var newConversation = {
+                    "newQuery": query,
+                    "newResponse": data["data"]["response"]
+                };
+                sessionStorage.setItem("newConversation", JSON.stringify(newConversation));
+                conversationMemoryEntry();
+                checkInput();
+            } else {
+                generateSystemBubble('ERROR GENERATING RESPONSE');
+                generatingResponse = false;
+                checkInput();
+            }
+        } catch (error) {
+            console.error('Error: ', error.message);
+            generateSystemBubble('ERROR GENERATING RESPONSE');
+            generatingResponse = false;
+            checkInput();
+        }
     }
 
-    function addChatbotLoader()
-    {
+    function addChatbotLoader() {
         var parent = document.createElement('div');
         parent.classList.add('chat-output');
-        parent.setAttribute('id','chat-loader');
+        parent.setAttribute('id', 'chat-loader');
         var bubble = document.createElement('div');
         bubble.classList.add('typing');
-        var circle1 = document.createElement('span');
-        circle1.classList.add('circle');
-        circle1.classList.add('scaling');
-        var circle2 = document.createElement('span');
-        circle2.classList.add('circle');
-        circle2.classList.add('scaling');
-        var circle3 = document.createElement('span');
-        circle3.classList.add('circle');
-        circle3.classList.add('scaling');
-        bubble.appendChild(circle1);
-        bubble.appendChild(circle2);
-        bubble.appendChild(circle3);
+        var circle = document.createElement('span');
+        circle.classList.add('circle');
+        circle.classList.add('scaling');
+        bubble.appendChild(circle);
         parent.appendChild(bubble);
         var window = document.getElementById('chat-window');
         window.appendChild(parent);
+        checkInput();
     }
 
-    function removeChatbotLoader()
-    {
-        document.getElementById('chat-loader').remove();
+    function removeChatbotLoader() {
+        const loader = document.getElementById('chat-loader');
+        loader && loader.remove();
     }
 
-    function hideLoader()
-    {
+    function hideLoader() {
         document.getElementById("loader-spinner").style.display = "none";
         document.getElementById("page-container").style.opacity = 1;
-
+        checkInput();
     }
 
-    window.onload = function ()
-    {
+    function conversationMemoryEntry() {
+        var conversationMemory = JSON.parse(sessionStorage.getItem("conversationMemory"));
+        var newConversation = JSON.parse(sessionStorage.getItem("newConversation"));
+        console.log(conversationMemory);
+        console.log(conversationMemory.length);
+        if (conversationMemory.length == 0) {
+            var conv = {
+                "query1": newConversation["newQuery"],
+                "response1": newConversation["newResponse"]
+            };
+            conversationMemory.push(conv);
+            sessionStorage.setItem("conversationMemory", JSON.stringify(conversationMemory));
+            return;
+        } else if (conversationMemory.length < 5) {
+            var queryKeyLabel = "query" + (conversationMemory.length + 1);
+            var responseKeyLabel = "response" + (conversationMemory.length + 1);
+            var conv = {};
+            conv[queryKeyLabel] = newConversation["newQuery"];
+            conv[responseKeyLabel] = newConversation["newResponse"];
+            conversationMemory.push(conv);
+            sessionStorage.setItem("conversationMemory", JSON.stringify(conversationMemory));
+            return;
+        } else if (conversationMemory.length >= 5) {
+            conversationMemory.shift();
+            var newQueryKeyName = "";
+            var newResponseKeyName = "";
+            conversationMemory.forEach(function (dictionary) {
+                console.log("Dictionary: " + JSON.stringify(dictionary));
+                var keys = Object.keys(dictionary);
+                console.log(keys);
+                keys.forEach(function (key) {
+                    if (key.includes("query")) {
+                        var index = parseInt(key[key.length - 1]);
+                        index++;
+                        newQueryKeyName = "query" + index.toString();
+                        dictionary[newQueryKeyName] = dictionary[key];
+                        delete dictionary[key];
+                    }
+                    if (key.includes("response")) {
+                        var index = parseInt(key[key.length - 1]);
+                        index++;
+                        newResponseKeyName = "response" + index.toString();
+                        dictionary[newResponseKeyName] = dictionary[key];
+                        delete dictionary[key];
+                    }
+                });
+            });
+            newQueryKeyName = "query" + (conversationMemory.length + 1);
+            newResponseKeyName = "response" + (conversationMemory.length + 1);
+            var conv = {};
+            conv[newQueryKeyName] = newConversation["newQuery"];
+            conv[newResponseKeyName] = newConversation["newResponse"];
+            conversationMemory.push(conv);
+            sessionStorage.setItem("conversationMemory", JSON.stringify(conversationMemory));
+            return;
+        }
+        return;
+    }
+
+    window.onload = function () {
+        sessionStorage.setItem("conversationMemory", JSON.stringify([]));
+        document.getElementById('queryInput').addEventListener('input', checkInput);
         hideLoader();
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
+        checkInput();
+
+        // Chart.js and risk meter initialization
+        var ctx = document.getElementById('spiderChart').getContext('2d');
+        var spiderChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Operational Risk', 'Financial Risk', 'Reputational Risk', 'Compliance Risk'],
+                datasets: [{
+                    label: 'Risk Levels',
+                    data: [3, 2, 4, 5], // Example data, you can update this with dynamic values
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scale: {
+                    ticks: {
+                        beginAtZero: true,
+                        max: 5
+                    }
+                }
+            }
+        });
+
+        // Risk Meter
+        function updateRiskMeter(value) {
+            var riskMeterFill = document.getElementById('riskMeterFill');
+            var riskMeterLabel = document.getElementById('riskMeterLabel');
+            var percentage = value * 100; // Percentage of risk meter fill
+            riskMeterFill.style.width = percentage + '%';
+
+            // Adjust label value based on percentage
+            var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
+            riskMeterLabel.innerText = labelValue.toFixed(1);
+        }
+
+        // Example usage with a random value between 0 and 1
+        setInterval(function () {
+            var randomValue = Math.random(); // Random value between 0 and 1
+            updateRiskMeter(randomValue);
+        }, 2000); // Update every 2 seconds
     }
 
 
