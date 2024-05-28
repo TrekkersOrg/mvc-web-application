@@ -131,7 +131,7 @@
             </div>
             <div class="col-lg-4 text-white border description-container">
                 <h1 class="text-dark">For More Context</h1>
-                <button type="button" onclick="uploadDocumentToPinecone()" class="btn btn-primary next-button mt-3"
+                <button type="button" onclick="uploadFileFlow()" class="btn btn-primary next-button mt-3"
                     disabled id="nextButton">Next</button>
                 <div class="description-input">
                     <label for="documentName" class="description-label text-dark">Document Name</label>
@@ -338,6 +338,19 @@
                 });
 
 
+        }
+
+        async function routeToDocumentAnalysis()
+        {
+            var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
+            window.location.href = documentAnalysisUrl;
+            return Promise.resolve();
+        }
+
+        async function uploadFileFlow()
+        {
+            await uploadDocumentToPinecone();
+            await routeToDocumentAnalysis();
         }
 
 
