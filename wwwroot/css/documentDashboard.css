@@ -36,17 +36,20 @@ html {
     margin-bottom: 20px;
     padding: 15px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 #chat-window {
-    height: 400px;
+    height: calc(100% - 100px);
+    /* Adjust height to fill remaining space */
     overflow-y: auto;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;
     background: #f9f9f9;
     margin-bottom: 10px;
-    /* Reduced spacing */
     display: flex;
     flex-direction: column;
 }
@@ -56,7 +59,6 @@ html {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    /* Reduced spacing */
     width: 100%;
 }
 
@@ -94,7 +96,6 @@ html {
 /* Chat bubbles */
 .chat-output {
     margin-bottom: 5px;
-    /* Reduced spacing */
     padding: 10px;
     border-radius: 10px;
     background: #e9e9eb;
