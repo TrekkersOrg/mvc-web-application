@@ -205,7 +205,7 @@
             const jsonData = JSON.stringify(documentData);
 
             // Store the JSON data in local storage under the file name documentDescription.JSON
-            localStorage.setItem('documentDescription.JSON', jsonData);
+            sessionStorage.setItem('documentContext', jsonData);
         }
 
         async function uploadDocumentToApplication() {

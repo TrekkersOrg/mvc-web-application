@@ -14,7 +14,7 @@
                 <div class="chat-container d-flex flex-column h-100">
                     <div class="chatbot-topFrame container d-flex">
                         <div class="chatbot-name-container container">
-                            <h3>Strive LLC. Term Sheet - 2024</h3>
+                            <h3 id="document-name">Strive LLC. Term Sheet - 2024</h3>
                         </div>
                     </div>
                     <div class="chatbot-messages-container rounded flex-grow-1 overflow-y" id="chat-window">
@@ -303,6 +303,7 @@
         hideLoader();
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
         checkInput();
+        document.getElementById('document-name').innerText = JSON.parse(sessionStorage.getItem('documentContext'))?.documentName;
         await determineRiskScore();
         var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'))?.data;
         var finalScore = riskAssessmentData.result.finalScore;
