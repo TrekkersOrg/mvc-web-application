@@ -304,13 +304,6 @@
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
         checkInput();
         document.getElementById('document-name').innerText = JSON.parse(sessionStorage.getItem('documentContext'))?.documentName;
-        await determineRiskScore();
-        var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'))?.data;
-        var finalScore = riskAssessmentData.result.finalScore;
-        var financialScore = riskAssessmentData.result.financialScore;
-        var operationalScore = riskAssessmentData.result.operationalScore;
-        var regulatoryScore = riskAssessmentData.result.regulatoryScore;
-        var reputationalScore = riskAssessmentData.result.reputationalScore;
         // Chart.js and risk meter initialization
         var ctx = document.getElementById('spiderChart').getContext('2d');
         var spiderChart = new Chart(ctx, {
@@ -319,7 +312,7 @@
                 labels: ['Operational Risk', 'Financial Risk', 'Reputational Risk', 'Compliance Risk'],
                 datasets: [{
                     label: 'Risk Levels',
-                    data: [operationalScore, financialScore, reputationalScore, regulatoryScore], // Example data, you can update this with dynamic values
+                    data: [0, 0, 0, 0], // Example data, you can update this with dynamic values
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
@@ -329,13 +322,25 @@
                 scale: {
                     ticks: {
                         beginAtZero: true,
-                        max: 5,
-                        stepSize: 1
+                        stepSize: 1,
+                        count: 6
+                    },
+                    r: {
+                        suggestedMin: 0,
+                        suggestedMax: 5
                     }
                 }
             }
         });
-
+        await determineRiskScore();
+        var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'))?.data;
+        var finalScore = riskAssessmentData.result.finalScore;
+        var financialScore = riskAssessmentData.result.financialScore;
+        var operationalScore = riskAssessmentData.result.operationalScore;
+        var regulatoryScore = riskAssessmentData.result.regulatoryScore;
+        var reputationalScore = riskAssessmentData.result.reputationalScore;
+        spiderChart.data.datasets[0].data = [operationalScore,financialScore,reputationalScore,regulatoryScore];
+        spiderChart.update();
         // Risk Meter
         function updateRiskMeter(value) {
             var riskMeterFill = document.getElementById('riskMeterFill');
