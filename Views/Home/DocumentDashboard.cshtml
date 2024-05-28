@@ -261,13 +261,55 @@
         return;
     }
 
-    window.onload = function () {
+    async function determineRiskScore()
+    {
+        const requestBody = {
+            namespace: sessionStorage.getItem("sessionNamespace"),
+            file_name: sessionStorage.getItem("selectedFile")
+        };
+        await fetch("https://strive-ml-api.azurewebsites.net/riskAssessment",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*',
+                'Access-Control-Allow-Headers': '*'
+            },
+            body: JSON.stringify(requestBody)
+        })
+            .then(response =>
+            {
+                if (!response.ok)
+                {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                return response.text();
+            })
+            .then(data =>
+            {
+                sessionStorage.setItem('riskAssessment',data);
+            })
+            .catch(error =>
+            {
+                console.error('Fetch error:',error);
+            });
+    }
+
+    window.onload = async function () {
         sessionStorage.setItem("conversationMemory", JSON.stringify([]));
         document.getElementById('queryInput').addEventListener('input', checkInput);
         hideLoader();
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
         checkInput();
-
+        await determineRiskScore();
+        var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'))?.data;
+        var finalScore = riskAssessmentData.result.finalScore;
+        var financialScore = riskAssessmentData.result.financialScore;
+        var operationalScore = riskAssessmentData.result.operationalScore;
+        var regulatoryScore = riskAssessmentData.result.regulatoryScore;
+        var reputationalScore = riskAssessmentData.result.reputationalScore;
         // Chart.js and risk meter initialization
         var ctx = document.getElementById('spiderChart').getContext('2d');
         var spiderChart = new Chart(ctx, {
@@ -276,7 +318,7 @@
                 labels: ['Operational Risk', 'Financial Risk', 'Reputational Risk', 'Compliance Risk'],
                 datasets: [{
                     label: 'Risk Levels',
-                    data: [3, 2, 4, 5], // Example data, you can update this with dynamic values
+                    data: [operationalScore, financialScore, reputationalScore, regulatoryScore], // Example data, you can update this with dynamic values
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
@@ -286,7 +328,8 @@
                 scale: {
                     ticks: {
                         beginAtZero: true,
-                        max: 5
+                        max: 5,
+                        stepSize: 1
                     }
                 }
             }
@@ -296,18 +339,18 @@
         function updateRiskMeter(value) {
             var riskMeterFill = document.getElementById('riskMeterFill');
             var riskMeterLabel = document.getElementById('riskMeterLabel');
-            var percentage = value * 100; // Percentage of risk meter fill
+            var percentage = value * 20; // Percentage of risk meter fill
             riskMeterFill.style.width = percentage + '%';
 
             // Adjust label value based on percentage
-            var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
-            riskMeterLabel.innerText = labelValue.toFixed(1);
+            //var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
+            riskMeterLabel.innerText = value.toFixed(1);
         }
 
         // Example usage with a random value between 0 and 1
         setInterval(function () {
-            var randomValue = Math.random(); // Random value between 0 and 1
-            updateRiskMeter(randomValue);
+            //var randomValue = Math.random(); // Random value between 0 and 1
+            updateRiskMeter(finalScore);
         }, 2000); // Update every 2 seconds
     }
 </script>
