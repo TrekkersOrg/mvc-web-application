@@ -1,33 +1,26 @@
-﻿/* Specific styles for the spider chart container */
-.spider-chart-container {
-    width: 100%;
-    height: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Existing styles */
+/* Navbar Styles */
 .nav-gradient {
     background-color: #000000;
     height: 56px;
     display: flex;
     align-items: center;
-    padding: 0;
+    padding: 0 1rem;
 }
 
 .navbar-brand {
     color: #ffffff !important;
     font-size: 1.5rem;
     font-weight: bold;
-    margin-left: 0;
+    margin-left: 1rem;
+    /* Add margin to move it to the right */
 }
 
 .navbar-collapse {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: auto;
+    margin-left: 80% !important;
+    /* Push the collapse to the right */
 }
 
 .navbar-nav {
@@ -53,9 +46,11 @@
 
 .nav-link.btn.login-btn {
     margin-left: 1rem;
+    /* Ensure there is space between nav items and login button */
     color: #ffffff !important;
 }
 
+/* Additional styles for the landing page */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #000000;
@@ -80,7 +75,6 @@ body {
     justify-content: center;
     background-color: #000000;
     padding: 0;
-    margin-top: -10vh;
 }
 
 .landing-container {
@@ -88,43 +82,11 @@ body {
     padding: 2rem;
 }
 
-.middle-section {
+.middle-section,
+.calendly-section {
     padding: 4rem 0;
     margin: 0 auto;
-    max-width: 1200px;
-}
-
-.info-box {
-    background-color: #333;
-    padding: 2rem;
-    margin: 1rem;
-    border-radius: 8px;
-    color: white;
-    text-align: left;
-    width: 100%;
-}
-
-.info-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.info-description {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #fff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #004085;
+    max-width: 800px;
 }
 
 .bottom-row {
@@ -160,16 +122,32 @@ body {
     font-style: italic;
 }
 
+.award-box {
+    background-color: #333;
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 8px;
+    color: white;
+}
+
+.award-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.award-date,
+.award-location {
+    font-size: 0.9rem;
+}
+
 header .title-frame h1 {
     font-size: 2rem;
     margin: 0.5rem 0;
-    padding-left: 2rem;
 }
 
 header .title-frame h5 {
     font-size: 1rem;
     margin: 0.5rem 0;
-    padding-left: 2rem;
 }
 
 @media (max-width: 768px) {
@@ -177,7 +155,6 @@ header .title-frame h5 {
         flex-direction: column;
         text-align: center;
         align-items: center;
-        margin-top: -10vh;
     }
 
     .top-row .col-lg-8,
@@ -192,9 +169,5 @@ header .title-frame h5 {
     .start-button-frame {
         flex-direction: column;
         align-items: center;
-    }
-
-    .info-box {
-        width: 100%;
     }
 }
