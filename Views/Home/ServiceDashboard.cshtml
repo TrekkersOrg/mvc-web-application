@@ -5,13 +5,16 @@
 
 <div class="container-fluid">
     <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
+        <div class="col-md-4 offset-md-1">
             <a href="@Url.Action("FileUpload", "Home")" class="text-decoration-none">
                 <div class="widget shadow p-3 mb-5 bg-light rounded">
                     <h5 class="widget-title">File Upload</h5>
                     <p class="widget-text">Upload your files here</p>
                 </div>
             </a>
+        </div>
+        <div id="additional-widgets" class="col-md-4 offset-md-1">
+            <!-- Additional widgets will be dynamically added here -->
         </div>
     </div>
 </div>
@@ -23,13 +26,16 @@
 <style>
     .widget {
         border-radius: 20px !important;
-        /* Ensure corners are rounded */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        /* Add shadow */
         padding: 20px;
         background-color: #f8f9fa;
-        /* Off-white background */
         transition: box-shadow 0.3s;
+        width: 400px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .widget:hover {
@@ -46,4 +52,33 @@
         font-size: 1rem;
         color: #555555;
     }
+
+    #main-content {
+        transition: margin-left 0.5s;
+    }
+
+    .sidebar-open #main-content {
+        margin-left: 250px;
+    }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (localStorage.getItem('showDocumentAnalysisWidget') === 'true') {
+            const newWidget = document.createElement('div');
+            newWidget.className = 'col-md-4 offset-md-1';
+            newWidget.innerHTML = `
+                <a href="/Home/DocumentAnalysis" class="text-decoration-none">
+                    <div class="widget shadow p-3 mb-5 bg-light rounded">
+                        <h5 class="widget-title">Document Analysis</h5>
+                        <p class="widget-text">Analyze your documents here</p>
+                    </div>
+                </a>
+            `;
+
+            document.getElementById('additional-widgets').appendChild(newWidget);
+
+            localStorage.removeItem('showDocumentAnalysisWidget');
+        }
+    });
+</script>
