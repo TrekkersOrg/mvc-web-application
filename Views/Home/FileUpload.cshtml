@@ -6,7 +6,7 @@
 @using System.Security.Cryptography;
 @using System.Text;
 @{
-    // Get the username from User.Identity
+
     string username = User?.Identity?.Name ?? "Unknown";
     // Hash the username using SHA-256
     using (SHA256 sha256 = SHA256.Create())

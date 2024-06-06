@@ -56,6 +56,12 @@
             background-color: #444;
         }
 
+        .sidebar-bottom {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
         body {
             background-color: #ffffff;
             font-family: Arial, sans-serif;
@@ -144,8 +150,9 @@
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="/Home/Index">Home</a>
         <a href="/Home/ServiceDashboard">Service Dashboard</a>
-        <a href="/Home/Account">Account</a>
-        <a href="/Home/Settings">Settings</a>
+        <div class="sidebar-bottom">
+            <a href="/Home/ContactUs">Contact Us</a>
+        </div>
     </div>
 
     <div id="main">

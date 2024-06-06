@@ -10,19 +10,16 @@
             <div class="row title-row align-items-center">
                 <div class="col-lg-8 col-md-12 text-lg-left pt-0">
                     <header class="title-frame">
-                        <h1 class="display-4 title-text">Ontology <span class="highlight">for Enterprise Risk
-                                Management</span></h1>
+                        <h1 class="display-4 title-text">Ontology <span class="highlight">for Enterprise Risk Management</span></h1>
                         <h5 class="text-light mt-2">Empowering Data With through Ontology Services</h5>
                     </header>
                     <div class="start-button-frame mt-4">
-                        @* <a class="btn btn-primary-black rounded-pill btn-lg text-white text-decoration-none mr-2"
-                        asp-area="Identity" asp-page="/Account/Register">Get Started</a> *@
+                        @{
+                            var getStartedUrl = SignInManager.IsSignedIn(User) ? Url.Action("FileUpload", "Home") : Url.Action("Demo", "Home");
+                        }
+                        <a class="btn btn-primary-black rounded-pill btn-lg text-white text-decoration-none mr-2" href="@getStartedUrl">Get Started</a>
 
-                        <a class="btn btn-primary-black rounded-pill btn-lg text-white text-decoration-none mr-2"
-                            asp-controller="Home" asp-action="ServiceDashboard">Get Started</a>
-
-                        <a class="btn btn-primary-demo rounded-pill btn-lg text-white text-decoration-none"
-                            href="#middle-section">Learn More &#8594;</a>
+                        <a class="btn btn-primary-demo rounded-pill btn-lg text-white text-decoration-none" href="#middle-section">Learn More &#8594;</a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-12 text-center mt-3 mt-lg-0 p-5">
@@ -42,16 +39,14 @@
                 <div class="col-12 mb-4">
                     <div class="info-box">
                         <h3 class="info-title">OaaS</h3>
-                        <p class="info-description">Learn More about Ontology as a Service (OaaS) and how it can
-                            benefit your organization.</p>
+                        <p class="info-description">Learn More about Ontology as a Service (OaaS) and how it can benefit your organization.</p>
                         <a class="btn btn-primary" asp-controller="Home" asp-action="OaasView">Learn More</a>
                     </div>
                 </div>
                 <div class="col-12 mb-4">
                     <div class="info-box">
                         <h3 class="info-title">Why Strive</h3>
-                        <p class="info-description">Watch our demo to understand why Strive is the best choice for
-                            your ontology needs.</p>
+                        <p class="info-description">Watch our demo to understand why Strive is the best choice for your ontology needs.</p>
                         <a class="btn btn-primary" asp-controller="Home" asp-action="Demo">Watch Demo</a>
                     </div>
                 </div>
@@ -59,6 +54,7 @@
         </div>
     </div>
     <!-- Top Section -->
+
     <div class="top-row d-flex align-items-center">
         <div class="container landing-container">
             <div class="row title-row align-items-center">
@@ -67,12 +63,14 @@
                         <h1 class="display-4 title-text">Contact Us</h1>
                         <h5 class="text-light mt-2">We'd love to hear from you!</h5>
                     </header>
+                    @* <div class="calendly-container">
+                        <div class="calendly-inline-widget" data-url="https://calendly.com/apoorva-sharma-strive/30min" style="min-width:320px;height:630px;"></div>
+                        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+                    </div> *@
                 </div>
             </div>
         </div>
     </div>
-
-
     <!-- Footer Section -->
     <footer class="footer-section bg-dark text-white text-center">
         <div class="container">
@@ -155,5 +153,51 @@
             var newData = generateRandomData();
             updateSpiderChartData(newData);
         }, 2000);
+    });
+</script>
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a id="user-greeting" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"></a>
+    </li>
+    <li class="nav-item">
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-white btn btn-lg" asp-area="Identity" asp-page="/Account/Register" style="display: none;">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-white btn btn-lg" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}
+</ul>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        if('@User.Identity.IsAuthenticated' === 'True' && localStorage.getItem('userFirstName') == null) {
+            $.ajax({
+                url: 'https://strive-api.azurewebsites.net/api/user/getUser?username=' + '@User.Identity.Name',
+                type: 'GET',
+                success: function (data) {
+                    localStorage.setItem('userFirstName', data['data']['firstName'])
+                    $('#user-greeting').text(localStorage.getItem('userFirstName'));
+                }
+            });
+        }
+        else {
+            $('#user-greeting').text(localStorage.getItem('userFirstName'));
+        }
     });
 </script>

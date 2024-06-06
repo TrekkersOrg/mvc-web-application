@@ -36,14 +36,12 @@ html {
     flex-direction: column;
     height: 100%;
     width: calc(100% - 60px);
-    /* Adjust based on the sidebar width */
     margin-left: 50px;
     transition: width 0.3s ease, margin-left 0.3s ease;
 }
 
 .sidebar-open .chat-container {
     width: calc(100% - 60px);
-    /* Adjusted for the sidebar width */
 }
 
 #chat-window {
