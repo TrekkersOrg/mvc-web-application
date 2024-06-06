@@ -1,4 +1,8 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
     ViewData["Title"] = "Ontological Risk Management";
     Layout = "~/Views/Shared/_CustomLayoutWithLogin.cshtml";
 }
@@ -153,51 +157,5 @@
             var newData = generateRandomData();
             updateSpiderChartData(newData);
         }, 2000);
-    });
-</script>
-
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
-
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a id="user-greeting" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"></a>
-    </li>
-    <li class="nav-item">
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-white btn btn-lg" asp-area="Identity" asp-page="/Account/Register" style="display: none;">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-white btn btn-lg" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
-</ul>
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        if('@User.Identity.IsAuthenticated' === 'True' && localStorage.getItem('userFirstName') == null) {
-            $.ajax({
-                url: 'https://strive-api.azurewebsites.net/api/user/getUser?username=' + '@User.Identity.Name',
-                type: 'GET',
-                success: function (data) {
-                    localStorage.setItem('userFirstName', data['data']['firstName'])
-                    $('#user-greeting').text(localStorage.getItem('userFirstName'));
-                }
-            });
-        }
-        else {
-            $('#user-greeting').text(localStorage.getItem('userFirstName'));
-        }
     });
 </script>
