@@ -1,0 +1,77 @@
+@{
+    ViewData["Title"] = "Service Dashboard";
+    Layout = "~/Views/Shared/_ServiceDashboardLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mt-4">
+        <div class="col-md-4 offset-md-1">
+            <a href="@Url.Action("FileUpload", "Home")" class="text-decoration-none">
+                <div class="widget shadow p-3 mb-5 bg-light rounded">
+                    <h5 class="widget-title">File Upload</h5>
+                    <p class="widget-text">Upload your files here</p>
+                </div>
+            </a>
+        </div>
+        <div id="additional-widgets" class="col-md-4 offset-md-1">
+            <!-- Additional widgets will be dynamically added here -->
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+
+<style>
+    .widget {
+        border-radius: 20px !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        background-color: #f8f9fa;
+        transition: box-shadow 0.3s;
+        width: 400px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .widget:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .widget-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .widget-text {
+        font-size: 1rem;
+        color: #555555;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (localStorage.getItem('showDocumentDashboardWidget') === 'true') {
+            const newWidget = document.createElement('div');
+            newWidget.className = 'col-md-4 offset-md-1';
+            newWidget.innerHTML = `
+                <a href="/Home/DocumentDashboard" class="text-decoration-none">
+                    <div class="widget shadow p-3 mb-5 bg-light rounded">
+                        <h5 class="widget-title">Document Dashboard</h5>
+                        <p class="widget-text">Access your document dashboard here</p>
+                    </div>
+                </a>
+            `;
+
+            document.getElementById('additional-widgets').appendChild(newWidget);
+
+            // Remove the flag from local storage after adding the widget
+            localStorage.removeItem('showDocumentDashboardWidget');
+        }
+    });
+</script>

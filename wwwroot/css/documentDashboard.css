@@ -8,7 +8,6 @@ html {
     background-color: #f5f5f5;
 }
 
-/* Loader styles */
 .loader-spinner {
     position: absolute;
     top: 50%;
@@ -21,42 +20,46 @@ html {
     transition: opacity 0.3s ease;
 }
 
-/* Container styles */
 .container {
     max-width: 100%;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Chat container styles */
 .chat-container {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     padding: 15px;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: calc(100% - 60px);
+    margin-left: 50px;
+    transition: width 0.3s ease, margin-left 0.3s ease;
+}
+
+.sidebar-open .chat-container {
+    width: calc(100% - 60px);
 }
 
 #chat-window {
-    height: 400px;
+    height: calc(100% - 100px);
     overflow-y: auto;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;
     background: #f9f9f9;
     margin-bottom: 10px;
-    /* Reduced spacing */
     display: flex;
     flex-direction: column;
 }
 
-/* Chat input and buttons */
 .input-group {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    /* Reduced spacing */
     width: 100%;
 }
 
@@ -91,10 +94,8 @@ html {
     cursor: not-allowed;
 }
 
-/* Chat bubbles */
 .chat-output {
     margin-bottom: 5px;
-    /* Reduced spacing */
     padding: 10px;
     border-radius: 10px;
     background: #e9e9eb;
@@ -108,7 +109,6 @@ html {
     align-self: flex-end;
 }
 
-/* Chart container styles */
 .chart-container {
     background: #fff;
     border-radius: 8px;
@@ -143,7 +143,6 @@ html {
     color: #333;
 }
 
-/* Typing effect */
 .typing {
     display: flex;
     align-items: center;
@@ -176,21 +175,17 @@ html {
     }
 }
 
-/* Adjusted for full-width chat bubbles and matching send button height */
 .chatInput-container {
     display: flex;
     align-items: center;
     padding: 10px;
     width: 100%;
-    /* Set the width to match the chat container */
 }
 
 .input-container {
     flex-grow: 1;
     height: 50px;
-    /* Maintain the desired height */
     width: calc(100% - 75px);
-    /* Adjusted width */
 }
 
 #queryInput {
@@ -201,13 +196,10 @@ html {
 
 .sendButton-container {
     height: 50px;
-    /* Maintain the desired height */
     width: 75px;
-    /* Adjusted width */
     display: flex;
     align-items: center;
     margin-left: 5px;
-    /* Maintain the desired margin */
 }
 
 #send-button {

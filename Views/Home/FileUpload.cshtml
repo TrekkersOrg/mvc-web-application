@@ -1,11 +1,12 @@
 @{
-    ViewData["Title"] = "";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Service Dashboard";
+    Layout = "~/Views/Shared/_ServiceDashboardLayout.cshtml";
 }
+
 @using System.Security.Cryptography;
 @using System.Text;
 @{
-    // Get the username from User.Identity
+
     string username = User?.Identity?.Name ?? "Unknown";
     // Hash the username using SHA-256
     using (SHA256 sha256 = SHA256.Create())
@@ -131,8 +132,8 @@
             </div>
             <div class="col-lg-4 text-white border description-container">
                 <h1 class="text-dark">For More Context</h1>
-                <button type="button" onclick="uploadFileFlow()" class="btn btn-primary next-button mt-3"
-                    disabled id="nextButton">Next</button>
+                <button type="button" onclick="uploadFileFlow()" class="btn btn-primary next-button mt-3" disabled
+                    id="nextButton">Next</button>
                 <div class="description-input">
                     <label for="documentName" class="description-label text-dark">Document Name</label>
                     <input type="text" id="documentName" class="form-control" required>
@@ -181,20 +182,16 @@
             const documentType = documentTypeInput.value;
             const documentDescription = documentDescriptionInput.value.trim();
 
-            // Enable the button only if all fields have a value
             nextButton.disabled = !(documentName && documentType && documentDescription);
         }
 
-        // Call validateForm on page load to handle initial state
         validateForm();
 
         async function storeDocumentDescription() {
-            // Get the values of documentName, documentType, and documentDescription
             const documentName = document.getElementById('documentName').value;
             const documentType = document.getElementById('documentType').value;
             const documentDescription = document.getElementById('documentDescription').value;
 
-            // Create a JavaScript object with the values
             const documentData = {
                 documentName: documentName,
                 documentType: documentType,
@@ -205,7 +202,7 @@
             const jsonData = JSON.stringify(documentData);
 
             // Store the JSON data in local storage under the file name documentDescription.JSON
-            localStorage.setItem('documentDescription.JSON', jsonData);
+            sessionStorage.setItem('documentContext', jsonData);
         }
 
         async function uploadDocumentToApplication() {
@@ -221,7 +218,6 @@
             fileInput.addEventListener("change", (event) => {
                 const selectedFile = event.target.files[0];
                 sessionStorage.setItem("selectedFile", selectedFile.name);
-                // Check for supported file types
                 const allowedExtensions = ['pdf', 'docx', 'doc'];
                 const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
                 const deleteButton = document.getElementById('delete-button');
@@ -235,7 +231,7 @@
                 const tableRow = document.createElement('tr');
 
                 const statusCell = document.createElement('td');
-                statusCell.textContent = 'Uploading...'; // Update status while uploading
+                statusCell.textContent = 'Uploading...';
 
                 const fileNameCell = document.createElement('td');
                 fileNameCell.textContent = selectedFile.name;
@@ -246,11 +242,9 @@
 
                 sendFileToMongoDB(selectedFile)
                     .then(() => {
-                        // Update status after successful upload
                         statusCell.textContent = 'Uploaded';
                     })
                     .catch((error) => {
-                        // Update status in case of error
                         statusCell.textContent = 'Error';
                         console.error('Error uploading file:', error);
                     });
@@ -340,17 +334,33 @@
 
         }
 
-        async function routeToDocumentAnalysis()
-        {
+        // ================== Document Dashboard Widget Generator =====================
+        async function routeToDocumentAnalysis() {
             var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
             window.location.href = documentAnalysisUrl;
             return Promise.resolve();
+
+            const newWidget = document.createElement('div');
+            newWidget.className = 'col-md-4 offset-md-1';
+            newWidget.innerHTML = `
+            <a href="/Home/DocumentAnalysis" class="text-decoration-none">
+                <div class="widget shadow p-3 mb-5 bg-light rounded">
+                    <h5 class="widget-title">Document Analysis</h5>
+                    <p class="widget-text">Analyze your documents here</p>
+                </div>
+            </a>
+        `;
+
+            document.getElementById('additional-widgets').appendChild(newWidget);
+            var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
+            window.location.href = documentAnalysisUrl;
         }
 
-        async function uploadFileFlow()
-        {
+
+        async function uploadFileFlow() {
             await uploadDocumentToPinecone();
             await routeToDocumentAnalysis();
+            localStorage.setItem('showDocumentDashboardWidget', 'true');
         }
 
 

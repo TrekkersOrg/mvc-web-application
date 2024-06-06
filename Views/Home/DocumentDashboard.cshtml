@@ -1,8 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Service Dashboard";
+    Layout = "~/Views/Shared/_ServiceDashboardLayout.cshtml";
 }
-
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
 <link rel="stylesheet" href="~/css/documentDashboard.css">
 
@@ -11,10 +10,10 @@
     <div class="container page-container" id="page-container">
         <div class="row chatbot-row">
             <div class="col-md-8 chatbot-col">
-                <div class="chat-container">
+                <div class="chat-container d-flex flex-column h-100">
                     <div class="chatbot-topFrame container d-flex">
                         <div class="chatbot-name-container container">
-                            <h3>Strive LLC. Term Sheet - 2024</h3>
+                            <h3 id="document-name">Strive LLC. Term Sheet - 2024</h3>
                         </div>
                     </div>
                     <div class="chatbot-messages-container rounded flex-grow-1 overflow-y" id="chat-window">
@@ -261,13 +260,49 @@
         return;
     }
 
-    window.onload = function () {
+    async function determineRiskScore()
+    {
+        const requestBody = {
+            namespace: sessionStorage.getItem("sessionNamespace"),
+            file_name: sessionStorage.getItem("selectedFile")
+        };
+        await fetch("https://strive-ml-api.azurewebsites.net/riskAssessment",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*',
+                'Access-Control-Allow-Headers': '*'
+            },
+            body: JSON.stringify(requestBody)
+        })
+            .then(response =>
+            {
+                if (!response.ok)
+                {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                return response.text();
+            })
+            .then(data =>
+            {
+                sessionStorage.setItem('riskAssessment',data);
+            })
+            .catch(error =>
+            {
+                console.error('Fetch error:',error);
+            });
+    }
+
+    window.onload = async function () {
         sessionStorage.setItem("conversationMemory", JSON.stringify([]));
         document.getElementById('queryInput').addEventListener('input', checkInput);
         hideLoader();
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
         checkInput();
-
+        document.getElementById('document-name').innerText = JSON.parse(sessionStorage.getItem('documentContext'))?.documentName;
         // Chart.js and risk meter initialization
         var ctx = document.getElementById('spiderChart').getContext('2d');
         var spiderChart = new Chart(ctx, {
@@ -276,7 +311,7 @@
                 labels: ['Operational Risk', 'Financial Risk', 'Reputational Risk', 'Compliance Risk'],
                 datasets: [{
                     label: 'Risk Levels',
-                    data: [3, 2, 4, 5], // Example data, you can update this with dynamic values
+                    data: [0, 0, 0, 0], // Example data, you can update this with dynamic values
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
@@ -286,30 +321,41 @@
                 scale: {
                     ticks: {
                         beginAtZero: true,
-                        max: 5
+                        stepSize: 1,
+                        count: 6
+                    },
+                    r: {
+                        suggestedMin: 0,
+                        suggestedMax: 5
                     }
                 }
             }
         });
-
+        await determineRiskScore();
+        var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'))?.data;
+        var finalScore = riskAssessmentData.result.finalScore;
+        var financialScore = riskAssessmentData.result.financialScore;
+        var operationalScore = riskAssessmentData.result.operationalScore;
+        var regulatoryScore = riskAssessmentData.result.regulatoryScore;
+        var reputationalScore = riskAssessmentData.result.reputationalScore;
+        spiderChart.data.datasets[0].data = [operationalScore,financialScore,reputationalScore,regulatoryScore];
+        spiderChart.update();
         // Risk Meter
         function updateRiskMeter(value) {
             var riskMeterFill = document.getElementById('riskMeterFill');
             var riskMeterLabel = document.getElementById('riskMeterLabel');
-            var percentage = value * 100; // Percentage of risk meter fill
+            var percentage = value * 20; // Percentage of risk meter fill
             riskMeterFill.style.width = percentage + '%';
 
             // Adjust label value based on percentage
-            var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
-            riskMeterLabel.innerText = labelValue.toFixed(1);
+            //var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
+            riskMeterLabel.innerText = value.toFixed(1);
         }
 
         // Example usage with a random value between 0 and 1
         setInterval(function () {
-            var randomValue = Math.random(); // Random value between 0 and 1
-            updateRiskMeter(randomValue);
+            //var randomValue = Math.random(); // Random value between 0 and 1
+            updateRiskMeter(finalScore);
         }, 2000); // Update every 2 seconds
     }
-
-
 </script>

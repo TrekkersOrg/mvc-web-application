@@ -1,82 +1,161 @@
-﻿@{
-    ViewData["Title"] = "";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Ontological Risk Management";
+    Layout = "~/Views/Shared/_CustomLayoutWithLogin.cshtml";
 }
-
 <link rel="stylesheet" href="~/css/index.css">
-
-<body>
-    <div class="container-fluid">
-        <div class="row bg-gradient top-row">
-            <div class="col">
-                <div class="row title-frame">
-                    <header class="title-row justify-content-center">
-                        <h1 class="display-4 title-text">Ontological Risk Management</h1>
-                        <h1 id="text-container" class="text-white display-4"></h1>
+<div class="container-fluid p-0">
+    <!-- Top Section -->
+    <div class="top-row d-flex align-items-center">
+        <div class="container landing-container">
+            <div class="row title-row align-items-center">
+                <div class="col-lg-8 col-md-12 text-lg-left pt-0">
+                    <header class="title-frame">
+                        <h1 class="display-4 title-text">Ontology <span class="highlight">for Enterprise Risk Management</span></h1>
+                        <h5 class="text-light mt-2">Empowering Data With through Ontology Services</h5>
                     </header>
-                </div>
-                <div class="description-row justify-content-center text-dark">
-                    <h5>Your Startup's Holistic Risk Evaluator</h5>
-                </div>
-                <div class="row start-button-frame">
-                    <div class="col start-button-col">
-                        <a class="btn btn-primary rounded-pill btn-lg text-dark text-decoration-none"
-                            asp-area="Identity" asp-page="/Account/Register">Get Started</a>
-                    </div>
-                    <div class="col justify-content-center demo-button-frame">
-                        <a class="btn btn-primary-demo rounded-pill btn-lg text-white text-decoration-none"
-                            asp-area="Identity" asp-page="/Account/Register">Demo &#8594</a>
+                    <div class="start-button-frame mt-4">
+                        @{
+                            var getStartedUrl = SignInManager.IsSignedIn(User) ? Url.Action("FileUpload", "Home") : Url.Action("Demo", "Home");
+                        }
+                        <a class="btn btn-primary-black rounded-pill btn-lg text-white text-decoration-none mr-2" href="@getStartedUrl">Get Started</a>
+
+                        <a class="btn btn-primary-demo rounded-pill btn-lg text-white text-decoration-none" href="#middle-section">Learn More &#8594;</a>
                     </div>
                 </div>
-            </div>
-            <div class="col right-col">
-                @* <img src="" alt="Data gif"> *@
-            </div>
-        </div>
-
-        <div class="bottom-row">
-            <div class="row bottom-title text-center">
-                <h1 class="display-3 text-black font-weight-bold">Work With Us</h1>
-            </div>
-            <div class="row summary-row text-center">
-                <p class="lead text-dark">Strive is currently in closed beta but we would love to work with you.</p>
-            </div>
-
-            <div class="row name-email align-items-center justify-content-end">
-                <div class="col-md-6 name-col">
-                    <input type="text" placeholder="Name" class="form-control name-box" id="name"
-                        aria-describedby="nameHelp">
-                </div>
-                <div class="col-md-6 email-col">
-                    <input type="text" placeholder="Email" class="form-control email-box" id="email"
-                        aria-describedby="emailHelp">
-                </div>
-            </div>
-
-            <div class="row align-content-center company-phone-frame">
-                <div class="col company-col company-box">
-                    <input type="text" placeholder="Company Website" class="form-control company-container" id="company"
-                        aria-describedby="companyHelp">
-                </div>
-                <div class="col phone-col phoneNumber-box">
-                    <input type="tel" placeholder="(555) 123-4444" class="form-control phone-container" id="phoneNumber"
-                        aria-describedby="phoneNumberHelp">
-                </div>
-            </div>
-            <div class="row align-content-center usecase-frame">
-                <div class="col usecase-box">
-                    <textarea id="usecase" class="form-control usecase-col expandable-input" placeholder="Use Case"
-                        rows="4"></textarea>
-                </div>
-            </div>
-
-            <div class="row send-button-frame">
-                <div class="col send-button-box">
-                    <button type="submit" class="submit-btn" onclick="sendContactUsEmail()">Send</button>
+                <div class="col-lg-4 col-md-12 text-center mt-3 mt-lg-0 p-5">
+                    <div class="spider-chart-container">
+                        <canvas id="spiderChart" width="400" height="400"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</body>
 
+    <!-- Middle Section -->
+    <div id="middle-section" class="row middle-section text-center py-5">
+        <div class="col-md-10 col-lg-8 mx-auto">
+            <h2>Strive for More</h2>
+            <div class="row mt-4">
+                <div class="col-12 mb-4">
+                    <div class="info-box">
+                        <h3 class="info-title">OaaS</h3>
+                        <p class="info-description">Learn More about Ontology as a Service (OaaS) and how it can benefit your organization.</p>
+                        <a class="btn btn-primary" asp-controller="Home" asp-action="OaasView">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-12 mb-4">
+                    <div class="info-box">
+                        <h3 class="info-title">Why Strive</h3>
+                        <p class="info-description">Watch our demo to understand why Strive is the best choice for your ontology needs.</p>
+                        <a class="btn btn-primary" asp-controller="Home" asp-action="Demo">Watch Demo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Top Section -->
+
+    <div class="top-row d-flex align-items-center">
+        <div class="container landing-container">
+            <div class="row title-row align-items-center">
+                <div class="col-lg-8 col-md-12 text-lg-left pt-0" style="margin-left: 39%;">
+                    <header class="title-frame">
+                        <h1 class="display-4 title-text">Contact Us</h1>
+                        <h5 style="display: none;" class="text-light mt-2">We'd love to hear from you!</h5>
+                    </header>
+                    @* <div class="calendly-container">
+                        <div class="calendly-inline-widget" data-url="https://calendly.com/apoorva-sharma-strive/30min" style="min-width:320px;height:630px;"></div>
+                        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Section -->
+    <footer class="footer-section bg-dark text-white text-center">
+        <div class="container">
+            <p>Contact Information:</p>
+            <p>Email: info@strive.com | Phone: +123 456 7890</p>
+            <p>Address: 123 Risk St, Manage City, Ontological State, 45678</p>
+        </div>
+    </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/index.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('spiderChart').getContext('2d');
+        var spiderChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Operational Risk', '', 'Compliance Risk', ''],
+                datasets: [{
+                    data: [3, 2, 4, 5],
+                    backgroundColor: 'rgba(255, 191, 0, 0.1)',
+                    borderColor: 'rgba(255, 191, 0, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: '#ffffff'
+                        },
+                        grid: {
+                            color: '#ffffff'
+                        },
+                        pointLabels: {
+                            color: '#ffffff',
+                            font: {
+                                size: 14
+                            }
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            max: 5,
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        });
+
+        document.querySelector('.btn.btn-primary-demo').addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector('#middle-section').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        function updateSpiderChartData(newData) {
+            spiderChart.data.datasets[0].data = newData;
+            spiderChart.update();
+        }
+
+        function generateRandomData() {
+            return [
+                Math.random() * 5,
+                Math.random() * 5,
+                Math.random() * 5,
+                Math.random() * 5
+            ];
+        }
+
+        setInterval(function () {
+            var newData = generateRandomData();
+            updateSpiderChartData(newData);
+        }, 2000);
+    });
+</script>
