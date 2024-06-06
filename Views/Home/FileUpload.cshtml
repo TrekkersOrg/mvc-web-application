@@ -111,7 +111,7 @@
             <div class="col-lg-8 upload-container bg-light">
                 <h1>File Upload</h1>
                 <p>Only PDF and DOCX File Types</p>
-                <button class="btn btn-primary btn-lg" type="button" id="upload-button"
+                <button class="btn btn-primary btn-lg file-upload-button" type="button" id="upload-button"
                     onclick="uploadDocumentToApplication()">
                     Browse Files
                 </button>
@@ -132,7 +132,7 @@
             </div>
             <div class="col-lg-4 text-white border description-container">
                 <h1 class="text-dark">For More Context</h1>
-                <button type="button" onclick="uploadFileFlow()" class="btn btn-primary next-button mt-3" disabled
+                <button type="button" onclick="uploadFileFlow()" class="btn btn-primary next-button mt-3 file-upload-button" disabled
                     id="nextButton">Next</button>
                 <div class="description-input">
                     <label for="documentName" class="description-label text-dark">Document Name</label>
@@ -358,6 +358,10 @@
 
 
         async function uploadFileFlow() {
+            var fileUploadButtons = document.getElementsByClassName('file-upload-button');
+            for (let btn of fileUploadButtons) {
+                btn.disabled = true;
+            }
             await uploadDocumentToPinecone();
             await routeToDocumentAnalysis();
             localStorage.setItem('showDocumentDashboardWidget', 'true');
