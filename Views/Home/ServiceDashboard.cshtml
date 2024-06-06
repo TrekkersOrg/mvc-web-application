@@ -52,33 +52,26 @@
         font-size: 1rem;
         color: #555555;
     }
-
-    #main-content {
-        transition: margin-left 0.5s;
-    }
-
-    .sidebar-open #main-content {
-        margin-left: 250px;
-    }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        if (localStorage.getItem('showDocumentAnalysisWidget') === 'true') {
+        if (localStorage.getItem('showDocumentDashboardWidget') === 'true') {
             const newWidget = document.createElement('div');
             newWidget.className = 'col-md-4 offset-md-1';
             newWidget.innerHTML = `
-                <a href="/Home/DocumentAnalysis" class="text-decoration-none">
+                <a href="/Home/DocumentDashboard" class="text-decoration-none">
                     <div class="widget shadow p-3 mb-5 bg-light rounded">
-                        <h5 class="widget-title">Document Analysis</h5>
-                        <p class="widget-text">Analyze your documents here</p>
+                        <h5 class="widget-title">Document Dashboard</h5>
+                        <p class="widget-text">Access your document dashboard here</p>
                     </div>
                 </a>
             `;
 
             document.getElementById('additional-widgets').appendChild(newWidget);
 
-            localStorage.removeItem('showDocumentAnalysisWidget');
+            // Remove the flag from local storage after adding the widget
+            localStorage.removeItem('showDocumentDashboardWidget');
         }
     });
 </script>

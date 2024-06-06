@@ -231,7 +231,7 @@
                 const tableRow = document.createElement('tr');
 
                 const statusCell = document.createElement('td');
-                statusCell.textContent = 'Uploading...'; 
+                statusCell.textContent = 'Uploading...';
 
                 const fileNameCell = document.createElement('td');
                 fileNameCell.textContent = selectedFile.name;
@@ -334,13 +334,13 @@
 
         }
 
- // ================== Document Dashboard Widget Generator =====================
+        // ================== Document Dashboard Widget Generator =====================
         async function routeToDocumentAnalysis() {
             var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
             window.location.href = documentAnalysisUrl;
             return Promise.resolve();
 
-            const bewWudget = document.createElement('div');
+            const newWidget = document.createElement('div');
             newWidget.className = 'col-md-4 offset-md-1';
             newWidget.innerHTML = `
             <a href="/Home/DocumentAnalysis" class="text-decoration-none">
@@ -351,16 +351,16 @@
             </a>
         `;
 
-        document.getElementById('additional-widgets').appendChild(newWidget);
-        var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
-        window.location.href = documentAnalysisUrl;
+            document.getElementById('additional-widgets').appendChild(newWidget);
+            var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
+            window.location.href = documentAnalysisUrl;
         }
 
 
-        async function uploadFileFlow()
-        {
+        async function uploadFileFlow() {
             await uploadDocumentToPinecone();
             await routeToDocumentAnalysis();
+            localStorage.setItem('showDocumentDashboardWidget', 'true');
         }
 
 

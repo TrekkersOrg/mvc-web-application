@@ -198,3 +198,63 @@ header .title-frame h5 {
         width: 100%;
     }
 }
+
+
+.widget {
+    border-radius: 20px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #f8f9fa;
+    transition: box-shadow 0.3s;
+    width: 400px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.widget:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.widget-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.widget-text {
+    font-size: 1rem;
+    color: #555555;
+}
+
+/* Adjustments for when navbar is collapsed */
+body.navbar-collapsed .container-fluid,
+body.navbar-collapsed .page-row,
+body.navbar-collapsed .upload-container,
+body.navbar-collapsed .description-container {
+    width: calc(100% - 250px);
+    /* Adjust width to account for the navbar */
+    transition: width 0.7s ease;
+}
+
+body.navbar-collapsed .container-fluid {
+    padding-left: 250px;
+    /* Adjust padding to account for the navbar */
+}
+
+body.navbar-collapsed .widget {
+    width: calc(100% - 250px - 40px);
+    /* Adjust width to account for the navbar and padding */
+}
+
+body.navbar-collapsed .form-section {
+    width: calc(100% - 250px);
+    /* Adjust width to account for the navbar */
+}
+
+body.navbar-collapsed #main-content {
+    margin-left: 250px;
+    /* Adjust margin to account for the navbar */
+}
