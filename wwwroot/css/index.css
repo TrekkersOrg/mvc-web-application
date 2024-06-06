@@ -100,6 +100,7 @@ body {
     margin: 1rem;
     border-radius: 8px;
     color: white;
+                       
     text-align: left;
     width: 100%;
 }
@@ -257,4 +258,84 @@ body.navbar-collapsed .form-section {
 body.navbar-collapsed #main-content {
     margin-left: 250px;
     /* Adjust margin to account for the navbar */
+}
+
+/* Specific styles for the form section */
+.form-section {
+    background-color: #000;
+    padding: 4rem 0;
+    margin: 0 auto;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    width: 100%;
+}
+
+.form-control::placeholder {
+    color: #bbb;
+    font-size: 1.1rem;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.form-group.col-md-6 {
+    flex: 0 0 48%;
+    max-width: 48%;
+}
+
+.form-group.full-width {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+textarea.form-control {
+    height: auto;
+}
+
+/* Footer styles */
+.footer-section {
+    background-color: #111;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-section p {
+    margin: 5px 0;
 }
