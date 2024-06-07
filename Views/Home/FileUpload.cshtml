@@ -296,6 +296,7 @@
 
                 const data = await response.json();
                 console.log(data);
+                document.getElementById("upload-button").disabled = true;
             } catch (error) {
                 console.error('Error uploading file to MongoDB collection:', error.message);
             }
