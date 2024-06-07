@@ -243,13 +243,13 @@ function displayError(errorMessage)
 
 function showLoader()
 {
-    document.getElementById("loader-spinner").style.display = "";
+    //document.getElementById("loader-spinner").style.display = "";
     document.getElementById("page-container").style.opacity = 0.5;
 }
 
 function hideLoader()
 {
-    document.getElementById("loader-spinner").style.display = "none";
+    //document.getElementById("loader-spinner").style.display = "none";
     document.getElementById("page-container").style.opacity = 1;
 
 }
