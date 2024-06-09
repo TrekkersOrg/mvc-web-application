@@ -4,39 +4,22 @@
 }
 
 <style>
-    .content-wrapper {
+    .video-section {
         display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        flex-wrap: wrap;
-    }
-
-    .content-item {
-        flex: 1;
-        min-width: 320px;
-        max-width: 600px;
-        margin: 20px;
-    }
-
-    .calendly-wrapper {
-        height: 630px;
-    }
-
-    .video-wrapper {
-        display: flex;
-        flex-direction: column;
         justify-content: center;
-        height: 630px;
-        /* Ensure this matches the height of the calendly-wrapper */
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
     }
 
     .embed-responsive {
         position: relative;
         display: block;
         width: 100%;
-        height: 100%;
-        padding: 0;
+        height: 0;
+        padding-bottom: 56.25%;
         overflow: hidden;
+        margin-top: 20px;
     }
 
     .embed-responsive .embed-responsive-item,
@@ -54,24 +37,13 @@
     }
 </style>
 
-<div class="container my-5">
-    <h2>Schedule a Demo</h2>
-    <p>Use the calendar below to schedule a 30-minute demo with us:</p>
-
-    <div class="content-wrapper">
-        <div class="content-item calendly-wrapper">
-            <div class="calendly-inline-widget" data-url="https://calendly.com/apoorva-sharma-strive/30min"
-                style="min-width:320px;height:100%;"></div>
-            <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
-        </div>
-
-        <div class="content-item video-wrapper">
-            <h2 class="mt-5">Watch Our Introduction Video</h2>
-            <p>Learn more about our services by watching the video below:</p>
-            <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/-aKYu6ebDLg"
-                    allowfullscreen></iframe>
-            </div>
+<div class="container-fluid">
+    <div class="video-section">
+        <h2>Watch the Introduction Video</h2>
+        <p>Learn more about our ontology services by watching the video below:</p>
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/-aKYu6ebDLg"
+                allowfullscreen></iframe>
         </div>
     </div>
 </div>
