@@ -100,7 +100,6 @@ body {
     margin: 1rem;
     border-radius: 8px;
     color: white;
-                       
     text-align: left;
     width: 100%;
 }
@@ -199,7 +198,6 @@ header .title-frame h5 {
         width: 100%;
     }
 }
-
 
 .widget {
     border-radius: 20px !important;
