@@ -79,7 +79,7 @@ html {
 
 .input-group-append button,
 .input-group-prepend button {
-    background: #007bff;
+    background: #3a516a;
     color: #fff;
     border: none;
     padding: 10px 15px;
@@ -98,14 +98,15 @@ html {
     margin-bottom: 5px;
     padding: 10px;
     border-radius: 10px;
-    background: #e9e9eb;
+    background: #3a516a;
+    color: #fff;
     width: 100%;
     box-sizing: border-box;
 }
 
 .chat-output.darker {
-    background: #007bff;
-    color: #fff;
+    background: #e4e4e4;
+    color: black;
     align-self: flex-end;
 }
 
@@ -151,7 +152,7 @@ html {
 .circle {
     width: 10px;
     height: 10px;
-    background-color: #007bff;
+    background-color: #042446;
     border-radius: 50%;
     display: inline-block;
     animation: scaling 1s infinite ease-in-out;
