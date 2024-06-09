@@ -98,17 +98,17 @@ html {
     margin-bottom: 5px;
     padding: 10px;
     border-radius: 10px;
-    background: #3a516a;
-    color: #fff;
+    background: #e4e4e4;
+    color: black;
     width: 100%;
     box-sizing: border-box;
 }
 
-.chat-output.darker {
-    background: #e4e4e4;
-    color: black;
-    align-self: flex-end;
-}
+    .chat-output.darker {
+        background: #3a516a;
+        color: white;
+        align-self: flex-end;
+    }
 
 .chart-container {
     background: #fff;
@@ -152,7 +152,7 @@ html {
 .circle {
     width: 10px;
     height: 10px;
-    background-color: #042446;
+    background-color: #0177f5;
     border-radius: 50%;
     display: inline-block;
     animation: scaling 1s infinite ease-in-out;
