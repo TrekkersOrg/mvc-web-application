@@ -28,7 +28,7 @@ else
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
-        if('@User.Identity.IsAuthenticated' === 'True' && localStorage.getItem('userFirstName') == null) {
+        if('@User.Identity.IsAuthenticated' === 'True') {
             $.ajax({
                 url: 'https://strive-api.azurewebsites.net/api/user/getUser?username=' + '@User.Identity.Name',
                 type: 'GET',
