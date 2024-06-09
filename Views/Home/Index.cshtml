@@ -14,16 +14,19 @@
             <div class="row title-row align-items-center">
                 <div class="col-lg-8 col-md-12 text-lg-left pt-0">
                     <header class="title-frame">
-                        <h1 class="display-4 title-text">Ontology <span class="highlight">for Enterprise Risk Management</span></h1>
+                        <h1 class="display-4 title-text">Ontology <span class="highlight">for Enterprise Risk
+                                Management</span></h1>
                         <h5 class="text-light mt-2">Empowering Data Through Ontology Services</h5>
                     </header>
                     <div class="start-button-frame mt-4">
                         @{
-                            var getStartedUrl = SignInManager.IsSignedIn(User) ? Url.Action("FileUpload", "Home") : Url.Action("Demo", "Home");
+                            var getStartedUrl = SignInManager.IsSignedIn(User) ? Url.Action("FileUpload", "Home") :
+                            Url.Action("Demo", "Home");
                         }
-                        <a class="btn btn-primary-black rounded-pill btn-lg text-white text-decoration-none mr-2" href="@getStartedUrl">Get Started</a>
-
-                        <a class="btn btn-primary-demo rounded-pill btn-lg text-white text-decoration-none" href="#middle-section">Learn More &#8594;</a>
+                        <a class="btn btn-primary-black rounded-pill btn-lg text-white text-decoration-none mr-2"
+                            href="@getStartedUrl">Get Started</a>
+                        <a class="btn btn-primary-demo rounded-pill btn-lg text-white text-decoration-none"
+                            href="#middle-section">Learn More &#8594;</a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-12 text-center mt-3 mt-lg-0 p-5">
@@ -43,38 +46,43 @@
                 <div class="col-12 mb-4">
                     <div class="info-box">
                         <h3 class="info-title">OaaS</h3>
-                        <p class="info-description">Learn More about Ontology as a Service (OaaS) and how it can benefit your organization.</p>
+                        <p class="info-description">Learn More about Ontology as a Service (OaaS) and how it can benefit
+                            your organization.</p>
                         <a class="btn btn-primary" asp-controller="Home" asp-action="OaasView">Learn More</a>
                     </div>
                 </div>
                 <div class="col-12 mb-4">
                     <div class="info-box">
                         <h3 class="info-title">Why Strive</h3>
-                        <p class="info-description">Watch our demo to understand why Strive is the best choice for your ontology needs.</p>
+                        <p class="info-description">Watch our demo to understand why Strive is the best choice for your
+                            ontology needs.</p>
                         <a class="btn btn-primary" asp-controller="Home" asp-action="Demo">Watch Demo</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Top Section -->
 
+    <!-- Contact Us Section -->
     <div class="top-row d-flex align-items-center">
         <div class="container landing-container">
             <div class="row title-row align-items-center">
-                <div class="col-lg-8 col-md-12 text-lg-left pt-0" style="margin-left: 39%;">
+                <div class="col-12 text-center pt-0">
                     <header class="title-frame">
                         <h1 class="display-4 title-text">Contact Us</h1>
                         <h5 style="display: none;" class="text-light mt-2">We'd love to hear from you!</h5>
                     </header>
-                    @* <div class="calendly-container">
-                        <div class="calendly-inline-widget" data-url="https://calendly.com/apoorva-sharma-strive/30min" style="min-width:320px;height:630px;"></div>
-                        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
-                    </div> *@
+                    <div class="d-flex justify-content-center mt-4">
+                        <div class="calendly-inline-widget" data-url="https://calendly.com/apoorva-sharma-strive/30min"
+                            style="min-width:320px;width:100%;height:630px;"></div>
+                        <script type="text/javascript"
+                            src="https://assets.calendly.com/assets/external/widget.js"></script>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Footer Section -->
     <footer class="footer-section bg-dark text-white text-center">
         <div class="container">
@@ -83,7 +91,6 @@
             <p>Address: 123 Risk St, Manage City, Ontological State, 45678</p>
         </div>
     </footer>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

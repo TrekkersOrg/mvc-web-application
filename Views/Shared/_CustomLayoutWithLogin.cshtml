@@ -30,7 +30,7 @@
                         <ul class="navbar-nav ml-auto">
                             <!-- Additional nav items can go here -->
                         </ul>
-                        <a id="user-greeting" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"></a>
+                        <a id="user-greeting" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="pointer-events: none; cursor: default;"></a>
                         <a class="nav-link font text-white btn login-btn" asp-area="Identity" asp-page="/Account/Logout">Logout</a>
                     </div>
                 </nav>
@@ -80,7 +80,7 @@
                 type: 'GET',
                 success: function (data)
                 {
-                    localStorage.setItem('userFirstName',data['data']['firstName'])
+                    localStorage.setItem('userFirstName',data['data']['firstName']);
                     $('#user-greeting').text(localStorage.getItem('userFirstName'));
                 }
             });
