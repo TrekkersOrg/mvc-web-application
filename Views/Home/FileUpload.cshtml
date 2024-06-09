@@ -15,13 +15,10 @@
         string hashedUsername = BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant();
 
         <script>
-            @* sessionStorage.setItem("sessionNamespace", "133393fcd8d64c1308c7deaacbb98f049506b7775cb26e18edf4cec6298d57c0"); *@
-                sessionStorage.setItem("sessionNamespace", "@hashedUsername");
+            sessionStorage.setItem("sessionNamespace", "@hashedUsername");
         </script>
     }
 }
-
-
 
 <link rel="stylesheet" href="~/css/fileUpload.css">
 
@@ -59,7 +56,6 @@
 
     .description-input {
         margin-bottom: 1rem;
-        /* Add some spacing between inputs */
     }
 
     .btn-primary:disabled {
@@ -69,13 +65,11 @@
     .description-label {
         font-weight: bold;
         margin-bottom: 5px;
-        /* Add spacing between label and input */
     }
 
     .selected-file-name {
         margin-top: 2%;
         padding-bottom: 10%;
-
     }
 
     .next-button {
@@ -85,7 +79,6 @@
     .uploadStatus {
         border: 1px solid black;
         margin-top: 2%;
-        @*display:none;*@
     }
 
     .row>.col-lg-8,
@@ -93,7 +86,6 @@
     .col-lg-4 {
         margin-right: auto;
         flex: 0 0 auto;
-
     }
 
     .row>.col-lg-4:last-child {
@@ -115,7 +107,6 @@
                     onclick="uploadDocumentToApplication()">
                     Browse Files
                 </button>
-                @* <span class="selected-file-name display-none" id="selected-file-name"></span> *@
                 <div id="uploadStatus"></div>
                 <div class="uploadStatus-table">
                     <table class="table table-striped">
@@ -123,6 +114,7 @@
                             <tr>
                                 <th>Status</th>
                                 <th>File Name</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -132,8 +124,8 @@
             </div>
             <div class="col-lg-4 text-white border description-container">
                 <h1 class="text-dark">For More Context</h1>
-                <button type="button" onclick="uploadFileFlow()" class="btn btn-primary next-button mt-3 file-upload-button" disabled
-                    id="nextButton">Next</button>
+                <button type="button" onclick="uploadFileFlow()"
+                    class="btn btn-primary next-button mt-3 file-upload-button" disabled id="nextButton">Next</button>
                 <div class="description-input">
                     <label for="documentName" class="description-label text-dark">Document Name</label>
                     <input type="text" id="documentName" class="form-control" required>
@@ -220,8 +212,6 @@
                 sessionStorage.setItem("selectedFile", selectedFile.name);
                 const allowedExtensions = ['pdf', 'docx', 'doc'];
                 const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
-                const deleteButton = document.getElementById('delete-button');
-                const uploadFileDisplayPanel = document.getElementById('uploadFileDisplayPanel');
 
                 if (!allowedExtensions.includes(fileExtension)) {
                     displayError("Only PDF, DOCX, DOC files are allowed.");
@@ -236,8 +226,18 @@
                 const fileNameCell = document.createElement('td');
                 fileNameCell.textContent = selectedFile.name;
 
+                const actionsCell = document.createElement('td');
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.classList.add('btn', 'btn-danger');
+                deleteButton.addEventListener('click', () => {
+                    deleteFile(selectedFile.name, tableRow);
+                });
+                actionsCell.appendChild(deleteButton);
+
                 tableRow.appendChild(statusCell);
                 tableRow.appendChild(fileNameCell);
+                tableRow.appendChild(actionsCell);
                 tableBody.appendChild(tableRow);
 
                 sendFileToMongoDB(selectedFile)
@@ -255,12 +255,6 @@
 
         async function checkFileExists(namespace, fileName) {
             const url = `https://strive-api.azurewebsites.net/api/MongoDB/GetDocument?collectionName=${namespace}&fileName=${fileName}`;
-            const sessionNamespace = sessionStorage.getItem("sessionNamespace"); // <-- Renamed variable
-            const doesExist = await checkFileExists(sessionNamespace, selectedFileName.textContent);
-            if (doesExist) {
-                displayError("File already exists in the collection.");
-                return;
-            }
             try {
                 const response = await fetch(url);
                 return response.ok;
@@ -286,13 +280,11 @@
                         'Access-Control-Allow-Headers': '*'
                     },
                     body: formData
-
                 });
 
                 if (!response.ok) {
                     throw new Error('Failed to upload file to MongoDB collection.');
                 }
-
 
                 const data = await response.json();
                 console.log(data);
@@ -331,32 +323,13 @@
                     displayError("System is under maintenance. Please try again later.");
                     console.error('Fetch error:', error);
                 });
-
-
         }
 
-        // ================== Document Dashboard Widget Generator =====================
         async function routeToDocumentAnalysis() {
             var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
             window.location.href = documentAnalysisUrl;
             return Promise.resolve();
-
-            const newWidget = document.createElement('div');
-            newWidget.className = 'col-md-4 offset-md-1';
-            newWidget.innerHTML = `
-            <a href="/Home/DocumentAnalysis" class="text-decoration-none">
-                <div class="widget shadow p-3 mb-5 bg-light rounded">
-                    <h5 class="widget-title">Document Analysis</h5>
-                    <p class="widget-text">Analyze your documents here</p>
-                </div>
-            </a>
-        `;
-
-            document.getElementById('additional-widgets').appendChild(newWidget);
-            var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
-            window.location.href = documentAnalysisUrl;
         }
-
 
         async function uploadFileFlow() {
             var fileUploadButtons = document.getElementsByClassName('file-upload-button');
@@ -367,7 +340,6 @@
             await routeToDocumentAnalysis();
             localStorage.setItem('showDocumentDashboardWidget', 'true');
         }
-
 
         function displayError(errorMessage) {
             var errorBackground = document.getElementById("error-background");
@@ -381,16 +353,21 @@
         }
 
         function showLoader() {
-            //document.getElementById("loader-spinner").style.display = "";
             document.getElementById("page-container").style.opacity = 0.5;
         }
 
         function hideLoader() {
-            //document.getElementById("loader-spinner").style.display = "none";
             document.getElementById("page-container").style.opacity = 1;
-
         }
 
+        async function deleteFile(fileName, tableRow) {
+            // Delete from local storage
+            const selectedFile = sessionStorage.getItem("selectedFile");
+            if (selectedFile === fileName) {
+                sessionStorage.removeItem("selectedFile");
+                tableRow.remove();
+                document.getElementById("upload-button").disabled = false;
+            }
+        }
     </script>
-
 </body>
