@@ -155,6 +155,21 @@ html {
     left: 40%;
 }
 
+.new-upload {
+    background-color: #212529 !important;
+    border-color: #212529 !important;
+    white-space: nowrap;
+    font-size: 1rem !important;
+    display: flex !important;
+    height: 5vh !important;
+    align-items: center !important;
+}
+
+.new-upload-container {
+    display: flex;
+    align-items: center;
+}
+
 .page-container {
     width: 100%;
     height: 100%;
