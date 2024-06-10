@@ -7,7 +7,7 @@
 
 <body>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <div class="container page-container" id="page-container">
+    <div class="container">
         <div class="row chatbot-row">
             <div class="col-md-8 chatbot-col">
                 <div class="chat-container d-flex flex-column h-100">
@@ -40,6 +40,9 @@
             </div>
 
             <div class="col-md-4 chart-col">
+                <div id="page-container" class="page-container">
+                    <div id="loader" class="loader"></div>
+                </div>
                 <h4>Risk Analysis</h4>
                 <canvas id="spiderChart"></canvas>
                 <h4>Risk Meter</h4>
@@ -195,10 +198,14 @@
         loader && loader.remove();
     }
 
-    function hideLoader() {
-        // document.getElementById("loader-spinner").style.display = "none";
-        document.getElementById("page-container").style.opacity = 1;
-        checkInput();
+    function showLoader()
+    {
+        document.getElementById("page-container").style.display = 'block';
+    }
+
+    function hideLoader()
+    {
+        document.getElementById("page-container").style.display = 'none';
     }
 
     function conversationMemoryEntry() {
@@ -281,6 +288,7 @@
             {
                 if (!response.ok)
                 {
+                    hideLoader();
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
@@ -292,14 +300,15 @@
             })
             .catch(error =>
             {
+                hideLoader();
                 console.error('Fetch error:',error);
             });
     }
 
     window.onload = async function () {
+        showLoader();
         sessionStorage.setItem("conversationMemory", JSON.stringify([]));
         document.getElementById('queryInput').addEventListener('input', checkInput);
-        hideLoader();
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
         checkInput();
         document.getElementById('document-name').innerText = JSON.parse(sessionStorage.getItem('documentContext'))?.documentName;
@@ -338,6 +347,7 @@
             }
         });
         await determineRiskScore();
+        hideLoader();
         var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'))?.data;
         var finalScore = riskAssessmentData.result.finalScore;
         var financialScore = riskAssessmentData.result.financialScore;
