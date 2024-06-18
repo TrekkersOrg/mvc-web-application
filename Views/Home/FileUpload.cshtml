@@ -1,29 +1,26 @@
 @{
-    ViewData["Title"] = "Service Dashboard";
+    ViewData["Title"] = "File Upload";
     Layout = "~/Views/Shared/_ServiceDashboardLayout.cshtml";
 }
 
 @using System.Security.Cryptography;
 @using System.Text;
 @{
-
     string username = User?.Identity?.Name ?? "Unknown";
-    // Hash the username using SHA-256
     using (SHA256 sha256 = SHA256.Create())
     {
         byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(username));
         string hashedUsername = BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant();
 
-        <script>
-            sessionStorage.setItem("sessionNamespace", "@hashedUsername");
-        </script>
+                <script>
+                    sessionStorage.setItem("sessionNamespace", "@hashedUsername");
+                </script>
     }
 }
 
 <link rel="stylesheet" href="~/css/fileUpload.css">
 
 <style>
-
     .container {
         max-width: 2000px !important;
     }
@@ -118,7 +115,7 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="uploadedFilesTableBody">
                         </tbody>
                     </table>
                 </div>
@@ -145,13 +142,11 @@
                     <label for="documentDescription" class="description-label text-dark">Brief Description</label>
                     <textarea id="documentDescription" rows="5" class="form-control" required></textarea>
                 </div>
-
             </div>
         </div>
         <div id="page-container" class="page-container">
             <div id="loader" class="loader"></div>
         </div>
-
     </div>
 
     <script>
@@ -197,34 +192,27 @@
                 documentDescription: documentDescription
             };
 
-            // Convert the object to JSON format
             const jsonData = JSON.stringify(documentData);
-
-            // Store the JSON data in local storage under the file name documentDescription.JSON
             sessionStorage.setItem('documentContext', jsonData);
         }
 
         async function uploadDocumentToApplication() {
-            const uploadButton = document.getElementById('upload-button');
-            const selectedFileName = document.getElementById('selected-file-name');
             const fileInput = document.createElement("input");
-
-            fileInput.setAttribute("id", "fileInput");
             fileInput.type = "file";
 
             fileInput.click();
 
-            fileInput.addEventListener("change", (event) => {
+            fileInput.addEventListener("change", async (event) => {
                 const selectedFile = event.target.files[0];
-                sessionStorage.setItem("selectedFile", selectedFile.name);
                 const allowedExtensions = ['pdf', 'docx', 'doc'];
                 const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
 
                 if (!allowedExtensions.includes(fileExtension)) {
-                    displayError("Only PDF, DOCX, DOC files are allowed.");
+                    alert("Only PDF, DOCX, DOC files are allowed.");
                     return;
                 }
-                const tableBody = document.querySelector('.uploadStatus-table tbody');
+
+                const tableBody = document.getElementById('uploadedFilesTableBody');
                 const tableRow = document.createElement('tr');
 
                 const statusCell = document.createElement('td');
@@ -247,26 +235,44 @@
                 tableRow.appendChild(actionsCell);
                 tableBody.appendChild(tableRow);
 
-                sendFileToMongoDB(selectedFile)
-                    .then(() => {
-                        statusCell.textContent = 'Uploaded';
-                    })
-                    .catch((error) => {
-                        statusCell.textContent = 'Error';
-                        console.error('Error uploading file:', error);
-                    });
-                selectedFileName.textContent = selectedFile.name;
+                try {
+                    await sendFileToMongoDB(selectedFile);
+                    statusCell.textContent = 'Uploaded';
+                    const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
+                    uploadedFiles.push(selectedFile.name);
+                    sessionStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+                    sessionStorage.setItem('selectedFile', selectedFile.name);
+                    populateUploadedFilesList(); // Call new function to populate list
+                } catch (error) {
+                    statusCell.textContent = 'Error';
+                    console.error('Error uploading file:', error);
+                }
             });
         }
 
-        async function checkFileExists(namespace, fileName) {
-            const url = `https://strive-api.azurewebsites.net/api/MongoDB/GetDocument?collectionName=${namespace}&fileName=${fileName}`;
-            try {
-                const response = await fetch(url);
-                return response.ok;
-            } catch (error) {
-                console.error('Error checking file existence:', error);
-                return false;
+        function populateUploadedFilesList() {
+            const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
+            const uploadedFilesTableBody = document.getElementById('uploadedFilesTableBody');
+            uploadedFilesTableBody.innerHTML = ""; // Clear existing entries
+
+            for (const fileName of uploadedFiles) {
+                const tableRow = document.createElement('tr');
+                const fileNameCell = document.createElement('td');
+                fileNameCell.textContent = fileName;
+
+                const selectButton = document.createElement('button');
+                selectButton.textContent = 'Select';
+                selectButton.classList.add('btn', 'btn-primary');
+                selectButton.addEventListener('click', () => {
+                    sessionStorage.setItem('selectedFile', fileName);
+                });
+
+                const actionsCell = document.createElement('td');
+                actionsCell.appendChild(selectButton);
+
+                tableRow.appendChild(fileNameCell);
+                tableRow.appendChild(actionsCell);
+                uploadedFilesTableBody.appendChild(tableRow);
             }
         }
 
@@ -277,29 +283,22 @@
             const namespace = sessionStorage.getItem("sessionNamespace");
             const url = `https://strive-api.azurewebsites.net/api/MongoDB/UploadDocument?collectionName=${namespace}`;
 
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': '*',
-                        'Access-Control-Allow-Headers': '*'
-                    },
-                    body: formData
-                });
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': '*',
+                    'Access-Control-Allow-Headers': '*'
+                },
+                body: formData
+            });
 
-                if (!response.ok) {
-                    hideLoader();
-                    throw new Error('Failed to upload file to MongoDB collection.');
-                }
-
-                const data = await response.json();
-                console.log(data);
-                document.getElementById("upload-button").disabled = true;
-            } catch (error) {
-                hideLoader();
-                console.error('Error uploading file to MongoDB collection:', error.message);
+            if (!response.ok) {
+                throw new Error('Failed to upload file to MongoDB collection.');
             }
+
+            const data = await response.json();
+            console.log(data);
         }
 
         async function uploadDocumentToPinecone() {
@@ -322,14 +321,14 @@
                 .then(response => {
                     if (!response.ok) {
                         hideLoader();
-                        displayError("System is under maintenance. Please try again later.")
+                        alert("System is under maintenance. Please try again later.");
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     return response.json();
                 })
                 .catch(error => {
                     hideLoader();
-                    displayError("System is under maintenance. Please try again later.");
+                    alert("System is under maintenance. Please try again later.");
                     console.error('Fetch error:', error);
                 });
         }
@@ -352,17 +351,6 @@
             localStorage.setItem('showDocumentDashboardWidget', 'true');
         }
 
-        function displayError(errorMessage) {
-            var errorBackground = document.getElementById("error-background");
-            var errorCloseButton = document.getElementById("error-close");
-            var errorText = document.getElementById("error-message");
-            errorText.innerText = errorMessage;
-            errorBackground.style.display = "block";
-            errorCloseButton.onclick = function () {
-                errorBackground.style.display = "none";
-            }
-        }
-
         function showLoader() {
             document.getElementById("page-container").style.display = 'block';
         }
@@ -372,13 +360,12 @@
         }
 
         async function deleteFile(fileName, tableRow) {
-            // Delete from local storage
-            const selectedFile = sessionStorage.getItem("selectedFile");
-            if (selectedFile === fileName) {
-                sessionStorage.removeItem("selectedFile");
-                tableRow.remove();
-                document.getElementById("upload-button").disabled = false;
-            }
+            let uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
+            uploadedFiles = uploadedFiles.filter(file => file !== fileName);
+            sessionStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+            tableRow.remove();
         }
+
+        window.addEventListener('load', populateUploadedFilesList);
     </script>
 </body>

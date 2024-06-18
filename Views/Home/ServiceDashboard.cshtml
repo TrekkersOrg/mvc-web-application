@@ -21,8 +21,8 @@
                 </div>
             </a>
         </div>
-        <div id="additional-widgets" class="col-md-4 offset-md-1">
-            <!-- Additional widgets will be dynamically added here -->
+        <div id="all-files-widget" class="col-md-4 offset-md-1">
+            <!-- All files widget will be dynamically added here -->
         </div>
     </div>
 </div>
@@ -39,7 +39,7 @@
         background-color: #f8f9fa;
         transition: box-shadow 0.3s;
         width: 400px;
-        height: 200px;
+        height: auto;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -63,23 +63,36 @@
 </style>
 
 <script>
-    /*document.addEventListener('DOMContentLoaded', function () {
-        if (localStorage.getItem('showDocumentDashboardWidget') === 'true') {
-            const newWidget = document.createElement('div');
-            newWidget.className = 'col-md-4 offset-md-1';
-            newWidget.innerHTML = `
-                <a href="/Home/DocumentDashboard" class="text-decoration-none">
-                    <div class="widget shadow p-3 mb-5 bg-light rounded">
-                        <h5 class="widget-title">Document Dashboard</h5>
-                        <p class="widget-text">Access your document dashboard here</p>
-                    </div>
-                </a>
-            `;
+    document.addEventListener('DOMContentLoaded', function () {
+        const allFilesWidget = document.getElementById('all-files-widget');
 
-            document.getElementById('additional-widgets').appendChild(newWidget);
+        function fetchUploadedFiles() {
+            const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
+            let widgetContent = `
+                <div class="widget shadow p-3 mb-5 bg-light rounded">
+                    <h5 class="widget-title">All Files</h5>
+                    <ul class="list-group">`;
 
-            // Remove the flag from local storage after adding the widget
-            localStorage.removeItem('showDocumentDashboardWidget');
+            uploadedFiles.forEach(file => {
+                widgetContent += `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${file}
+                        <button class="btn btn-primary btn-sm" onclick="analyzeFile('${file}')">Analyze</button>
+                    </li>`;
+            });
+
+            widgetContent += `
+                    </ul>
+                </div>`;
+
+            allFilesWidget.innerHTML = widgetContent;
         }
-    */
+
+        window.analyzeFile = function(fileName) {
+            sessionStorage.setItem('selectedFile', fileName);
+            window.location.href = '@Url.Action("DocumentDashboard", "Home")';
+        }
+
+        fetchUploadedFiles();
+    });
 </script>
