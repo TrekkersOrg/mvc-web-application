@@ -256,6 +256,46 @@
         document.getElementById("page-container").style.display = 'none';
     }
 
+    async function customRiskAssessment() {
+        const fileName = sessionStorage.getItem('selectedFile');
+        const namespace = sessionStorage.getItem('sessionNamespace');
+        const requestBody = {
+            namespace: namespace,
+            file_name: fileName
+        };
+        showLoader();
+        await fetch("https://strive-ml-api.azurewebsites.net/xgboostModel",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*',
+                'Access-Control-Allow-Headers': '*'
+            },
+            body: JSON.stringify(requestBody)
+        })
+            .then(response =>
+            {
+                if (!response.ok)
+                {
+                    hideLoader();
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                return response.text();
+            })
+            .then(data =>
+            {
+                sessionStorage.setItem('custom',data);
+            })
+            .catch(error =>
+            {
+                hideLoader();
+                console.error('Fetch error:',error);
+            });
+    }
+
     function conversationMemoryEntry() {
         var conversationMemory = JSON.parse(sessionStorage.getItem("conversationMemory"));
         var newConversation = JSON.parse(sessionStorage.getItem("newConversation"));
@@ -315,13 +355,12 @@
         return;
     }
 
-    async function determineRiskScore()
-    {
+    async function systemQuery() {
         const requestBody = {
-            namespace: sessionStorage.getItem("sessionNamespace"),
-            file_name: sessionStorage.getItem("selectedFile")
+            namespace: sessionStorage.getItem("sessionNamespace")
         };
-        await fetch("https://strive-ml-api.azurewebsites.net/riskAssessment",{
+        showLoader();
+        await fetch("https://strive-ml-api.azurewebsites.net/systemQueryModel",{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -344,13 +383,35 @@
             })
             .then(data =>
             {
-                sessionStorage.setItem('riskAssessment',data);
+                sessionStorage.setItem('query',data);
             })
             .catch(error =>
             {
                 hideLoader();
                 console.error('Fetch error:',error);
             });
+    }
+
+    async function determineRiskScore()
+    {
+        await systemQuery();
+        var custom = JSON.parse(sessionStorage.getItem('custom')).data;
+        var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
+        var query = JSON.parse(sessionStorage.getItem('query')).data;
+        var financialScoreAvg = Math.round((custom.financialScore + keywords.financialScore + query.financialScore) / 3);
+        var operationalScoreAvg = Math.round((custom.operationalScore + keywords.operationalScore + query.operationalScore) / 3);
+        var regulatoryScoreAvg = Math.round((custom.regulatoryScore + keywords.regulatoryScore + query.regulatoryScore) / 3);
+        var reputationalScoreAvg = Math.round((custom.reputationalScore + keywords.reputationalScore + query.reputationalScore) / 3);
+        var finalScore = Math.round((financialScoreAvg + regulatoryScoreAvg) / 2);
+        var averagedScores = JSON.stringify({
+            financialScore: financialScoreAvg,
+            operationalScore: operationalScoreAvg,
+            regulatoryScore: regulatoryScoreAvg,
+            reputationalScore: reputationalScoreAvg,
+            finalScore: finalScore
+        });
+        sessionStorage.setItem('riskAssessment', averagedScores);
+
     }
 
     window.onload = async function () {
@@ -394,14 +455,15 @@
                 }
             }
         });
+        await customRiskAssessment();
         await determineRiskScore();
         hideLoader();
-        var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'))?.data;
-        var finalScore = riskAssessmentData.result.finalScore;
-        var financialScore = riskAssessmentData.result.financialScore;
-        var operationalScore = riskAssessmentData.result.operationalScore;
-        var regulatoryScore = riskAssessmentData.result.regulatoryScore;
-        var reputationalScore = riskAssessmentData.result.reputationalScore;
+        var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'));
+        var finalScore = riskAssessmentData.finalScore;
+        var financialScore = riskAssessmentData.financialScore;
+        var operationalScore = riskAssessmentData.operationalScore;
+        var regulatoryScore = riskAssessmentData.regulatoryScore;
+        var reputationalScore = riskAssessmentData.reputationalScore;
         spiderChart.data.datasets[0].data = [operationalScore,financialScore,reputationalScore,regulatoryScore];
         spiderChart.update();
         // Risk Meter

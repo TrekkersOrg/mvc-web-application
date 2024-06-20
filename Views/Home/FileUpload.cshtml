@@ -196,6 +196,47 @@
             sessionStorage.setItem('documentContext', jsonData);
         }
 
+        async function customKeyword() {
+            const fileName = sessionStorage.getItem('selectedFile');
+            const namespace = sessionStorage.getItem('sessionNamespace');
+            const requestBody = {
+                namespace: namespace,
+                file_name: fileName
+            };
+            showLoader();
+            await fetch("https://strive-ml-api.azurewebsites.net/keywordsModel",{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': '*',
+                    'Access-Control-Allow-Headers': '*'
+                },
+                body: JSON.stringify(requestBody)
+            })
+                .then(response =>
+                {
+                    if (!response.ok)
+                    {
+                        hideLoader();
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    return response.text();
+                })
+                .then(data =>
+                {
+                    sessionStorage.setItem('keywords',data);
+                })
+                .catch(error =>
+                {
+                    hideLoader();
+                    console.error('Fetch error:',error);
+                });
+            
+        }
+
         async function uploadDocumentToApplication() {
             const fileInput = document.createElement("input");
             fileInput.type = "file";
@@ -243,6 +284,8 @@
                     sessionStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
                     sessionStorage.setItem('selectedFile', selectedFile.name);
                     populateUploadedFilesList(); // Call new function to populate list
+                    await customKeyword();
+                    hideLoader();
                 } catch (error) {
                     statusCell.textContent = 'Error';
                     console.error('Error uploading file:', error);
@@ -250,7 +293,7 @@
             });
         }
 
-        function populateUploadedFilesList() {
+        async function populateUploadedFilesList() {
             const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
             const uploadedFilesTableBody = document.getElementById('uploadedFilesTableBody');
             uploadedFilesTableBody.innerHTML = ""; // Clear existing entries
@@ -263,8 +306,9 @@
                 const selectButton = document.createElement('button');
                 selectButton.textContent = 'Select';
                 selectButton.classList.add('btn', 'btn-primary');
-                selectButton.addEventListener('click', () => {
+                selectButton.addEventListener('click', async () => {
                     sessionStorage.setItem('selectedFile', fileName);
+                    await customKeyword();
                 });
 
                 const actionsCell = document.createElement('td');
