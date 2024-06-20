@@ -7,6 +7,13 @@
 
 <body>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div class="error-background" id="error-background">
+        <div class="error-container">
+            <span class="error-close" id="error-close">&times;</span>
+            <h2 class="error-title">Error</h2>
+            <p id="error-message"></p>
+        </div>
+    </div>
     <div class="container">
         <div class="row chatbot-row">
             <div class="col-md-8 chatbot-col">
@@ -74,6 +81,19 @@
 <script src="/js/documentDashboard.js"></script>
 <script>
     var generatingResponse = false;
+
+    function displayError(errorMessage)
+    {
+        var errorBackground = document.getElementById("error-background");
+        var errorCloseButton = document.getElementById("error-close");
+        var errorText = document.getElementById("error-message");
+        errorText.innerText = errorMessage;
+        errorBackground.style.display = "block";
+        errorCloseButton.onclick = function ()
+        {
+            errorBackground.style.display = "none";
+        }
+    }
 
     function checkInput() {
         var input = document.getElementById('queryInput').value.trim();
@@ -158,16 +178,21 @@
                         var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/FileUpload';
                         window.location.href = documentAnalysisUrl;
                     }
+                    else {
+                        displayError('Failed to process file.');
+                    }
                     
                 }
                 catch (error)
                 {
+                    displayError('Failed to process file.');
                     document.getElementById('upload-button').disabled = false;
                     return;
                 }
             }
         } catch (error)
         {
+            displayError('Failed to process file.');
             document.getElementById('upload-button').disabled = false;
             return;
         }
@@ -280,6 +305,7 @@
                 if (!response.ok)
                 {
                     hideLoader();
+                    displayError('Failed to process file.');
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
@@ -292,6 +318,7 @@
             .catch(error =>
             {
                 hideLoader();
+                displayError('Failed to process file.');
                 console.error('Fetch error:',error);
             });
     }
@@ -376,6 +403,7 @@
                 if (!response.ok)
                 {
                     hideLoader();
+                    displayError('Failed to process file.');
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
@@ -388,6 +416,7 @@
             .catch(error =>
             {
                 hideLoader();
+                displayError('Failed to process file.');
                 console.error('Fetch error:',error);
             });
     }

@@ -93,9 +93,57 @@
     .uploadStatus-table {
         margin-top: 3%;
     }
+
+    .error-background {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .error-container {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        margin-top: 10vw;
+    }
+
+    .error-close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .error-close:hover,
+        .error-close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    .error-title {
+        color: red;
+    }
 </style>
 
 <body>
+    <div class="error-background" id="error-background">
+        <div class="error-container">
+            <span class="error-close" id="error-close">&times;</span>
+            <h2 class="error-title">Error</h2>
+            <p id="error-message"></p>
+        </div>
+    </div>
     <div class="container site-container p-0">
         <div class="row page-row h-85">
             <div class="col-lg-8 upload-container bg-light">
@@ -156,6 +204,19 @@
         const documentTypeInput = document.getElementById('documentType');
         const documentDescriptionInput = document.getElementById('documentDescription');
         const nextButton = document.getElementById('nextButton');
+
+        function displayError(errorMessage)
+        {
+            var errorBackground = document.getElementById("error-background");
+            var errorCloseButton = document.getElementById("error-close");
+            var errorText = document.getElementById("error-message");
+            errorText.innerText = errorMessage;
+            errorBackground.style.display = "block";
+            errorCloseButton.onclick = function ()
+            {
+                errorBackground.style.display = "none";
+            }
+        }
 
         hideLoader();
 
@@ -220,6 +281,7 @@
                     if (!response.ok)
                     {
                         hideLoader();
+                        displayError('Failed to process file.')
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
 
@@ -232,6 +294,7 @@
                 .catch(error =>
                 {
                     hideLoader();
+                    displayError('Failed to process file.');
                     console.error('Fetch error:',error);
                 });
             
@@ -287,6 +350,8 @@
                     await customKeyword();
                     hideLoader();
                 } catch (error) {
+                    hideLoader();
+                    displayError('Failed to upload or process file.');
                     statusCell.textContent = 'Error';
                     console.error('Error uploading file:', error);
                 }
@@ -338,6 +403,7 @@
             });
 
             if (!response.ok) {
+                displayError('Failed to upload file.');
                 throw new Error('Failed to upload file to MongoDB collection.');
             }
 
