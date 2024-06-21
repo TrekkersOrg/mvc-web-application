@@ -200,6 +200,10 @@
 
     async function sendQuery() {
         var sessionNamespace = '';
+        var context = '';
+        if (sessionStorage.getItem('documentContext')) {
+            context = JSON.parse(sessionStorage.getItem('documentContext'))?.documentDescription;
+        }
         if (!sessionStorage.getItem('sessionNamespace')) {
             sessionNamespace = 'TestSuite';
         }
@@ -209,8 +213,12 @@
         generatingResponse = true;
         checkInput();
         var query = document.getElementById('queryInput').value;
+        var baseQuery = query;
+        if (context != '') {
+            query = "Use this as context for your response: " + context + ". Answer the following query: " + query;
+        }
         document.getElementById('queryInput').value = "";
-        generateUserBubble(query);
+        generateUserBubble(baseQuery);
         try {
             var sendButton = document.getElementById('send-button');
             sendButton.disabled = true;
