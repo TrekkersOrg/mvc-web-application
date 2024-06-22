@@ -148,8 +148,8 @@
 <body>
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="/Home/Index">Home</a>
-        <a href="/Home/ServiceDashboard">Service Dashboard</a>
+        <a href="/Home/ServiceDashboard">Home</a>
+        <a href="/Home/Index">About Ontology</a>
         <div class="sidebar-bottom">
             @*<a href="/Home/ContactUs">Contact Us</a>*@
             <a asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
@@ -186,6 +186,11 @@
             document.getElementById("main-content").style.marginLeft = "0";
             document.getElementById("main-content").style.width = "100%";
         }
+
+        // Call openNav function on page load
+        $(document).ready(function() {
+            openNav();
+        });
     </script>
 </body>
 

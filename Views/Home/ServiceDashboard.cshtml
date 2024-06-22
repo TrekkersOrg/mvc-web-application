@@ -3,26 +3,23 @@
     Layout = "~/Views/Shared/_ServiceDashboardLayout.cshtml";
 }
 
-<div class="container-fluid">
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-1">
+<div class="container-fluid d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-3 d-flex justify-content-end mb-4">
             <a href="@Url.Action("FileUpload", "Home")" class="text-decoration-none">
-                <div class="widget shadow p-3 mb-5 bg-light rounded">
+                <div class="widget shadow p-3 mb-5 rounded mr-3">
                     <h5 class="widget-title">File Upload</h5>
                     <p class="widget-text">Upload your files here</p>
                 </div>
             </a>
         </div>
-        <div class="col-md-4 offset-md-1">
+        <div class="col-md-3 d-flex justify-content-start mb-4">
             <a href="@Url.Action("ContactUs", "Home")" class="text-decoration-none">
-                <div class="widget shadow p-3 mb-5 bg-light rounded">
+                <div class="widget shadow p-3 mb-5 rounded ml-3">
                     <h5 class="widget-title">Get in Contact</h5>
                     <p class="widget-text">Schedule an appointment, now</p>
                 </div>
             </a>
-        </div>
-        <div id="all-files-widget" class="col-md-4 offset-md-1">
-            <!-- All files widget will be dynamically added here -->
         </div>
     </div>
 </div>
@@ -37,17 +34,21 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         padding: 20px;
         background-color: #f8f9fa;
-        transition: box-shadow 0.3s;
-        width: 400px;
+        transition: box-shadow 0.3s, background-color 0.3s;
+        width: 300px;
         height: auto;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        border: 2px solid #007bff;
+        margin: 0 60px;
     }
 
     .widget:hover {
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        color: #007bff;
+        background-color: #c7cdd4;
     }
 
     .widget-title {
@@ -60,7 +61,12 @@
         font-size: 1rem;
         color: #555555;
     }
+
+    .custom-top-margin {
+        margin-top: 100px;
+    }
 </style>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
