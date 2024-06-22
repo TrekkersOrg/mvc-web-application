@@ -20,7 +20,7 @@
                 <div class="chat-container d-flex flex-column h-100">
                     <div class="chatbot-topFrame container d-flex">
                         <div class="chatbot-name-container container">
-                            <h3 id="document-name">Strive LLC. Term Sheet - 2024</h3>
+                            <h3 id="document-name"></h3>
                         </div>
                         <div class="new-upload-container">
                             <button class="btn btn-primary btn-lg file-upload-button new-upload" type="button" id="upload-button"
@@ -151,8 +151,7 @@
         document.getElementById('send-button').disabled = false;
     }
 
-    async function newUpload()
-    {
+    async function newUpload() {
         var sessionNamespace = sessionStorage.getItem('sessionNamespace');
         try {
             document.getElementById('upload-button').disabled = true;
@@ -169,29 +168,12 @@
 
             var data = await pineconeResponse.json();
             if (pineconeResponse.ok) {
-                try {
-                    const url = `https://strive-api.azurewebsites.net/api/MongoDB/DeleteCollection?collectionName=${sessionNamespace}`;
-                    const mongoResponse = await fetch(url, {
-                        method: 'POST'
-                    });
-                    if (mongoResponse.ok) {
-                        var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/FileUpload';
-                        window.location.href = documentAnalysisUrl;
-                    }
-                    else {
-                        displayError('Failed to process file.');
-                    }
-                    
-                }
-                catch (error)
-                {
-                    displayError('Failed to process file.');
-                    document.getElementById('upload-button').disabled = false;
-                    return;
-                }
+                var documentAnalysisUrl = `${window.location.protocol}//${window.location.host}/Home/FileUpload`;
+                window.location.href = documentAnalysisUrl;
+            } else {
+                displayError('Failed to process file.');
             }
-        } catch (error)
-        {
+        } catch (error) {
             displayError('Failed to process file.');
             document.getElementById('upload-button').disabled = false;
             return;
@@ -457,7 +439,15 @@
         document.getElementById('queryInput').addEventListener('input', checkInput);
         generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
         checkInput();
-        document.getElementById('document-name').innerText = JSON.parse(sessionStorage.getItem('documentContext'))?.documentName;
+
+        if(JSON.parse(sessionStorage.getItem('documentContext'))?.documentName != "") {
+
+            document.getElementById('document-name').innerText = JSON.parse(sessionStorage.getItem('documentContext'))?.documentName;
+        } else {
+            document.getElementById('document-name').innerText = sessionStorage.getItem('selectedFile');
+
+        }
+        
         // Chart.js and risk meter initialization
         var ctx = document.getElementById('spiderChart').getContext('2d');
         var spiderChart = new Chart(ctx, {
@@ -492,6 +482,7 @@
                 }
             }
         });
+
         await customRiskAssessment();
         await determineRiskScore();
         hideLoader();
