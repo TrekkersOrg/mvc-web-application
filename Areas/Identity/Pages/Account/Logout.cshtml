@@ -1,21 +1,65 @@
 ﻿@page
 @model LogoutModel
 @{
-    ViewData["Title"] = "Log out ";
+    ViewData["Title"] = "Log out";
 }
 
-<header>
-    <h1>@ViewData["Title"]</h1>
-    @{
-        if (User.Identity?.IsAuthenticated ?? false)
+<style>
+    body {
+        background-color: white;
+        color: black; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0; 
+    }
+
+    .logout-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .highlighted-rectangle {
+        background-color: rgba(255, 0, 0, 0.1); 
+        border: 2px solid rgba(255, 0, 0, 1); 
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px; 
+        width: 100%; 
+        text-align: center; 
+    }
+
+    .logout-button {
+        margin-top: 15px; 
+        background-color: red;
+        color: white; 
+        border: none; 
+        padding: 10px 20px; 
+        border-radius: 5px; 
+        cursor: pointer; 
+        transition: background-color 0.3s ease; 
+    }
+
+    .logout-button:hover {
+        background-color: darkred; 
+</style>
+
+<div class="logout-container">
+    <div class="highlighted-rectangle">
+        <h1>@ViewData["Title"]</h1>
+        @if (User.Identity?.IsAuthenticated ?? false)
         {
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
+            <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                <button type="submit" class="logout-button">Click here to Logout</button>
             </form>
         }
         else
         {
             <p>You have successfully logged out of the application.</p>
         }
-    }
-</header>
+    </div>
+</div>

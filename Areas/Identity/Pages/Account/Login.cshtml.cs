@@ -103,7 +103,7 @@ namespace StriveAI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/Home/FileUpload");
+            returnUrl ??= Url.Content("~/Home/ServiceDashboard");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
