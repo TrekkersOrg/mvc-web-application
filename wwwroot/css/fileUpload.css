@@ -44,7 +44,7 @@ body {
 }
 
     .btn-primary:hover {
-        background-color: purple !important;
+        background-color: gray !important;
     }
 
 .close {

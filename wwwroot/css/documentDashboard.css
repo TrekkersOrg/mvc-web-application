@@ -165,6 +165,9 @@ html {
     align-items: center !important;
 }
 
+.new-upload:hover {
+    background-color: gray;
+}
 .new-upload-container {
     display: flex;
     align-items: center;
