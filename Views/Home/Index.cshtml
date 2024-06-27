@@ -8,6 +8,7 @@
 }
 <link rel="stylesheet" href="~/css/index.css">
 <div class="container-fluid p-0">
+
     <!-- Top Section -->
     <div class="top-row d-flex align-items-center">
         <div class="container landing-container">
@@ -95,74 +96,3 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/index.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var ctx = document.getElementById('spiderChart').getContext('2d');
-        var spiderChart = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: ['Operational Risk', '', 'Compliance Risk', ''],
-                datasets: [{
-                    data: [3, 2, 4, 5],
-                    backgroundColor: 'rgba(255, 191, 0, 0.1)',
-                    borderColor: 'rgba(255, 191, 0, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    r: {
-                        angleLines: {
-                            color: '#ffffff'
-                        },
-                        grid: {
-                            color: '#ffffff'
-                        },
-                        pointLabels: {
-                            color: '#ffffff',
-                            font: {
-                                size: 14
-                            }
-                        },
-                        ticks: {
-                            beginAtZero: true,
-                            max: 5,
-                            display: false
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-            }
-        });
-
-        document.querySelector('.btn.btn-primary-demo').addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector('#middle-section').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        function updateSpiderChartData(newData) {
-            spiderChart.data.datasets[0].data = newData;
-            spiderChart.update();
-        }
-
-        function generateRandomData() {
-            return [
-                Math.random() * 5,
-                Math.random() * 5,
-                Math.random() * 5,
-                Math.random() * 5
-            ];
-        }
-
-        setInterval(function () {
-            var newData = generateRandomData();
-            updateSpiderChartData(newData);
-        }, 2000);
-    });
-</script>
