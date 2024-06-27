@@ -18,11 +18,6 @@ namespace StriveAI.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         public IActionResult Demo()
         {
             return View();
