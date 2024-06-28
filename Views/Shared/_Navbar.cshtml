@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Strive</title>
 
-    <link rel="stylesheet" href="~/_CustomLayoutWithLogin.cshtml.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/_navbar.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
 </head>
@@ -68,28 +68,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-    $(document).ready(function ()
-    {
-        if ('@User.Identity.IsAuthenticated' === 'True' && localStorage.getItem('userFirstName') == null)
-        {
-            $.ajax({
-                url: 'https://strive-api.azurewebsites.net/api/user/getUser?username=' + '@User.Identity.Name',
-                type: 'GET',
-                success: function (data)
-                {
-                    localStorage.setItem('userFirstName',data['data']['firstName']);
-                    $('#user-greeting').text(localStorage.getItem('userFirstName'));
-                }
-            });
-        }
-        else
-        {
-            $('#user-greeting').text(localStorage.getItem('userFirstName'));
-        }
-    });
-</script>
+<script src="~/js/_navbar.js"></script>
