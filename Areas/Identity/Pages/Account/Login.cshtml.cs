@@ -119,7 +119,7 @@ namespace StriveAI.Areas.Identity.Pages.Account
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 // MONGODB CONFIG
                 //var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                using (HttpClient httpClient = new HttpClient())
+                using (HttpClient httpClient = new())
                 {
                     try
                     {

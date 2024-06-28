@@ -1,4 +1,4 @@
-﻿/* Reset some default styles */
+﻿/* Reset Styles and Basic Setup */
 body,
 html {
     margin: 0;
@@ -8,19 +8,25 @@ html {
     background-color: #f5f5f5;
 }
 
-.loader-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
+/* Container Styling */
 .container {
     max-width: 100%;
     margin: 0 auto;
     padding: 20px;
 }
 
+.page-container {
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    z-index: 999;
+    position: absolute;
+    background: #f5f5f5;
+    top: 0;
+    left: 0;
+}
+
+/* Chat Container */
 .chat-container {
     background: #fff;
     border-radius: 8px;
@@ -35,10 +41,7 @@ html {
     transition: width 0.3s ease, margin-left 0.3s ease;
 }
 
-.sidebar-open .chat-container {
-    width: calc(100% - 60px);
-}
-
+/* Chat Window */
 #chat-window {
     max-height: 60vh;
     overflow-y: scroll;
@@ -51,6 +54,7 @@ html {
     flex-direction: column;
 }
 
+/* Input Group and Form Controls */
 .input-group {
     display: flex;
     align-items: center;
@@ -72,23 +76,24 @@ html {
     align-items: stretch;
 }
 
-.input-group-append button,
-.input-group-prepend button {
-    background: #3a516a;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 4px;
-    margin-left: 5px;
-}
+    .input-group-append button,
+    .input-group-prepend button {
+        background: #3a516a;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-left: 5px;
+    }
 
-.input-group-append button:disabled,
-.input-group-prepend button:disabled {
-    background: #bbb;
-    cursor: not-allowed;
-}
+        .input-group-append button:disabled,
+        .input-group-prepend button:disabled {
+            background: #bbb;
+            cursor: not-allowed;
+        }
 
+/* Chat Messages */
 .chat-output {
     margin-bottom: 5px;
     padding: 10px;
@@ -105,6 +110,7 @@ html {
         align-self: flex-end;
     }
 
+/* Chart Container */
 .chart-container {
     background: #fff;
     border-radius: 8px;
@@ -117,6 +123,7 @@ html {
     position: relative;
 }
 
+/* Risk Meter */
 #riskMeter {
     width: 100%;
     height: 50px;
@@ -143,6 +150,14 @@ html {
     color: #333;
 }
 
+/* Loader Spinner */
+.loader-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .loader {
     width: 7vw;
     aspect-ratio: 1;
@@ -155,6 +170,13 @@ html {
     left: 40%;
 }
 
+@keyframes l1 {
+    to {
+        transform: rotate(.5turn);
+    }
+}
+
+/* File Upload Button */
 .new-upload {
     background-color: #212529 !important;
     border-color: #212529 !important;
@@ -165,7 +187,7 @@ html {
     align-items: center !important;
 }
 
-.new-upload:hover {
+    .new-upload:hover {
     background-color: gray;
 }
 .new-upload-container {
@@ -251,8 +273,7 @@ html {
     justify-content: center;
     padding: 10px 15px;
     box-sizing: border-box;
-}
-
+    }
 .error-background {
     display: none;
     position: fixed;

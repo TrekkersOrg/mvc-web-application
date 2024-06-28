@@ -150,6 +150,10 @@ header .title-frame h5 {
     margin: 0.5rem 0;
 }
 
+#user-greeting {
+    pointer-events: none;
+    cursor: default;
+}
 @media (max-width: 768px) {
     .top-row {
         flex-direction: column;
