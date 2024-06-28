@@ -5,87 +5,7 @@
     ViewData["Title"] = "Log in ";
 }
 
-<style>
-    body {
-        background-color: black;
-        color: white; 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0; 
-    }
-
-    .login-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-    }
-
-    .highlighted-rectangle {
-        background-color: rgba(255, 191, 0, 0.2); 
-        border: 2px solid rgba(255, 191, 0, 1); 
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        max-width: 600px; 
-        width: 100%; 
-    }
-
-    .form-floating {
-        margin-bottom: 10px; 
-        position: relative;
-    }
-
-    .form-floating input {
-        padding: 8px 16px; 
-        color: white; 
-        background-color: black; 
-        border: 1px solid rgba(255, 191, 0, 1); 
-    }
-
-    .form-floating input::placeholder {
-        color: gray; 
-        opacity: 1; 
-    }
-
-    .form-floating label {
-        position: absolute;
-        top: 0;
-        left: 0;
-        padding: 8px 16px; 
-        pointer-events: none;
-        transition: 0.2s ease;
-        opacity: 0.6;
-        color: white;
-    }
-
-    .form-floating input:focus + label,
-    .form-floating input:not(:placeholder-shown) + label {
-        top: -16px;
-        left: 8px;
-        font-size: 12px;
-        opacity: 1; 
-    }
-
-    #login-submit {
-        margin-top: 10px; 
-        background-color: black; 
-        color: white;
-        border: none; 
-        padding: 8px 16px; 
-        border-radius: 5px; 
-        cursor: pointer;
-        transition: background-color 0.3s ease; 
-    }
-
-    #login-submit:hover {
-        background-color: rgba(255, 191, 0, 1); 
-        color: black; 
-    
-</style>
-
+<link rel="stylesheet" href="~/css/login.css">
 <div class="login-container">
     <div class="highlighted-rectangle">
         <section>
@@ -103,7 +23,7 @@
                     <label asp-for="Input.Password">Password</label>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
-                <div style="display: none !important;">
+                <div>
                     <div class="checkbox">
                         <label asp-for="Input.RememberMe" class="form-label">
                             <input class="form-check-input" asp-for="Input.RememberMe" />
@@ -114,7 +34,7 @@
                 <div>
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg">Log in</button>
                 </div>
-                <div style="display: none !important;">
+                <div class="login-options">
                     <p>
                         <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
                     </p>

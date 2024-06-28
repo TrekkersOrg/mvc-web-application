@@ -40,8 +40,8 @@ html {
 }
 
 #chat-window {
-    height: calc(100% - 100px);
-    overflow-y: auto;
+    max-height: 60vh;
+    overflow-y: scroll;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;

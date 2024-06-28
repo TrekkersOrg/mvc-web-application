@@ -21,7 +21,7 @@
                     </header>
                     <div class="start-button-frame mt-4">
                         @{
-                            var getStartedUrl = SignInManager.IsSignedIn(User) ? Url.Action("ServiceDashboard", "Home") :
+                            var getStartedUrl = User.Identity.IsAuthenticated ? Url.Action("ServiceDashboard", "Home") :
                             Url.Action("Demo", "Home");
                         }
                         <a class="btn btn-primary-black rounded-pill btn-lg text-white text-decoration-none mr-2"
