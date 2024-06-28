@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Strive</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/_hamburgerBar.css" asp-append-version="true" />
+</head>
+
+<body>
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="/Home/ServiceDashboard">Home</a>
+        <a href="/Home/Index">About Ontology</a>
+        <div class="sidebar-bottom">
+            @*<a href="/Home/ContactUs">Contact Us</a>*@
+            <a asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
+            <a asp-area="Identity" asp-page="/Account/Logout">Logout</a>
+        </div>
+    </div>
+
+    <div id="main">
+        <div class="vertical-nav">
+            <button class="openbtn" onclick="openNav()">&#9776;</button>
+        </div>
+    </div>
+
+    <div id="main-content" class="container-fluid p-0">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/_hamburgerBar.js"></script>
+</body>
+
+</html>
