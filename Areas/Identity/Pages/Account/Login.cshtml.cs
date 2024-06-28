@@ -119,72 +119,69 @@ namespace StriveAI.Areas.Identity.Pages.Account
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 // MONGODB CONFIG
                 //var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                using (HttpClient httpClient = new())
+                using HttpClient httpClient = new();
+                try
                 {
-                    try
+                    HttpResponseMessage response = await httpClient.GetAsync("https://strive-api.azurewebsites.net/api/MongoDB/GetUser?username=" + Input.Email);
+                    string responseData = await response.Content.ReadAsStringAsync();
+                    using JsonDocument doc = JsonDocument.Parse(responseData);
+                    JsonElement root = doc.RootElement;
+                    if (root.TryGetProperty("data", out JsonElement dataElement))
                     {
-                        HttpResponseMessage response = await httpClient.GetAsync("https://strive-api.azurewebsites.net/api/MongoDB/GetUser?username=" + Input.Email);
-                        string responseData = await response.Content.ReadAsStringAsync();
-                        using (JsonDocument doc = JsonDocument.Parse(responseData))
+                        if (dataElement.ValueKind == JsonValueKind.Null)
                         {
-                            JsonElement root = doc.RootElement;
-                            if (root.TryGetProperty("data", out JsonElement dataElement))
+                            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                            return Page();
+                        }
+                        else
+                        {
+                            if (dataElement.TryGetProperty("password", out JsonElement passwordElement))
                             {
-                                if (dataElement.ValueKind == JsonValueKind.Null)
+                                if (Input.Password == passwordElement.GetString())
+                                {
+                                    var claims = new List<Claim>
+                                        {
+                                            new Claim(ClaimTypes.Name, Input.Email),
+                                            // Add other claims as needed
+                                        };
+
+                                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                                    var authProperties = new AuthenticationProperties
+                                    {
+                                        IsPersistent = true, // Keeps the user logged in across sessions
+                                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30) // Adjust expiration as needed
+                                    };
+
+                                    // Sign in the user
+                                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                                        new ClaimsPrincipal(claimsIdentity),
+                                        authProperties);
+                                    _logger.LogInformation("User logged in.");
+                                    return LocalRedirect(returnUrl);
+                                }
+                                else
                                 {
                                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                                     return Page();
                                 }
-                                else
-                                {
-                                    if (dataElement.TryGetProperty("password", out JsonElement passwordElement))
-                                    {
-                                        if (Input.Password == passwordElement.GetString())
-                                        {
-                                            var claims = new List<Claim>
-                                            {
-                                                new Claim(ClaimTypes.Name, Input.Email),
-                                                // Add other claims as needed
-                                            };
-
-                                            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                                            var authProperties = new AuthenticationProperties
-                                            {
-                                                IsPersistent = true, // Keeps the user logged in across sessions
-                                                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30) // Adjust expiration as needed
-                                            };
-
-                                            // Sign in the user
-                                            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                                                new ClaimsPrincipal(claimsIdentity),
-                                                authProperties);
-                                            _logger.LogInformation("User logged in.");
-                                            return LocalRedirect(returnUrl);
-                                        }
-                                        else
-                                        {
-                                            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                                            return Page();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                                        return Page();
-                                    }
-                                }
+                            }
+                            else
+                            {
+                                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                                return Page();
                             }
                         }
                     }
-                    catch (HttpRequestException e)
-                    {
-                        // Handle exceptions (e.g., network issues, API errors)
-                        Console.WriteLine($"Request error: {e.Message}");
-                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                        return Page();
-                    }
                 }
+                catch (HttpRequestException e)
+                {
+                    // Handle exceptions (e.g., network issues, API errors)
+                    Console.WriteLine($"Request error: {e.Message}");
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
+                }
+
                 /*if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
