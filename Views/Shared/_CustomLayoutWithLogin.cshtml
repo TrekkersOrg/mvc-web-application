@@ -17,7 +17,9 @@
 
 <body>
     <header>
-        @if (SignInManager.IsSignedIn(User))
+        @*MONGODB CONFIG*@
+        @*@if (SignInManager.IsSignedIn(User))*@
+        @if (User.Identity.IsAuthenticated)
         {
             <div class="container">
                 <nav class="navbar navbar-expand-sm nav-gradient">
