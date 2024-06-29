@@ -43,12 +43,12 @@ namespace StriveAI.Controllers
             const int maximumRequestLimit = 100;
             if (requestBody.Namespace == null || requestBody.Ids == null || requestBody.Ids.Any(string.IsNullOrEmpty) == true || requestBody.Ids.Any() == false)
             {
-                responseModel = createResponseModel(200, "Success", "The 'namespace' and/or 'ids' field is missing or empty in the request body.", DateTime.Now);
+                responseModel = CreateResponseModel(200, "Success", "The 'namespace' and/or 'ids' field is missing or empty in the request body.", DateTime.Now);
                 return Ok(responseModel);
             }
             if (requestBody.Ids.Count > maximumRequestLimit)
             {
-                responseModel = createResponseModel(200, "Success", "The number of IDs entered exceeded the limit of 100.", DateTime.Now);
+                responseModel = CreateResponseModel(200, "Success", "The number of IDs entered exceeded the limit of 100.", DateTime.Now);
             }
             ActionResult? pineconeDetailsResult = await PineconeDetails();
             List<string> existingNamespaces = new();
@@ -66,103 +66,103 @@ namespace StriveAI.Controllers
             }
             List<string> idList = requestBody.Ids;
             string idQueryString = BuildQueryString("ids", idList);
-            using (HttpClient httpClient = new())
+            using HttpClient httpClient = new();
+            var requestUri = _pineconeHost + "/vectors/fetch?namespace=" + requestBody.Namespace + '&' + idQueryString;
+            var content = new StringContent(
+                requestBody.ToJson(),
+                Encoding.UTF8,
+                "application/json"
+            );
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
+            if (requestBody.Namespace != null && !existingNamespaces.Contains(requestBody.Namespace))
             {
-                var requestUri = _pineconeHost + "/vectors/fetch?namespace=" + requestBody.Namespace + '&' + idQueryString;
-                var content = new StringContent(
-                    requestBody.ToJson(),
-                    Encoding.UTF8,
-                    "application/json"
-                );
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
-                if (requestBody.Namespace != null && !existingNamespaces.Contains(requestBody.Namespace))
+                responseModel = CreateResponseModel(200, "Success", "Unable to find index: " + string.Join(", ", requestBody.Namespace), DateTime.Now);
+                return Ok(responseModel);
+            }
+            var response = await httpClient.GetAsync(requestUri);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseBodyString = await response.Content.ReadAsStringAsync();
+                JsonDocument responseBodyJson = JsonDocument.Parse(responseBodyString);
+                JsonElement responseBodyElement = responseBodyJson.RootElement;
+                getRecordResponseModel.Namespace = requestBody.Namespace;
+                foreach (var property in responseBodyElement.EnumerateObject())
                 {
-                    responseModel = createResponseModel(200, "Success", "Unable to find index: " + string.Join(", ", requestBody.Namespace), DateTime.Now);
-                    return Ok(responseModel);
-                }
-                var response = await httpClient.GetAsync(requestUri);
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseBodyString = await response.Content.ReadAsStringAsync();
-                    JsonDocument responseBodyJson = JsonDocument.Parse(responseBodyString);
-                    JsonElement responseBodyElement = responseBodyJson.RootElement;
-                    getRecordResponseModel.Namespace = requestBody.Namespace;
-                    foreach (var property in responseBodyElement.EnumerateObject())
+                    if (property.Name == "namespace")
                     {
-                        if (property.Name == "namespace")
+                        getRecordResponseModel.Namespace = property.Value.GetString();
+                    }
+                    if (property.Name == "usage")
+                    {
+                        GetRecordResponseModel.UsageDetails usage = new();
+                        foreach (var usageProperty in property.Value.EnumerateObject())
                         {
-                            getRecordResponseModel.Namespace = property.Value.GetString();
-                        }
-                        if (property.Name == "usage")
-                        {
-                            GetRecordResponseModel.UsageDetails usage = new();
-                            foreach (var usageProperty in property.Value.EnumerateObject())
+                            if (usageProperty.Name == "readUnits")
                             {
-                                if (usageProperty.Name == "readUnits")
+                                usage.ReadUnits = usageProperty.Value.GetInt32();
+                            }
+                        }
+                        getRecordResponseModel.Usage = usage;
+                    }
+                    if (property.Name == "vectors")
+                    {
+                        GetRecordResponseModel.VectorsDetails vectorsDetails = new()
+                        {
+                            Vectors = new Dictionary<string, GetRecordResponseModel.VectorDetails>()
+                        };
+                        foreach (var vectorsDetailsProperty in property.Value.EnumerateObject())
+                        {
+                            GetRecordResponseModel.VectorDetails vectorDetails = new();
+                            foreach (var vectorDetailsProperty in vectorsDetailsProperty.Value.EnumerateObject())
+                            {
+                                if (vectorDetailsProperty.Name == "id")
                                 {
-                                    usage.ReadUnits = usageProperty.Value.GetInt32();
+                                    vectorDetails.Id = vectorDetailsProperty.Value.GetString();
+                                }
+                                if (vectorDetailsProperty.Name == "values")
+                                {
+                                    vectorDetails.Values = new List<double>();
+                                    foreach (var value in vectorDetailsProperty.Value.EnumerateArray())
+                                    {
+                                        vectorDetails.Values.Add(value.GetDouble());
+                                    }
                                 }
                             }
-                            getRecordResponseModel.Usage = usage;
+                            vectorsDetails.Vectors.Add(vectorsDetailsProperty.Name, vectorDetails);
                         }
-                        if (property.Name == "vectors")
+                        if (vectorsDetails.Vectors.Count == 0)
                         {
-                            GetRecordResponseModel.VectorsDetails vectorsDetails = new();
-                            vectorsDetails.Vectors = new Dictionary<string, GetRecordResponseModel.VectorDetails>();
-                            foreach (var vectorsDetailsProperty in property.Value.EnumerateObject())
+                            responseModel = CreateResponseModel(200, "Success", "Unable to find vectors: " + string.Join(", ", requestBody.Ids), DateTime.Now);
+                            return Ok(responseModel);
+                        }
+                        List<String> invalidVectors = new();
+                        if (vectorsDetails.Vectors.Count > 0 && vectorsDetails.Vectors.Count < idList.Count)
+                        {
+                            foreach (string vector in idList)
                             {
-                                GetRecordResponseModel.VectorDetails vectorDetails = new();
-                                foreach (var vectorDetailsProperty in vectorsDetailsProperty.Value.EnumerateObject())
+                                if (vectorsDetails.Vectors.ContainsKey(vector) == false)
                                 {
-                                    if (vectorDetailsProperty.Name == "id")
-                                    {
-                                        vectorDetails.Id = vectorDetailsProperty.Value.GetString();
-                                    }
-                                    if (vectorDetailsProperty.Name == "values")
-                                    {
-                                        vectorDetails.Values = new List<double>();
-                                        foreach (var value in vectorDetailsProperty.Value.EnumerateArray())
-                                        {
-                                            vectorDetails.Values.Add(value.GetDouble());
-                                        }
-                                    }
+                                    invalidVectors.Add(vector);
                                 }
-                                vectorsDetails.Vectors.Add(vectorsDetailsProperty.Name, vectorDetails);
                             }
-                            if (vectorsDetails.Vectors.Count == 0)
+                            if (invalidVectors.Count > 0)
                             {
-                                responseModel = createResponseModel(200, "Success", "Unable to find vectors: " + string.Join(", ", requestBody.Ids), DateTime.Now);
+                                getRecordResponseModel.Vectors = vectorsDetails;
+                                responseModel = CreateResponseModel(200, "OK", "Some Pinecone records fetched successfully. The following records were not found: " + string.Join(", ", invalidVectors), DateTime.Now, getRecordResponseModel);
                                 return Ok(responseModel);
                             }
-                            List<String> invalidVectors = new();
-                            if (vectorsDetails.Vectors.Count > 0 && vectorsDetails.Vectors.Count < idList.Count)
-                            {
-                                foreach (string vector in idList)
-                                {
-                                    if (vectorsDetails.Vectors.ContainsKey(vector) == false)
-                                    {
-                                        invalidVectors.Add(vector);
-                                    }
-                                }
-                                if (invalidVectors.Count > 0)
-                                {
-                                    getRecordResponseModel.Vectors = vectorsDetails;
-                                    responseModel = createResponseModel(200, "OK", "Some Pinecone records fetched successfully. The following records were not found: " + string.Join(", ", invalidVectors), DateTime.Now, getRecordResponseModel);
-                                    return Ok(responseModel);
-                                }
-                            }
-                            getRecordResponseModel.Vectors = vectorsDetails;
                         }
+                        getRecordResponseModel.Vectors = vectorsDetails;
                     }
-                    responseModel = createResponseModel(200, "OK", "Pinecone records fetched successfully.", DateTime.Now, getRecordResponseModel);
-                    return Ok(responseModel);
                 }
-                else
-                {
-                    responseModel = createResponseModel((int)response.StatusCode, "Unexpected Error", "An unexpected error occurred, please refer to status code.", DateTime.Now);
-                    return StatusCode((int)response.StatusCode, responseModel);
-                }
+                responseModel = CreateResponseModel(200, "OK", "Pinecone records fetched successfully.", DateTime.Now, getRecordResponseModel);
+                return Ok(responseModel);
+            }
+            else
+            {
+                responseModel = CreateResponseModel((int)response.StatusCode, "Unexpected Error", "An unexpected error occurred, please refer to status code.", DateTime.Now);
+                return StatusCode((int)response.StatusCode, responseModel);
             }
         }
 
@@ -175,11 +175,11 @@ namespace StriveAI.Controllers
         [EnableCors("AllowAll")]
         public async Task<ActionResult> PurgePinecone([FromBody] PurgePineconeRequestModel requestBody)
         {
-            var responseModel = new APIResponseBodyWrapperModel();
+            APIResponseBodyWrapperModel responseModel;
             var purgePinecodeResponseModel = new PurgePineconeResponseModel();
             if (string.IsNullOrEmpty(requestBody.Namespace))
             {
-                responseModel = createResponseModel(200, "Success", "The 'namespace' field is empty in the request body.", DateTime.Now);
+                responseModel = CreateResponseModel(200, "Success", "The 'namespace' field is empty in the request body.", DateTime.Now);
                 return Ok(responseModel);
             }
             ActionResult? pineconeDetailsResult = await PineconeDetails();
@@ -205,34 +205,32 @@ namespace StriveAI.Controllers
                     }
                 }
             }
-            using (var httpClient = new HttpClient())
+            using var httpClient = new HttpClient();
+            var requestUri = _pineconeHost + "/vectors/delete";
+            var content = new StringContent(
+                requestBody.ToJson(),
+                Encoding.UTF8,
+                "application/json"
+            );
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
+            if (requestBody.Namespace != null && !existingNamespaces.Contains(requestBody.Namespace))
             {
-                var requestUri = _pineconeHost + "/vectors/delete";
-                var content = new StringContent(
-                    requestBody.ToJson(),
-                    Encoding.UTF8,
-                    "application/json"
-                );
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
-                if (requestBody.Namespace != null && !existingNamespaces.Contains(requestBody.Namespace))
-                {
-                    responseModel = createResponseModel(200, "Success", "Unable to find index: " + requestBody.Namespace, DateTime.Now);
-                    return Ok(responseModel);
-                }
-                var response = await httpClient.PostAsync(requestUri, content);
-                if (response.IsSuccessStatusCode)
-                {
-                    purgePinecodeResponseModel.Namespace = requestBody.Namespace;
-                    purgePinecodeResponseModel.NumberOfVectorsDeleted = namespaceVectorCount;
-                    responseModel = createResponseModel(200, "OK", "Pinecone records deleted successfully.", DateTime.Now, purgePinecodeResponseModel);
-                    return Ok(responseModel);
-                }
-                else
-                {
-                    responseModel = createResponseModel((int)response.StatusCode, "Unexpected Error", "An unexpected error occurred, please refer to status code.", DateTime.Now);
-                    return StatusCode((int)response.StatusCode, responseModel);
-                }
+                responseModel = CreateResponseModel(200, "Success", "Unable to find index: " + requestBody.Namespace, DateTime.Now);
+                return Ok(responseModel);
+            }
+            var response = await httpClient.PostAsync(requestUri, content);
+            if (response.IsSuccessStatusCode)
+            {
+                purgePinecodeResponseModel.Namespace = requestBody.Namespace;
+                purgePinecodeResponseModel.NumberOfVectorsDeleted = namespaceVectorCount;
+                responseModel = CreateResponseModel(200, "OK", "Pinecone records deleted successfully.", DateTime.Now, purgePinecodeResponseModel);
+                return Ok(responseModel);
+            }
+            else
+            {
+                responseModel = CreateResponseModel((int)response.StatusCode, "Unexpected Error", "An unexpected error occurred, please refer to status code.", DateTime.Now);
+                return StatusCode((int)response.StatusCode, responseModel);
             }
         }
 
@@ -245,41 +243,39 @@ namespace StriveAI.Controllers
         [EnableCors("AllowAll")]
         public async Task<ActionResult> PineconeDetails()
         {
-            using (var httpClient = new HttpClient())
+            using var httpClient = new HttpClient();
+            var requestUri = _pineconeHost + "/describe_index_stats";
+            httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
+            var responseModel = new APIResponseBodyWrapperModel();
+            var response = await httpClient.PostAsync(requestUri, null);
+            if (response.IsSuccessStatusCode)
             {
-                var requestUri = _pineconeHost + "/describe_index_stats";
-                httpClient.DefaultRequestHeaders.Add("Api-Key", _pineconeAPIKey);
-                var responseModel = new APIResponseBodyWrapperModel();
-                var response = await httpClient.PostAsync(requestUri, null);
-                if (response.IsSuccessStatusCode)
+                var responseBodyString = await response.Content.ReadAsStringAsync();
+                JsonDocument responseBodyJson = JsonDocument.Parse(responseBodyString);
+                JsonElement responseBodyElement = responseBodyJson.RootElement;
+                var namespacesDictionary = new Dictionary<string, PineconeDetailsResponseModel.NamespaceModel>();
+                foreach (var namespaceProperty in responseBodyElement.GetProperty("namespaces").EnumerateObject())
                 {
-                    var responseBodyString = await response.Content.ReadAsStringAsync();
-                    JsonDocument responseBodyJson = JsonDocument.Parse(responseBodyString);
-                    JsonElement responseBodyElement = responseBodyJson.RootElement;
-                    var namespacesDictionary = new Dictionary<string, PineconeDetailsResponseModel.NamespaceModel>();
-                    foreach (var namespaceProperty in responseBodyElement.GetProperty("namespaces").EnumerateObject())
+                    var namespaceModel = new PineconeDetailsResponseModel.NamespaceModel
                     {
-                        var namespaceModel = new PineconeDetailsResponseModel.NamespaceModel
-                        {
-                            VectorCount = namespaceProperty.Value.GetProperty("vectorCount").GetInt32()
-                        };
-                        namespacesDictionary.Add(namespaceProperty.Name, namespaceModel);
-                    }
-                    PineconeDetailsResponseModel pineconeDetailsResponseModel = new()
-                    {
-                        Namespaces = namespacesDictionary,
-                        Dimension = responseBodyElement.GetProperty("dimension").GetInt32(),
-                        IndexFullness = responseBodyElement.GetProperty("indexFullness").GetDouble(),
-                        TotalVectorCount = responseBodyElement.GetProperty("totalVectorCount").GetInt32()
+                        VectorCount = namespaceProperty.Value.GetProperty("vectorCount").GetInt32()
                     };
-                    responseModel = createResponseModel(200, "Success", "Pinecone details retrieved successfully.", DateTime.Now, pineconeDetailsResponseModel);
-                    return Ok(responseModel);
+                    namespacesDictionary.Add(namespaceProperty.Name, namespaceModel);
                 }
-                else
+                PineconeDetailsResponseModel pineconeDetailsResponseModel = new()
                 {
-                    responseModel = createResponseModel((int)response.StatusCode, "Unexpected Error", "An unexpected error occurred, please refer to status code.", DateTime.Now);
-                    return StatusCode((int)response.StatusCode, responseModel);
-                }
+                    Namespaces = namespacesDictionary,
+                    Dimension = responseBodyElement.GetProperty("dimension").GetInt32(),
+                    IndexFullness = responseBodyElement.GetProperty("indexFullness").GetDouble(),
+                    TotalVectorCount = responseBodyElement.GetProperty("totalVectorCount").GetInt32()
+                };
+                responseModel = CreateResponseModel(200, "Success", "Pinecone details retrieved successfully.", DateTime.Now, pineconeDetailsResponseModel);
+                return Ok(responseModel);
+            }
+            else
+            {
+                responseModel = CreateResponseModel((int)response.StatusCode, "Unexpected Error", "An unexpected error occurred, please refer to status code.", DateTime.Now);
+                return StatusCode((int)response.StatusCode, responseModel);
             }
         }
 
@@ -292,17 +288,17 @@ namespace StriveAI.Controllers
         [EnableCors("AllowAll")]
         public ActionResult InsertDocument([FromBody] InsertDocumentRequestModel requestBody)
         {
-            APIResponseBodyWrapperModel responseModel = new();
+            APIResponseBodyWrapperModel responseModel;
             try
             {
                 if (requestBody.Namespace == null || requestBody.Namespace == "" || requestBody.FileName == null || requestBody.FileName == "")
                 {
-                    responseModel = createResponseModel(200, "Success", "The 'namespace' and/or 'filename' field is missing or empty.", DateTime.Now);
+                    responseModel = CreateResponseModel(200, "Success", "The 'namespace' and/or 'filename' field is missing or empty.", DateTime.Now);
                     return Ok(responseModel);
                 }
-                if (requestBody.FileName.Contains(" "))
+                if (requestBody.FileName.Contains(' '))
                 {
-                    responseModel = createResponseModel(200, "Success", "The file name must not contain spaces.", DateTime.Now);
+                    responseModel = CreateResponseModel(200, "Success", "The file name must not contain spaces.", DateTime.Now);
                     return Ok(responseModel);
                 }
                 string arguments = $"-n {requestBody.Namespace} -f {requestBody.FileName}";
@@ -321,7 +317,7 @@ namespace StriveAI.Controllers
                         Directory.SetCurrentDirectory(rootDirectory);
 
                     }
-                    responseModel = createResponseModel(200, "OK", $"Document successfully inserted into {requestBody.Namespace} namespace.", DateTime.Now);
+                    responseModel = CreateResponseModel(200, "OK", $"Document successfully inserted into {requestBody.Namespace} namespace.", DateTime.Now);
                     return Ok(responseModel);
                 }
                 else if (finalOutput.Contains("File type not supported."))
@@ -333,7 +329,7 @@ namespace StriveAI.Controllers
                         Directory.SetCurrentDirectory(rootDirectory);
 
                     }
-                    responseModel = createResponseModel(200, "Success", $"File type for file {requestBody.FileName} is not supported.", DateTime.Now);
+                    responseModel = CreateResponseModel(200, "Success", $"File type for file {requestBody.FileName} is not supported.", DateTime.Now);
                     return Ok(responseModel);
                 }
                 else if (finalOutput.Contains("File name must include file type."))
@@ -345,7 +341,7 @@ namespace StriveAI.Controllers
                         Directory.SetCurrentDirectory(rootDirectory);
 
                     }
-                    responseModel = createResponseModel(200, "Success", $"File type must be included for file {requestBody.FileName}.", DateTime.Now);
+                    responseModel = CreateResponseModel(200, "Success", $"File type must be included for file {requestBody.FileName}.", DateTime.Now);
                     return BadRequest(responseModel);
                 }
                 else if (finalOutput.Contains("File does not exist."))
@@ -357,7 +353,7 @@ namespace StriveAI.Controllers
                         Directory.SetCurrentDirectory(rootDirectory);
 
                     }
-                    responseModel = createResponseModel(200, "Success", $"File {requestBody.FileName} does not exist.", DateTime.Now);
+                    responseModel = CreateResponseModel(200, "Success", $"File {requestBody.FileName} does not exist.", DateTime.Now);
                     return Ok(responseModel);
                 }
                 else
@@ -369,7 +365,7 @@ namespace StriveAI.Controllers
                         Directory.SetCurrentDirectory(rootDirectory);
 
                     }
-                    responseModel = createResponseModel(500, "Internal Server Error", "Error executing script", DateTime.Now);
+                    responseModel = CreateResponseModel(500, "Internal Server Error", "Error executing script", DateTime.Now);
                     return StatusCode(500, responseModel);
                 }
             }
@@ -382,7 +378,7 @@ namespace StriveAI.Controllers
                     Directory.SetCurrentDirectory(rootDirectory);
 
                 }
-                responseModel = createResponseModel(500, "Internal Server Error", ex.Message, DateTime.Now);
+                responseModel = CreateResponseModel(500, "Internal Server Error", ex.Message, DateTime.Now);
                 return StatusCode(500, responseModel);
             }
         }
@@ -410,7 +406,7 @@ namespace StriveAI.Controllers
         {
             try
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo
+                ProcessStartInfo startInfo = new()
                 {
                     FileName = command,
                     Arguments = arguments,
@@ -419,20 +415,18 @@ namespace StriveAI.Controllers
                     UseShellExecute = false,
                     CreateNoWindow = true
                 };
-                using (Process process = new Process { StartInfo = startInfo })
+                using Process process = new() { StartInfo = startInfo };
+                process.Start();
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+                if (process.ExitCode == 0)
                 {
-                    process.Start();
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-                    process.WaitForExit();
-                    if (process.ExitCode == 0)
-                    {
-                        return output.Trim();
-                    }
-                    else
-                    {
-                        return $"{error}";
-                    }
+                    return output.Trim();
+                }
+                else
+                {
+                    return $"{error}";
                 }
             }
             catch (Exception ex)
@@ -451,13 +445,15 @@ namespace StriveAI.Controllers
         /// <param name="timestamp" type="DateTime"></param>
         /// <param name="data" type="Object"></param>
         /// <returns type="APIResponseBodyWrapperModel"></returns>
-        private static APIResponseBodyWrapperModel createResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
+        private static APIResponseBodyWrapperModel CreateResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
         {
-            APIResponseBodyWrapperModel responseModel = new();
-            responseModel.StatusCode = statusCode;
-            responseModel.StatusMessage = statusMessage;
-            responseModel.StatusMessageText = statusMessageText;
-            responseModel.Timestamp = timestamp;
+            APIResponseBodyWrapperModel responseModel = new()
+            {
+                StatusCode = statusCode,
+                StatusMessage = statusMessage,
+                StatusMessageText = statusMessageText,
+                Timestamp = timestamp
+            };
             if (data is GetRecordResponseModel)
             {
                 responseModel.Data = data;
