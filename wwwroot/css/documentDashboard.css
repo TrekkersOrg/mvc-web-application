@@ -44,6 +44,7 @@ html {
 /* Chat Window */
 #chat-window {
     max-height: 60vh;
+    height: 100vw;
     overflow-y: scroll;
     border: 1px solid #ddd;
     border-radius: 8px;
