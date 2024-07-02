@@ -6,19 +6,12 @@ namespace StriveAI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController()
         {
-            _logger = logger;
         }
 
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
@@ -53,7 +46,7 @@ namespace StriveAI.Controllers
             return View();
         }
 
-        public IActionResult OaasView() 
+        public IActionResult LearnMore() 
         {
             return View();
         }

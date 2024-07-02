@@ -34,8 +34,8 @@ namespace StriveAI.Controllers
         [EnableCors("AllowAll")]
         public async Task<ActionResult> SendEmail(SendEmailRequestModel requestBody)
         {
-            APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
-            SendEmailResponseModel sendEmailResponseModel = new SendEmailResponseModel();
+            APIResponseBodyWrapperModel responseModel;
+            SendEmailResponseModel sendEmailResponseModel = new();
             try
             {
                 var client = new SendGridClient(_sendGridAPIKey);
@@ -83,7 +83,7 @@ namespace StriveAI.Controllers
         /// <returns type="APIResponseBodyWrapperModel"></returns>
         static APIResponseBodyWrapperModel createResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
         {
-            APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
+            APIResponseBodyWrapperModel responseModel = new();
             responseModel.StatusCode = statusCode;
             responseModel.StatusMessage = statusMessage;
             responseModel.StatusMessageText = statusMessageText;

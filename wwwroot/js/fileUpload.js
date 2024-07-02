@@ -1,233 +1,15 @@
-async function deleteSelectedFile() {
-    const selectedFileName = document.getElementById('selected-file-name');
-    const deleteFileButton = document.getElementById("delete-button"); 
-    deleteFileButton.addEventListener("click", deleteSelectedFile);
-    const requestBody = {
-        FileName: sessionStorage.getItem("selectedFiles")
-    };
-    await fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/delete",{
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-    })
-        .then(response =>
-        {
-            if (!response.ok)
-            {
-                displayError("System is under maintenance. Please try again later.")
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-        })
-        .then(data =>
-        {
+const fileInput = document.getElementById('fileInput');
+const uploadStatus = document.getElementById('uploadStatus');
+const documentNameInput = document.getElementById('documentName');
+const documentTypeInput = document.getElementById('documentType');
+const documentDescriptionInput = document.getElementById('documentDescription');
+const nextButton = document.getElementById('nextButton');
 
-            const uploadFileDisplay = document.getElementById('uploadFileDisplayPanel');
-            if (uploadFileDisplay.classList.contains('d-none')) {
-                // Keep uploadFileDisplay hidden
-            } else {
-                uploadFileDisplay.classList.add('d-none');
-            }
-        })
-        .catch(error =>
-        {
-            displayError("System is under maintenance. Please try again later.")
-            console.error('Fetch error:',error);
-        });
-    sessionStorage.removeItem("selectedFiles",selectedFileName);
-    
-}
-
-async function uploadDocumentToApplication()
+function validateFiles()
 {
-    const uploadButton = document.getElementById('upload-button');
-    const selectedFileName = document.getElementById('selected-file-name');
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-
-    fileInput.addEventListener("change",(event) =>
-    {
-        const selectedFile = event.target.files[0];
-        // Check for supported file types
-        const allowedExtensions = ['pdf', 'docx', 'doc'];
-        const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
-        const deleteButton = document.getElementById('delete-button');
-        const uploadFileDisplay = document.getElementById('uploadFileDisplayPanel');
-
-        if (!allowedExtensions.includes(fileExtension)) {
-            displayError("Only PDF, DOCX, DOC files are allowed.");
-            return;
-        }
-        
-        if (selectedFile)
-        {
-            const getFileRequestBody = {
-                FileName: selectedFile.name
-            }
-            fetch(window.location.protocol + "//" + window.location.host + "/api/fileupload/getFile", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(getFileRequestBody)
-            })
-                .then(response =>
-                {
-                    if (!response.ok)
-                    {
-                        displayError("System is under maintenance. Please try again later.");
-                    }
-                    return response.json();
-                })
-                .then(data =>
-                {
-                    const fileExists = data.data.fileExists;
-                    selectedFileName.textContent = selectedFile.name;
-                    if (fileExists)
-                    {
-                        displayError("File is already uploaded, please try another file.");
-                        return;
-                    }
-                    else
-                    {
-
-
-                        // Send the selected file to the API for server-side execution
-                        const formData = new FormData();
-                        formData.append('targetFile',selectedFile);
-                        showLoader();
-                        fetch('/api/fileupload/upload',{
-                            method: 'POST',
-                            body: formData
-                        })
-                            .then(response =>
-                            {
-                                hideLoader();
-                                if (!response.ok)
-                                {
-                                    displayError("System is under maintenance. Please try again later.")
-                                    throw new Error(`HTTP error! Status: ${response.status}`);
-                                }
-                                return response.json();
-                            })
-                            .then(data =>
-                            {
-                                sessionStorage.setItem("selectedFiles",data.data.fileName);
-                                if (sessionStorage.getItem("selectedFiles") !== null)
-                                {
-                                    uploadFileDisplay.classList.remove('d-none');
-                                    document.getElementById("next-button").removeAttribute("disabled");
-                                    // Show delete button upon file selection
-                                    deleteButton.classList.remove('d-none');
-                                }
-                            })
-                            .catch(error =>
-                            {
-                                hideLoader();
-                                displayError("System is under maintenance. Please try again later.")
-                                console.log('Upload error:',error);
-                            });
-                        hideLoader();
-                    }
-                })
-                .catch(error =>
-                {
-                    displayError("System is under maintenance. Please try again later.")
-                    console.log('Get error:',error);
-                });
-        }
-        
-    });
-    fileInput.click(); // Trigger the file selection dialog
+    const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
+    nextButton.disabled = uploadedFiles.length === 0;
 }
-
-async function uploadDocumentToPinecone()
-{
-    const requestBody = {
-        Namespace: sessionStorage.getItem("sessionNamespace"),
-        FileName: sessionStorage.getItem("selectedFiles")
-    };
-    showLoader();
-    await fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/insertDocument",{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-    })
-        .then(response =>
-        {
-            hideLoader();
-            if (!response.ok)
-            {
-                sessionStorage.setItem("insertDocumentStatus","fail");
-                displayError("System is under maintenance. Please try again later.")
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            sessionStorage.setItem("insertDocumentStatus","success");
-            return response.json();
-        })
-        .then(data =>
-        {
-            hideLoader();
-            sessionStorage.setItem("insertDocumentStatus","success");
-        })
-        .catch(error =>
-        {
-            sessionStorage.setItem("insertDocumentStatus","fail");
-            hideLoader();
-            displayError("System is under maintenance. Please try again later.")
-            console.error('Fetch error:',error);
-        });
-    setTimeout(function ()
-    {
-        console.log("Idle for 10 seconds");
-    },10000);
-    return Promise.resolve();
-}
-
-async function verifyPineconeNamespace()
-{
-    showLoader();
-    await fetch(window.location.protocol + "//" + window.location.host + "/api/indexer/PineconeDetails",{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    })
-        .then(response =>
-        {
-            hideLoader();
-            if (!response.ok)
-            {
-                sessionStorage.setItem("pineconeDetailsStatus","fail");
-                displayError("System is under maintenance. Please try again later.")
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            sessionStorage.setItem("pineconeDetailsStatus","success");
-            return response.json();
-        })
-        .then(data =>
-        {
-            hideLoader();
-            sessionStorage.setItem("pineconeDetailsStatus","success");
-            var namespaceExistence = data.data && data.data.namespaces && data.data.namespaces[sessionStorage.getItem("sessionNamespace")];
-            return namespaceExistence;
-        })
-        .catch(error =>
-        {
-            sessionStorage.setItem("pineconeDetailsStatus","fail");
-            hideLoader();
-            displayError("System is under maintenance. Please try again later.")
-            console.error('Fetch error:',error);
-        });
-    return Promise.resolve();
-}
-
 function displayError(errorMessage)
 {
     var errorBackground = document.getElementById("error-background");
@@ -235,38 +17,73 @@ function displayError(errorMessage)
     var errorText = document.getElementById("error-message");
     errorText.innerText = errorMessage;
     errorBackground.style.display = "block";
-    errorCloseButton.onclick = function()
+    errorCloseButton.onclick = function ()
     {
         errorBackground.style.display = "none";
     }
 }
 
-function showLoader()
+hideLoader();
+
+documentNameInput.addEventListener('keyup',() =>
 {
-    //document.getElementById("loader-spinner").style.display = "";
-    document.getElementById("page-container").style.opacity = 0.5;
+    validateForm();
+});
+
+documentTypeInput.addEventListener('change',() =>
+{
+    validateForm();
+});
+
+documentDescriptionInput.addEventListener('keyup',() =>
+{
+    validateForm();
+});
+
+function validateForm()
+{
+    const documentName = documentNameInput.value.trim();
+    const documentType = documentTypeInput.value;
+    const documentDescription = documentDescriptionInput.value.trim();
+
+    nextButton.disabled = !(documentName && documentType && documentDescription);
 }
 
-function hideLoader()
-{
-    //document.getElementById("loader-spinner").style.display = "none";
-    document.getElementById("page-container").style.opacity = 1;
+validateForm();
 
+async function storeDocumentDescription()
+{
+    const documentName = document.getElementById('documentName').value;
+    const documentType = document.getElementById('documentType').value;
+    const documentDescription = document.getElementById('documentDescription').value;
+
+    const documentData = {
+        documentName: documentName,
+        documentType: documentType,
+        documentDescription: documentDescription
+    };
+
+    const jsonData = JSON.stringify(documentData);
+    sessionStorage.setItem('documentContext',jsonData);
 }
 
-// Generate document title
-
-async function generateTitle()
+async function customKeyword()
 {
+    const fileName = sessionStorage.getItem('selectedFile');
+    const namespace = sessionStorage.getItem('sessionNamespace');
     const requestBody = {
-        Vectorstore: sessionStorage.getItem("sessionNamespace"),
-        Query: "Generate a title for this document. The title should be less than 5 words but should detail what the document is."
+        namespace: namespace,
+        file_name: fileName
     };
     showLoader();
-    await fetch(window.location.protocol + "//" + window.location.host + "/api/chatbot/sendQuery",{
+    await fetch("https://strive-ml-api.azurewebsites.net/keywordsModel",{
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': '*'
         },
         body: JSON.stringify(requestBody)
     })
@@ -274,31 +91,248 @@ async function generateTitle()
         {
             if (!response.ok)
             {
-                sessionStorage.setItem("generateTitleStatus","fail");
-                displayError("System is under maintenance. Please try again later.")
+                hideLoader();
+                displayError('Failed to process file.')
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            sessionStorage.setItem("generateTitleStatus","success");
 
-            return response.json();
+            return response.text();
         })
         .then(data =>
         {
-            sessionStorage.setItem("generateTitleStatus","success");
-            sessionStorage.setItem("documentTitle",data["data"]["response"]);
-            hideLoader();
+            sessionStorage.setItem('keywords',data);
         })
         .catch(error =>
         {
-            sessionStorage.setItem("generateTitleStatus","fail");
             hideLoader();
-            displayError("System is under maintenance. Please try again later.");
+            displayError('Failed to process file.');
             console.error('Fetch error:',error);
         });
-    return Promise.resolve();
+    hideLoader();
 }
 
-function routeToDocumentAnalysis()
+async function uploadDocumentToApplication()
+{
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+
+    fileInput.click();
+
+    fileInput.addEventListener("change",async (event) =>
+    {
+        const selectedFile = event.target.files[0];
+        const allowedExtensions = ['pdf','docx','doc'];
+        const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
+
+        if (!allowedExtensions.includes(fileExtension))
+        {
+            alert("Only PDF, DOCX, DOC files are allowed.");
+            return;
+        }
+
+        const tableBody = document.getElementById('uploadedFilesTableBody');
+        const tableRow = document.createElement('tr');
+
+        const fileNameCell = document.createElement('td');
+        fileNameCell.textContent = selectedFile.name;
+
+        const actionsCell = document.createElement('td');
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.classList.add('btn','btn-danger');
+        deleteButton.addEventListener('click',() =>
+        {
+            deleteFile(selectedFile.name,tableRow);
+        });
+        actionsCell.appendChild(deleteButton);
+
+        const selectCell = document.createElement('td');
+        const selectRadio = document.createElement('input');
+        selectRadio.type = 'radio';
+        selectRadio.name = 'selectedFile';
+        selectRadio.value = selectedFile.name;
+        selectRadio.classList.add('large-radio-button');
+        selectRadio.addEventListener('change',async () =>
+        {
+            sessionStorage.setItem('selectedFile',selectedFile.name);
+            await customKeyword();
+        });
+        selectCell.appendChild(selectRadio);
+
+        const statusCell = document.createElement('td');
+        tableRow.appendChild(statusCell);
+        statusCell.textContent = 'Uploading...';
+        tableRow.appendChild(fileNameCell);
+        tableRow.appendChild(actionsCell);
+        tableRow.appendChild(selectCell);
+        tableBody.appendChild(tableRow);
+
+        try
+        {
+            await sendFileToMongoDB(selectedFile);
+            const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
+            uploadedFiles.push(selectedFile.name);
+            sessionStorage.setItem('uploadedFiles',JSON.stringify(uploadedFiles));
+            sessionStorage.setItem('selectedFile',selectedFile.name);
+            populateUploadedFilesList(); // Call new function to populate list
+            await customKeyword();
+            statusCell.textContent = 'Uploaded';
+            validateFiles();
+            hideLoader();
+        } catch (error)
+        {
+            hideLoader();
+            displayError('Failed to upload or process file.');
+            statusCell.textContent = 'Error';
+            console.error('Error uploading file:',error);
+        }
+    });
+}
+
+async function populateUploadedFilesList()
+{
+    const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
+    const uploadedFilesTableBody = document.getElementById('uploadedFilesTableBody');
+    uploadedFilesTableBody.innerHTML = ""; // Clear existing entries
+
+    for (const fileName of uploadedFiles)
+    {
+        const tableRow = document.createElement('tr');
+        const statusCell = document.createElement('td');
+        const fileNameCell = document.createElement('td');
+        fileNameCell.textContent = fileName;
+
+
+
+        const actionsCell = document.createElement('td');
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.classList.add('btn','btn-danger');
+        deleteButton.addEventListener('click',() =>
+        {
+            deleteFile(fileName,tableRow);
+        });
+        actionsCell.appendChild(deleteButton);
+
+        const selectCell = document.createElement('td');
+        const selectRadio = document.createElement('input');
+        selectRadio.type = 'radio';
+        selectRadio.name = 'selectedFile';
+        selectRadio.value = fileName;
+        selectRadio.classList.add('large-radio-button');
+        selectRadio.addEventListener('change',async () =>
+        {
+            sessionStorage.setItem('selectedFile',fileName);
+            await customKeyword();
+        });
+        selectCell.appendChild(selectRadio);
+        statusCell.textContent = 'Uploaded';
+        tableRow.appendChild(statusCell);
+        tableRow.appendChild(fileNameCell);
+        tableRow.appendChild(actionsCell);
+        tableRow.appendChild(selectCell);
+        uploadedFilesTableBody.appendChild(tableRow);
+    }
+    validateFiles();
+}
+
+async function sendFileToMongoDB(selectedFile)
+{
+    const formData = new FormData();
+    formData.append('targetFile',selectedFile);
+
+    const namespace = sessionStorage.getItem("sessionNamespace");
+    const url = `https://strive-api.azurewebsites.net/api/MongoDB/UploadDocument?collectionName=${namespace}`;
+
+    const response = await fetch(url,{
+        method: 'POST',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': '*'
+        },
+        body: formData
+    });
+
+    if (!response.ok)
+    {
+        displayError('Failed to upload file.');
+        throw new Error('Failed to upload file to MongoDB collection.');
+    }
+
+    const data = await response.json();
+}
+
+async function uploadDocumentToPinecone()
+{
+    storeDocumentDescription();
+    const requestBody = {
+        namespace: sessionStorage.getItem("sessionNamespace"),
+        fileName: sessionStorage.getItem("selectedFile")
+    };
+    await fetch("https://strive-ml-api.azurewebsites.net/embedder",{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': '*'
+        },
+        body: JSON.stringify(requestBody)
+    })
+        .then(response =>
+        {
+            console.log(response);
+            if (!response.ok)
+            {
+                hideLoader();
+                alert("System is under maintenance. Please try again later.");
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return Promise.resolve();
+        })
+        .catch(error =>
+        {
+            hideLoader();
+            alert("System is under maintenance. Please try again later.");
+            console.error('Fetch error:',error);
+        });
+}
+
+async function purgePinecone()
+{
+    var sessionNamespace = sessionStorage.getItem('sessionNamespace');
+    try
+    {
+        document.getElementById('upload-button').disabled = true;
+        const url = `https://strive-api.azurewebsites.net/api/pinecone/purgePinecone`;
+        const pineconeResponse = await fetch(url,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                namespace: sessionNamespace
+            })
+        });
+        var data = await pineconeResponse.json();
+        return Promise.resolve();
+    } catch (error)
+    {
+        displayError('Failed to process file.');
+        document.getElementById('upload-button').disabled = false;
+        return Promise.reject(error);
+    }
+}
+
+async function processPinecone()
+{
+    await purgePinecone();  // Wait for this function to complete
+    await uploadDocumentToPinecone();  // Then wait for this function to complete
+}
+
+async function routeToDocumentAnalysis()
 {
     var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
     window.location.href = documentAnalysisUrl;
@@ -307,25 +341,37 @@ function routeToDocumentAnalysis()
 
 async function uploadFileFlow()
 {
-    await uploadDocumentToPinecone();
-    if (sessionStorage.getItem("insertDocumentStatus") == "fail")
+    showLoader();
+    var fileUploadButtons = document.getElementsByClassName('file-upload-button');
+    for (let btn of fileUploadButtons)
     {
-        return;
+        btn.disabled = true;
     }
-    else
-    {
-        await verifyPineconeNamespace();
-        if (sessionStorage.getItem("pineconeDetailsStatus") == "fail")
-        {
-            return;
-        }
-        else
-        {
-            await routeToDocumentAnalysis();
-        }
-    }
-}
-window.onload = function ()
-{
+    await processPinecone()
+        .then(() => console.log("All operations completed"))
+        .catch((error) => console.error("An error occurred:",error));
     hideLoader();
-};
+    await routeToDocumentAnalysis();
+    localStorage.setItem('showDocumentDashboardWidget','true');
+}
+
+function showLoader()
+{
+    document.getElementById("page-container").style.display = 'block';
+}
+
+function hideLoader()
+{
+    document.getElementById("page-container").style.display = 'none';
+}
+
+async function deleteFile(fileName,tableRow)
+{
+    let uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
+    uploadedFiles = uploadedFiles.filter(file => file !== fileName);
+    sessionStorage.setItem('uploadedFiles',JSON.stringify(uploadedFiles));
+    tableRow.remove();
+    validateFiles();
+}
+
+window.addEventListener('load',populateUploadedFilesList);

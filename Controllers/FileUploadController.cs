@@ -19,14 +19,14 @@ namespace StriveAI.Controllers
         [EnableCors("AllowAll")]
         public ActionResult Upload(IFormFile targetFile)
         {
-            APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();
-            UploadFileResponseModel uploadFileResponseBody = new UploadFileResponseModel();
+            APIResponseBodyWrapperModel responseBody;
+            UploadFileResponseModel uploadFileResponseBody = new();
             long maxFileSize = 500 * 1024;
             if (targetFile != null && targetFile.Length > 0)
             {
                 if (targetFile.Length > maxFileSize)
                 {
-                    responseBody = createResponseModel(200, "Success", "File must be smaller than 500 KB.", DateTime.Now, null);
+                    responseBody = CreateResponseModel(200, "Success", "File must be smaller than 500 KB.", DateTime.Now, null);
                     return Ok(responseBody);
                 }
                 var formattedFileName = targetFile.FileName.Replace(" ", "_");
@@ -52,10 +52,10 @@ namespace StriveAI.Controllers
                 uploadFileResponseBody.FileName = formattedFileName;
                 uploadFileResponseBody.FileType = targetFile.ContentType;
                 uploadFileResponseBody.FileSize = targetFile.Length;
-                responseBody = createResponseModel(200, "Success", "File uploaded successfully.", DateTime.Now, uploadFileResponseBody);
+                responseBody = CreateResponseModel(200, "Success", "File uploaded successfully.", DateTime.Now, uploadFileResponseBody);
                 return Ok(responseBody);
             }
-            responseBody = createResponseModel(200, "Success", "File name must not be null or empty.", DateTime.Now, null);
+            responseBody = CreateResponseModel(200, "Success", "File name must not be null or empty.", DateTime.Now, null);
             return Ok(responseBody);
         }
 
@@ -68,8 +68,8 @@ namespace StriveAI.Controllers
         [EnableCors("AllowAll")]
         public ActionResult Delete([FromBody] DeleteFileRequestModel requestBody)
         {
-            APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();
-            DeleteFileResponseModel deleteFileResponseBody = new DeleteFileResponseModel();
+            APIResponseBodyWrapperModel responseBody;
+            DeleteFileResponseModel deleteFileResponseBody = new();
             var targetFileName = requestBody.FileName;
             if (!string.IsNullOrEmpty(targetFileName))
             {
@@ -79,20 +79,20 @@ namespace StriveAI.Controllers
                     System.IO.File.Delete(filePath);
                     deleteFileResponseBody.FileName = targetFileName;
                     deleteFileResponseBody.isDeleted = true;
-                    responseBody = createResponseModel(200, "Success", "File deleted successfully.", DateTime.Now, deleteFileResponseBody);
+                    responseBody = CreateResponseModel(200, "Success", "File deleted successfully.", DateTime.Now, deleteFileResponseBody);
                     return Ok(responseBody);
                 }
                 else
                 {
                     deleteFileResponseBody.FileName = targetFileName;
                     deleteFileResponseBody.isDeleted = false;
-                    responseBody = createResponseModel(200, "Success", "File not found.", DateTime.Now, deleteFileResponseBody);
+                    responseBody = CreateResponseModel(200, "Success", "File not found.", DateTime.Now, deleteFileResponseBody);
                     return Ok(responseBody);
                 }
             }
             deleteFileResponseBody.FileName = targetFileName;
             deleteFileResponseBody.isDeleted = false;
-            responseBody = createResponseModel(200, "Success", "File name field is null or empty.", DateTime.Now, deleteFileResponseBody);
+            responseBody = CreateResponseModel(200, "Success", "File name field is null or empty.", DateTime.Now, deleteFileResponseBody);
             return Ok(responseBody);
         }
 
@@ -105,20 +105,20 @@ namespace StriveAI.Controllers
         [EnableCors("AllowAll")]
         public ActionResult Get([FromBody] GetFileRequestModel requestBody)
         {
-            APIResponseBodyWrapperModel responseBody = new APIResponseBodyWrapperModel();
-            GetFileResponseModel getFileResponseModel = new GetFileResponseModel();
+            APIResponseBodyWrapperModel responseBody;
+            GetFileResponseModel getFileResponseModel = new();
             if (requestBody.FileName == null || requestBody.FileName == "")
             {
                 getFileResponseModel.FileName = requestBody.FileName;
                 getFileResponseModel.FileExists = false;
-                return Ok(createResponseModel(200, "Success", "File name must not be empty.", DateTime.Now, null));
+                return Ok(CreateResponseModel(200, "Success", "File name must not be empty.", DateTime.Now, null));
             }
             var targetFileName = requestBody.FileName;
             string userFilesPath = Path.Combine(Directory.GetCurrentDirectory(), "UserFiles", targetFileName);
             bool fileExists = System.IO.File.Exists(userFilesPath);
             getFileResponseModel.FileName = targetFileName;
             getFileResponseModel.FileExists = fileExists;
-            responseBody = createResponseModel(200, "Success", "File existence checked successfully.", DateTime.Now, getFileResponseModel);
+            responseBody = CreateResponseModel(200, "Success", "File existence checked successfully.", DateTime.Now, getFileResponseModel);
             return Ok(responseBody);
         }
 
@@ -132,13 +132,16 @@ namespace StriveAI.Controllers
         /// <param name="timestamp" type="DateTime"></param>
         /// <param name="data" type="Object"></param>
         /// <returns type="APIResponseBodyWrapperModel"></returns>
-        static APIResponseBodyWrapperModel createResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
+        static APIResponseBodyWrapperModel CreateResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
         {
-            APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
-            responseModel.StatusCode = statusCode;
-            responseModel.StatusMessage = statusMessage;
-            responseModel.StatusMessageText = statusMessageText;
-            responseModel.Timestamp = timestamp;
+            APIResponseBodyWrapperModel responseModel = new()
+            {
+                StatusCode = statusCode,
+                StatusMessage = statusMessage,
+                StatusMessageText = statusMessageText,
+                Timestamp = timestamp
+            };
+
             if (data is GetRecordResponseModel)
             {
                 responseModel.Data = data;

@@ -29,4 +29,8 @@
   <ItemGroup>
     <Folder Include="UserFiles\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\_navbar.css" />
+  </ItemGroup>
 </Project>

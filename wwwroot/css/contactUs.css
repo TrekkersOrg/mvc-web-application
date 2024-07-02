@@ -1,0 +1,8 @@
+﻿.contact-us-container {
+    min-height: 100vh !important;
+}
+
+.calendly-inline-widget {
+    min-width: 320px;
+    height: 630px;
+}
