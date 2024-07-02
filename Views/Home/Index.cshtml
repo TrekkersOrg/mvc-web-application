@@ -4,10 +4,11 @@
 
 @{
     ViewData["Title"] = "Ontological Risk Management";
-    Layout = "~/Views/Shared/_CustomLayoutWithLogin.cshtml";
+    Layout = "~/Views/Shared/_Navbar.cshtml";
 }
 <link rel="stylesheet" href="~/css/index.css">
 <div class="container-fluid p-0">
+
     <!-- Top Section -->
     <div class="top-row d-flex align-items-center">
         <div class="container landing-container">
@@ -20,8 +21,7 @@
                     </header>
                     <div class="start-button-frame mt-4">
                         @{
-                            var getStartedUrl = SignInManager.IsSignedIn(User) ? Url.Action("FileUpload", "Home") :
-                            Url.Action("Demo", "Home");
+                            var getStartedUrl = User.Identity?.IsAuthenticated == true ? Url.Action("ServiceDashboard", "Home") : Url.Action("Demo", "Home");
                         }
                         <a class="btn btn-primary-black rounded-pill btn-lg text-white text-decoration-none mr-2"
                             href="@getStartedUrl">Get Started</a>
@@ -48,7 +48,7 @@
                         <h3 class="info-title">OaaS</h3>
                         <p class="info-description">Learn More about Ontology as a Service (OaaS) and how it can benefit
                             your organization.</p>
-                        <a class="btn btn-primary" asp-controller="Home" asp-action="OaasView">Learn More</a>
+                        <a class="btn btn-primary" asp-controller="Home" asp-action="LearnMore">Learn More</a>
                     </div>
                 </div>
                 <div class="col-12 mb-4">
@@ -70,13 +70,11 @@
                 <div class="col-12 text-center pt-0">
                     <header class="title-frame">
                         <h1 class="display-4 title-text">Contact Us</h1>
-                        <h5 style="display: none;" class="text-light mt-2">We'd love to hear from you!</h5>
+                        @*<h5 class="text-light mt-2">We'd love to hear from you!</h5>*@
                     </header>
                     <div class="d-flex justify-content-center mt-4">
-                        <div class="calendly-inline-widget" data-url="https://calendly.com/apoorva-sharma-strive/30min"
-                            style="min-width:320px;width:100%;height:630px;"></div>
-                        <script type="text/javascript"
-                            src="https://assets.calendly.com/assets/external/widget.js"></script>
+                        <div class="calendly-inline-widget" data-url="https://calendly.com/apoorva-sharma-strive/30min"></div>
+                            <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
                     </div>
                 </div>
             </div>
@@ -95,74 +93,3 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/index.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var ctx = document.getElementById('spiderChart').getContext('2d');
-        var spiderChart = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: ['Operational Risk', '', 'Compliance Risk', ''],
-                datasets: [{
-                    data: [3, 2, 4, 5],
-                    backgroundColor: 'rgba(255, 191, 0, 0.1)',
-                    borderColor: 'rgba(255, 191, 0, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    r: {
-                        angleLines: {
-                            color: '#ffffff'
-                        },
-                        grid: {
-                            color: '#ffffff'
-                        },
-                        pointLabels: {
-                            color: '#ffffff',
-                            font: {
-                                size: 14
-                            }
-                        },
-                        ticks: {
-                            beginAtZero: true,
-                            max: 5,
-                            display: false
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-            }
-        });
-
-        document.querySelector('.btn.btn-primary-demo').addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector('#middle-section').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        function updateSpiderChartData(newData) {
-            spiderChart.data.datasets[0].data = newData;
-            spiderChart.update();
-        }
-
-        function generateRandomData() {
-            return [
-                Math.random() * 5,
-                Math.random() * 5,
-                Math.random() * 5,
-                Math.random() * 5
-            ];
-        }
-
-        setInterval(function () {
-            var newData = generateRandomData();
-            updateSpiderChartData(newData);
-        }, 2000);
-    });
-</script>

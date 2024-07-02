@@ -14,6 +14,12 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace StriveAI.Areas.Identity.Pages.Account
 {
@@ -103,7 +109,7 @@ namespace StriveAI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/Home/FileUpload");
+            returnUrl ??= Url.Content("~/Home/ServiceDashboard");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
@@ -111,8 +117,72 @@ namespace StriveAI.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+                // MONGODB CONFIG
+                //var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                using HttpClient httpClient = new();
+                try
+                {
+                    HttpResponseMessage response = await httpClient.GetAsync("https://strive-api.azurewebsites.net/api/MongoDB/GetUser?username=" + Input.Email);
+                    string responseData = await response.Content.ReadAsStringAsync();
+                    using JsonDocument doc = JsonDocument.Parse(responseData);
+                    JsonElement root = doc.RootElement;
+                    if (root.TryGetProperty("data", out JsonElement dataElement))
+                    {
+                        if (dataElement.ValueKind == JsonValueKind.Null)
+                        {
+                            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                            return Page();
+                        }
+                        else
+                        {
+                            if (dataElement.TryGetProperty("password", out JsonElement passwordElement))
+                            {
+                                if (Input.Password == passwordElement.GetString())
+                                {
+                                    var claims = new List<Claim>
+                                        {
+                                            new Claim(ClaimTypes.Name, Input.Email),
+                                            // Add other claims as needed
+                                        };
+
+                                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                                    var authProperties = new AuthenticationProperties
+                                    {
+                                        IsPersistent = true, // Keeps the user logged in across sessions
+                                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30) // Adjust expiration as needed
+                                    };
+
+                                    // Sign in the user
+                                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                                        new ClaimsPrincipal(claimsIdentity),
+                                        authProperties);
+                                    _logger.LogInformation("User logged in.");
+                                    return LocalRedirect(returnUrl);
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                                    return Page();
+                                }
+                            }
+                            else
+                            {
+                                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                                return Page();
+                            }
+                        }
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    // Handle exceptions (e.g., network issues, API errors)
+                    Console.WriteLine($"Request error: {e.Message}");
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
+                }
+
+                /*if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
@@ -130,7 +200,7 @@ namespace StriveAI.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
-                }
+                }*/
             }
 
             // If we got this far, something failed, redisplay form

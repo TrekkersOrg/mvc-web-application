@@ -10,14 +10,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Strive</title>
 
-    <link rel="stylesheet" href="~/_CustomLayoutWithLogin.cshtml.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/_navbar.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
 </head>
 
 <body>
     <header>
-        @if (SignInManager.IsSignedIn(User))
+        @*MONGODB CONFIG*@
+        @*@if (SignInManager.IsSignedIn(User))*@
+        @if (User.Identity.IsAuthenticated)
         {
             <div class="container">
                 <nav class="navbar navbar-expand-sm nav-gradient">
@@ -30,7 +32,7 @@
                         <ul class="navbar-nav ml-auto">
                             <!-- Additional nav items can go here -->
                         </ul>
-                        <a id="user-greeting" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="pointer-events: none; cursor: default;"></a>
+                        <a id="user-greeting" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"></a>
                         <a class="nav-link font text-white btn login-btn" asp-area="Identity" asp-page="/Account/Logout">Logout</a>
                     </div>
                 </nav>
@@ -66,28 +68,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-    $(document).ready(function ()
-    {
-        if ('@User.Identity.IsAuthenticated' === 'True' && localStorage.getItem('userFirstName') == null)
-        {
-            $.ajax({
-                url: 'https://strive-api.azurewebsites.net/api/user/getUser?username=' + '@User.Identity.Name',
-                type: 'GET',
-                success: function (data)
-                {
-                    localStorage.setItem('userFirstName',data['data']['firstName']);
-                    $('#user-greeting').text(localStorage.getItem('userFirstName'));
-                }
-            });
-        }
-        else
-        {
-            $('#user-greeting').text(localStorage.getItem('userFirstName'));
-        }
-    });
-</script>
+<script src="~/js/_navbar.js"></script>

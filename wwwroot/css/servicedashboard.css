@@ -1,112 +1,46 @@
-/* Hamburger Sidebar Styles */
-.sidebar {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: #111;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-}
-
-.sidebar a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidebar a:hover {
-    color: #f1f1f1;
-}
-
-.sidebar .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-}
-
-.openbtn {
-    font-size: 20px;
-    cursor: pointer;
-    background-color: #111;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-}
-
-.openbtn:hover {
-    background-color: #444;
-}
-
-/* Widget Styles */
+/* General Widget Styling */
 .widget {
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 20px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     background-color: #f8f9fa;
-    transition: box-shadow 0.3s;
+    transition: box-shadow 0.3s, background-color 0.3s;
+    width: 300px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #007bff;
+    margin: 0 60px;
 }
 
-.widget:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
+    /* Widget Hover Effects */
+    .widget:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        color: #007bff;
+        background-color: #c7cdd4;
+    }
 
+/* Widget Title */
 .widget-title {
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 1rem;
 }
 
+/* Widget Text */
 .widget-text {
     font-size: 1rem;
     color: #555555;
 }
 
-body {
-    background-color: #ffffff;
-    font-family: Arial, sans-serif;
+/* Custom Margin */
+.custom-top-margin {
+    margin-top: 100px;
 }
 
-.navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-toggler {
-    border: none;
-}
-
-.vertical-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 60px;
-    height: 100%;
-    background-color: #111;
-}
-
-.vertical-nav .nav-item {
-    width: 100%;
-}
-
-.vertical-nav .nav-item .nav-link {
-    color: #fff;
-    padding: 20px;
-    transition: background-color 0.3s;
-}
-
-.vertical-nav .nav-item .nav-link:hover {
-    background-color: #575757;
-}
-
-.vertical-nav .navbar-toggler-icon {
-    color: #fff;
-    padding: 15px;
+/* Dashboard Container */
+.dashboard-container {
+    height: 100vh !important;
 }

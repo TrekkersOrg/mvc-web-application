@@ -1,4 +1,103 @@
-﻿/* Specific styles for the spider chart container */
+﻿/* ========== Global Styles ========== */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #000000;
+    color: white;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: auto;
+    padding-top: 56px;
+}
+
+.container-fluid {
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ========== Layout ========== */
+
+/* Top Section */
+.top-row {
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000000;
+    padding: 0;
+    margin-top: -10vh;
+}
+
+.landing-container {
+    width: 100%;
+    padding: 2rem;
+}
+
+/* Middle Section */
+.middle-section {
+    padding: 4rem 0;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.bottom-row {
+    padding: 2rem 0;
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+/* Footer Section */
+.footer-section {
+    background-color: #111;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+    .footer-section p {
+        margin: 5px 0;
+    }
+
+/* ========== Typography ========== */
+
+.highlight {
+    color: #ffbf00;
+    font-style: italic;
+}
+
+header .title-frame h1 {
+    font-size: 2rem;
+    margin: 0.5rem 0;
+    padding-left: 2rem;
+}
+
+header .title-frame h5 {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    padding-left: 2rem;
+}
+
+.info-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.info-description {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ========== Components ========== */
+
+/* Spider Chart */
 .spider-chart-container {
     width: 100%;
     height: 400px;
@@ -7,7 +106,92 @@
     align-items: center;
 }
 
-/* Existing styles */
+/* Info Boxes */
+.info-box {
+    background-color: #333;
+    padding: 2rem;
+    margin: 1rem;
+    border-radius: 8px;
+    color: white;
+    text-align: left;
+    width: 100%;
+}
+
+/* Buttons */
+.btn-primary-black.rounded-pill.btn-lg {
+    color: white;
+    background-color: black;
+    border: transparent;
+    padding: 0.75rem 1.5rem;
+}
+
+    .btn-primary-black.rounded-pill.btn-lg:hover {
+        background-color: lightgray;
+    }
+
+.btn-primary-demo {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 0.75rem 1.5rem;
+}
+
+    .btn-primary-demo:hover {
+        color: blue;
+    }
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+/* Widget */
+.widget {
+    border-radius: 20px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #f8f9fa;
+    transition: box-shadow 0.3s;
+    width: 400px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+    .widget:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+.widget-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.widget-text {
+    font-size: 1rem;
+    color: #555555;
+}
+
+.calendly-inline-widget {
+    min-width: 320px;
+    width: 100%;
+    height: 630px;
+}
+
+/* Navigation */
 .nav-gradient {
     background-color: #000000;
     height: 56px;
@@ -37,11 +221,11 @@
     justify-content: flex-end;
 }
 
-.navbar-nav .nav-link {
-    color: #ffffff !important;
-    font-size: 1rem;
-    margin: 0 0.5rem;
-}
+    .navbar-nav .nav-link {
+        color: #ffffff !important;
+        font-size: 1rem;
+        margin: 0 0.5rem;
+    }
 
 .navbar-toggler {
     border-color: rgba(255, 255, 255, 0.1);
@@ -56,121 +240,7 @@
     color: #ffffff !important;
 }
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #000000;
-    color: white;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: auto;
-    padding-top: 56px;
-}
-
-.container-fluid {
-    display: flex;
-    flex-direction: column;
-}
-
-.top-row {
-    min-height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #000000;
-    padding: 0;
-    margin-top: -10vh;
-}
-
-.landing-container {
-    width: 100%;
-    padding: 2rem;
-}
-
-.middle-section {
-    padding: 4rem 0;
-    margin: 0 auto;
-    max-width: 1200px;
-}
-
-.info-box {
-    background-color: #333;
-    padding: 2rem;
-    margin: 1rem;
-    border-radius: 8px;
-    color: white;
-    text-align: left;
-    width: 100%;
-}
-
-.info-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.info-description {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #fff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #004085;
-}
-
-.bottom-row {
-    padding: 2rem 0;
-    margin: 0 auto;
-    max-width: 800px;
-}
-
-.btn-primary-black.rounded-pill.btn-lg {
-    color: white;
-    background-color: black;
-    border: transparent;
-    padding: 0.75rem 1.5rem;
-}
-
-.btn-primary-black.rounded-pill.btn-lg:hover {
-    background-color: lightgray;
-}
-
-.btn-primary-demo {
-    background-color: transparent;
-    border: 2px solid white;
-    color: white;
-    padding: 0.75rem 1.5rem;
-}
-
-.btn-primary-demo:hover {
-    color: blue;
-}
-
-.highlight {
-    color: #ffbf00;
-    font-style: italic;
-}
-
-header .title-frame h1 {
-    font-size: 2rem;
-    margin: 0.5rem 0;
-    padding-left: 2rem;
-}
-
-header .title-frame h5 {
-    font-size: 1rem;
-    margin: 0.5rem 0;
-    padding-left: 2rem;
-}
+/* ========== Responsive Design ========== */
 
 @media (max-width: 768px) {
     .top-row {
@@ -180,14 +250,14 @@ header .title-frame h5 {
         margin-top: -10vh;
     }
 
-    .top-row .col-lg-8,
-    .top-row .col-lg-4 {
-        margin-bottom: 20px;
-    }
+        .top-row .col-lg-8,
+        .top-row .col-lg-4 {
+            margin-bottom: 20px;
+        }
 
-    .top-row .col-lg-4 {
-        margin-bottom: 0;
-    }
+        .top-row .col-lg-4 {
+            margin-bottom: 0;
+        }
 
     .start-button-frame {
         flex-direction: column;
@@ -197,144 +267,4 @@ header .title-frame h5 {
     .info-box {
         width: 100%;
     }
-}
-
-.widget {
-    border-radius: 20px !important;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    background-color: #f8f9fa;
-    transition: box-shadow 0.3s;
-    width: 400px;
-    height: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.widget:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.widget-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
-
-.widget-text {
-    font-size: 1rem;
-    color: #555555;
-}
-
-body.navbar-collapsed .container-fluid,
-body.navbar-collapsed .page-row,
-body.navbar-collapsed .upload-container,
-body.navbar-collapsed .description-container {
-    width: calc(100% - 250px);
-    transition: width 0.7s ease;
-}
-
-body.navbar-collapsed .container-fluid {
-    padding-left: 250px;
-
-}
-
-body.navbar-collapsed .widget {
-    width: calc(100% - 250px - 40px);
-
-}
-
-body.navbar-collapsed .form-section {
-    width: calc(100% - 250px);
-}
-
-body.navbar-collapsed #main-content {
-    margin-left: 250px;
-}
-
-.form-section {
-    background-color: #000;
-    padding: 4rem 0;
-    margin: 0 auto;
-    max-width: 800px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-control {
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 1rem 1.5rem;
-    font-size: 1.1rem;
-    width: 100%;
-}
-
-.form-control::placeholder {
-    color: #bbb;
-    font-size: 1.1rem;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #fff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    margin-top: 1rem;
-    font-size: 1.1rem;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #004085;
-}
-
-.form-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-}
-
-.form-group.col-md-6 {
-    flex: 0 0 48%;
-    max-width: 48%;
-}
-
-.form-group.full-width {
-    flex: 0 0 100%;
-    max-width: 100%;
-}
-
-textarea.form-control {
-    height: auto;
-}
-
-.footer-section {
-    background-color: #111;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-
-.footer-section p {
-    margin: 5px 0;
-}
-
-.calendly-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
 }

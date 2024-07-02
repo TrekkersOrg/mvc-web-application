@@ -15,8 +15,6 @@ namespace StriveAI.Controllers
     [ApiController]
     public class StriveMLController : Controller
     {
-        private readonly IConfiguration _configuration;
-        private readonly string _domain;
         private readonly HttpClient _httpClient;
 
         /// <summary>
@@ -24,19 +22,19 @@ namespace StriveAI.Controllers
         /// Initializes the local instances.
         /// </summary>
         /// <param name="configuration" type="IConfiguration"></param>
-        public StriveMLController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
+        public StriveMLController()
         {
-            _configuration = configuration;
-            _domain = _configuration["Hosting:Domain"];
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("http://strive-ml-api.azurewebsites.net/");
+            _httpClient = new()
+            {
+                BaseAddress = new Uri("http://strive-ml-api.azurewebsites.net/")
+            };
 
         }
 
         [HttpPost("chatbot")]
         async public Task<ActionResult> Chatbot([FromBody] StriveML_Chatbot_Request request)
         {
-            APIResponseBodyWrapperModel response = new();
+            APIResponseBodyWrapperModel response;
             var httpContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
             try
             {
@@ -48,19 +46,17 @@ namespace StriveAI.Controllers
                 }
                 else
                 {
-                    response = createResponseModel(200, "Success", "Error generating response.", DateTime.Now, "");
+                    response = CreateResponseModel(200, "Success", "Error generating response.", DateTime.Now, "");
                     return Ok(response);
                 }
             }
             catch (Exception ex)
             {
-                response = createResponseModel(500, "Internal Server Error", ex.Message, DateTime.Now, "");
+                response = CreateResponseModel(500, "Internal Server Error", ex.Message, DateTime.Now, "");
                 return StatusCode(500, response);
             }
 
         }
-
-       
 
         /// <summary>
         /// Initializes response body with APIResponseBodyWrapperModel
@@ -72,14 +68,16 @@ namespace StriveAI.Controllers
         /// <param name="timestamp" type="DateTime"></param>
         /// <param name="data" type="Object"></param>
         /// <returns type="APIResponseBodyWrapperModel"></returns>
-        static APIResponseBodyWrapperModel createResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
+        static APIResponseBodyWrapperModel CreateResponseModel(int statusCode, string statusMessage, string statusMessageText, DateTime timestamp, object? data = null)
         {
-            APIResponseBodyWrapperModel responseModel = new APIResponseBodyWrapperModel();
-            responseModel.StatusCode = statusCode;
-            responseModel.StatusMessage = statusMessage;
-            responseModel.StatusMessageText = statusMessageText;
-            responseModel.Timestamp = timestamp;
-            if (data is object)
+            APIResponseBodyWrapperModel responseModel = new()
+            {
+                StatusCode = statusCode,
+                StatusMessage = statusMessage,
+                StatusMessageText = statusMessageText,
+                Timestamp = timestamp
+            };
+            if (data is not null)
             {
                 responseModel.Data = data;
             }

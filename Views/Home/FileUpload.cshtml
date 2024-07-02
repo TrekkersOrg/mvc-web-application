@@ -1,110 +1,39 @@
 @{
-    ViewData["Title"] = "Service Dashboard";
-    Layout = "~/Views/Shared/_ServiceDashboardLayout.cshtml";
+    ViewData["Title"] = "File Upload";
+    Layout = "~/Views/Shared/_HamburgerBar.cshtml";
 }
 
 @using System.Security.Cryptography;
 @using System.Text;
 @{
-
     string username = User?.Identity?.Name ?? "Unknown";
-    // Hash the username using SHA-256
     using (SHA256 sha256 = SHA256.Create())
     {
         byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(username));
         string hashedUsername = BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant();
 
         <script>
-            sessionStorage.setItem("sessionNamespace", "@hashedUsername");
+            sessionStorage.setItem("sessionNamespace","@hashedUsername");
         </script>
     }
 }
 
 <link rel="stylesheet" href="~/css/fileUpload.css">
-
-<style>
-    .container {
-        max-width: 2000px !important;
-    }
-
-    .site-container {
-        width: 100%;
-    }
-
-    .upload-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 5%;
-        width: 60%;
-        height: 100%;
-        margin-right: 10%;
-        margin-left: 0.4%;
-        background-color: rgb(247 247 247) !important;
-        margin-top: 5%;
-    }
-
-    .description-container {
-        padding: 5%;
-        display: flex;
-        background-color: #f7f7f7;
-        flex-direction: column;
-        margin-top: 3%;
-        box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .description-input {
-        margin-bottom: 1rem;
-    }
-
-    .btn-primary:disabled {
-        height: 10% !important;
-    }
-
-    .description-label {
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    .selected-file-name {
-        margin-top: 2%;
-        padding-bottom: 10%;
-    }
-
-    .next-button {
-        margin-bottom: 10%;
-    }
-
-    .uploadStatus {
-        border: 1px solid black;
-        margin-top: 2%;
-    }
-
-    .row>.col-lg-8,
-    .row,
-    .col-lg-4 {
-        margin-right: auto;
-        flex: 0 0 auto;
-    }
-
-    .row>.col-lg-4:last-child {
-        margin-left: auto;
-    }
-
-    .uploadStatus-table {
-        margin-top: 3%;
-    }
-</style>
-
 <body>
+    <div class="error-background" id="error-background">
+        <div class="error-container">
+            <span class="error-close" id="error-close">&times;</span>
+            <h2 class="error-title">Error</h2>
+            <p id="error-message"></p>
+        </div>
+    </div>
     <div class="container site-container p-0">
         <div class="row page-row h-85">
             <div class="col-lg-8 upload-container bg-light">
                 <h1>File Upload</h1>
                 <p>Only PDF and DOCX File Types</p>
                 <button class="btn btn-primary btn-lg file-upload-button" type="button" id="upload-button"
-                    onclick="uploadDocumentToApplication()">
+                        onclick="uploadDocumentToApplication()">
                     Browse Files
                 </button>
                 <div id="uploadStatus"></div>
@@ -115,9 +44,10 @@
                                 <th>Status</th>
                                 <th>File Name</th>
                                 <th>Actions</th>
+                                <th>Select</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="uploadedFilesTableBody">
                         </tbody>
                     </table>
                 </div>
@@ -125,7 +55,9 @@
             <div class="col-lg-4 text-white border description-container">
                 <h1 class="text-dark">For More Context</h1>
                 <button type="button" onclick="uploadFileFlow()"
-                    class="btn btn-primary next-button mt-3 file-upload-button" disabled id="nextButton">Next</button>
+                        class="btn btn-primary next-button mt-3 file-upload-button" disabled id="nextButton">
+                    Next
+                </button>
                 <div class="description-input">
                     <label for="documentName" class="description-label text-dark">Document Name</label>
                     <input type="text" id="documentName" class="form-control" required>
@@ -144,230 +76,12 @@
                     <label for="documentDescription" class="description-label text-dark">Brief Description</label>
                     <textarea id="documentDescription" rows="5" class="form-control" required></textarea>
                 </div>
-
             </div>
+        </div>
+        <div id="page-container" class="page-container">
+            <div id="loader" class="loader"></div>
         </div>
     </div>
 
-    <script>
-        const fileInput = document.getElementById('fileInput');
-        const uploadStatus = document.getElementById('uploadStatus');
-        const documentNameInput = document.getElementById('documentName');
-        const documentTypeInput = document.getElementById('documentType');
-        const documentDescriptionInput = document.getElementById('documentDescription');
-        const nextButton = document.getElementById('nextButton');
-
-        documentNameInput.addEventListener('keyup', () => {
-            validateForm();
-        });
-
-        documentTypeInput.addEventListener('change', () => {
-            validateForm();
-        });
-
-        documentDescriptionInput.addEventListener('keyup', () => {
-            validateForm();
-        });
-
-        function validateForm() {
-            const documentName = documentNameInput.value.trim();
-            const documentType = documentTypeInput.value;
-            const documentDescription = documentDescriptionInput.value.trim();
-
-            nextButton.disabled = !(documentName && documentType && documentDescription);
-        }
-
-        validateForm();
-
-        async function storeDocumentDescription() {
-            const documentName = document.getElementById('documentName').value;
-            const documentType = document.getElementById('documentType').value;
-            const documentDescription = document.getElementById('documentDescription').value;
-
-            const documentData = {
-                documentName: documentName,
-                documentType: documentType,
-                documentDescription: documentDescription
-            };
-
-            // Convert the object to JSON format
-            const jsonData = JSON.stringify(documentData);
-
-            // Store the JSON data in local storage under the file name documentDescription.JSON
-            sessionStorage.setItem('documentContext', jsonData);
-        }
-
-        async function uploadDocumentToApplication() {
-            const uploadButton = document.getElementById('upload-button');
-            const selectedFileName = document.getElementById('selected-file-name');
-            const fileInput = document.createElement("input");
-
-            fileInput.setAttribute("id", "fileInput");
-            fileInput.type = "file";
-
-            fileInput.click();
-
-            fileInput.addEventListener("change", (event) => {
-                const selectedFile = event.target.files[0];
-                sessionStorage.setItem("selectedFile", selectedFile.name);
-                const allowedExtensions = ['pdf', 'docx', 'doc'];
-                const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
-
-                if (!allowedExtensions.includes(fileExtension)) {
-                    displayError("Only PDF, DOCX, DOC files are allowed.");
-                    return;
-                }
-                const tableBody = document.querySelector('.uploadStatus-table tbody');
-                const tableRow = document.createElement('tr');
-
-                const statusCell = document.createElement('td');
-                statusCell.textContent = 'Uploading...';
-
-                const fileNameCell = document.createElement('td');
-                fileNameCell.textContent = selectedFile.name;
-
-                const actionsCell = document.createElement('td');
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete';
-                deleteButton.classList.add('btn', 'btn-danger');
-                deleteButton.addEventListener('click', () => {
-                    deleteFile(selectedFile.name, tableRow);
-                });
-                actionsCell.appendChild(deleteButton);
-
-                tableRow.appendChild(statusCell);
-                tableRow.appendChild(fileNameCell);
-                tableRow.appendChild(actionsCell);
-                tableBody.appendChild(tableRow);
-
-                sendFileToMongoDB(selectedFile)
-                    .then(() => {
-                        statusCell.textContent = 'Uploaded';
-                    })
-                    .catch((error) => {
-                        statusCell.textContent = 'Error';
-                        console.error('Error uploading file:', error);
-                    });
-
-                selectedFileName.textContent = selectedFile.name;
-            });
-        }
-
-        async function checkFileExists(namespace, fileName) {
-            const url = `https://strive-api.azurewebsites.net/api/MongoDB/GetDocument?collectionName=${namespace}&fileName=${fileName}`;
-            try {
-                const response = await fetch(url);
-                return response.ok;
-            } catch (error) {
-                console.error('Error checking file existence:', error);
-                return false;
-            }
-        }
-
-        async function sendFileToMongoDB(selectedFile) {
-            const formData = new FormData();
-            formData.append('targetFile', selectedFile);
-
-            const namespace = sessionStorage.getItem("sessionNamespace");
-            const url = `https://strive-api.azurewebsites.net/api/MongoDB/UploadDocument?collectionName=${namespace}`;
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': '*',
-                        'Access-Control-Allow-Headers': '*'
-                    },
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to upload file to MongoDB collection.');
-                }
-
-                const data = await response.json();
-                console.log(data);
-                document.getElementById("upload-button").disabled = true;
-            } catch (error) {
-                console.error('Error uploading file to MongoDB collection:', error.message);
-            }
-        }
-
-        async function uploadDocumentToPinecone() {
-            storeDocumentDescription();
-
-            const requestBody = {
-                namespace: sessionStorage.getItem("sessionNamespace"),
-                fileName: sessionStorage.getItem("selectedFile")
-            };
-            await fetch("https://strive-ml-api.azurewebsites.net/embedder", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': '*',
-                    'Access-Control-Allow-Headers': '*'
-                },
-                body: JSON.stringify(requestBody)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        displayError("System is under maintenance. Please try again later.")
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .catch(error => {
-                    displayError("System is under maintenance. Please try again later.");
-                    console.error('Fetch error:', error);
-                });
-        }
-
-        async function routeToDocumentAnalysis() {
-            var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
-            window.location.href = documentAnalysisUrl;
-            return Promise.resolve();
-        }
-
-        async function uploadFileFlow() {
-            var fileUploadButtons = document.getElementsByClassName('file-upload-button');
-            for (let btn of fileUploadButtons) {
-                btn.disabled = true;
-            }
-            await uploadDocumentToPinecone();
-            await routeToDocumentAnalysis();
-            localStorage.setItem('showDocumentDashboardWidget', 'true');
-        }
-
-        function displayError(errorMessage) {
-            var errorBackground = document.getElementById("error-background");
-            var errorCloseButton = document.getElementById("error-close");
-            var errorText = document.getElementById("error-message");
-            errorText.innerText = errorMessage;
-            errorBackground.style.display = "block";
-            errorCloseButton.onclick = function () {
-                errorBackground.style.display = "none";
-            }
-        }
-
-        function showLoader() {
-            document.getElementById("page-container").style.opacity = 0.5;
-        }
-
-        function hideLoader() {
-            document.getElementById("page-container").style.opacity = 1;
-        }
-
-        async function deleteFile(fileName, tableRow) {
-            // Delete from local storage
-            const selectedFile = sessionStorage.getItem("selectedFile");
-            if (selectedFile === fileName) {
-                sessionStorage.removeItem("selectedFile");
-                tableRow.remove();
-                document.getElementById("upload-button").disabled = false;
-            }
-        }
-    </script>
+    <script src="~/js/fileUpload.js"></script>
 </body>

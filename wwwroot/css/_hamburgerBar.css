@@ -1,0 +1,134 @@
+/* Hamburger Sidebar Styles */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s ease;
+    padding-top: 60px;
+}
+
+    .sidebar a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+    .sidebar .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #111;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+}
+
+    .openbtn:hover {
+        background-color: #444;
+    }
+
+.sidebar-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.vertical-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 100%;
+    background-color: #111;
+}
+
+    .vertical-nav .nav-item {
+        width: 100%;
+    }
+
+        .vertical-nav .nav-item .nav-link {
+            color: #fff;
+            padding: 20px;
+            transition: background-color 0.3s;
+        }
+
+            .vertical-nav .nav-item .nav-link:hover {
+                background-color: #575757;
+            }
+
+    .vertical-nav .navbar-toggler-icon {
+        color: #fff;
+        padding: 15px;
+    }
+
+#main-content {
+    transition: margin-left 0.5s ease;
+    width: 100%;
+}
+
+.sidebar-open #main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+}
+
+.widget {
+    border-radius: 20px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #f8f9fa;
+    transition: box-shadow 0.3s;
+    width: 100%;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+    .widget:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+.widget-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.widget-text {
+    font-size: 1rem;
+    color: #555555;
+}

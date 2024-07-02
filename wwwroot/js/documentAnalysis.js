@@ -13,15 +13,16 @@ function displayError(errorMessage)
 }
 function showLoader()
 {
-    document.getElementById("loader-spinner").style.display = "";
-    document.getElementById("page-container").style.opacity = 0.5;
+    //document.getElementById("loader-spinner").style.display = "";
+    //document.getElementById("page-container").style.opacity = 0.5;
+    document.getElementById("loader").style.opacity = 0.75;
 }
 
 function hideLoader()
 {
-    document.getElementById("loader-spinner").style.display = "none";
-    document.getElementById("page-container").style.opacity = 1;
-
+    //document.getElementById("loader-spinner").style.display = "none";
+    //document.getElementById("page-container").style.opacity = 1;
+    document.getElementById("loader").style.opacity = 0;
 }
 function loadSummary()
 {
