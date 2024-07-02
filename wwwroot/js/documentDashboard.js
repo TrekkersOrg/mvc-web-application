@@ -365,6 +365,40 @@ async function systemQuery()
         });
 }
 
+async function generateSummary()
+{
+    try
+    {
+        sessionNamespace = sessionStorage.getItem('sessionNamespace');
+        query = "Generate a 3-7 sentence summary on the document. Include what the document is about."
+        sendButton.disabled = true;
+        const response = await fetch('/api/striveml/chatbot',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                namespace: sessionNamespace,
+                query: query,
+                context: sessionStorage.getItem('conversationMemory')
+            })
+        });
+
+        var data = await response.json();
+        if (response.ok)
+        {
+            var summary = data["data"]["response"];
+            // Inject summary into UI here
+        } else
+        {
+            displayError("ERROR GENERATING SUMMARY");
+        }
+    } catch (error)
+    {
+        displayError("ERROR GENERATING SUMMARY");
+    }
+}
+
 async function determineRiskScore()
 {
     await systemQuery();
@@ -439,7 +473,7 @@ window.onload = async function ()
             }
         }
     });
-
+    await generateSummary();
     await customRiskAssessment();
     await determineRiskScore();
     hideLoader();
