@@ -106,6 +106,7 @@ html {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    align-items: center;
 }
 
     .chat-output.darker {
@@ -116,6 +117,7 @@ html {
 
 .bubble-text {
     width: max-content;
+    margin: 0;
 }
 
 .edit-button {

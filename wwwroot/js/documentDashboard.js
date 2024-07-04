@@ -157,14 +157,6 @@ async function generateUserBubble(message)
             checkInput();
         }
     });
-    document.addEventListener('keydown',function (event)
-    {
-        if (event.key === 'Enter' && saveButton.style.display !== 'none')
-        {
-            event.preventDefault();
-            saveButton.click();
-        }
-    });
     cancelButton.addEventListener('click',function ()
     {
         text.contentEditable = 'false';
@@ -184,6 +176,7 @@ function generateSystemBubble(message)
     var bubble = document.createElement('div');
     bubble.classList.add('chat-output');
     var text = document.createElement('p');
+    text.classList.add('bubble-text');
     bubble.appendChild(text);
     var window = document.getElementById('chat-window');
     removeChatbotLoader();
