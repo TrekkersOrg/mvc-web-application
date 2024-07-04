@@ -328,8 +328,9 @@ async function purgePinecone()
 
 async function processPinecone()
 {
-    await purgePinecone();  // Wait for this function to complete
-    await uploadDocumentToPinecone();  // Then wait for this function to complete
+    await purgePinecone();
+    await new Promise(resolve => setTimeout(resolve,10000));
+    await uploadDocumentToPinecone();
 }
 
 async function routeToDocumentAnalysis()
