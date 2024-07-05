@@ -152,12 +152,11 @@ html {
 }
 
 
-/* Loader Spinner */
+/* Base styles */
 .loader-spinner {
     position: absolute;
     top: 29vh;
     left: 39vw;
-    /* transform: translate(-50%, -50%); */
 }
 
 .loader {
@@ -169,20 +168,22 @@ html {
     animation: l1 1s infinite;
 }
 
-@media screen and (min-width: 768px) {
+/* 768px viewport */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
     .loader {
         width: 80px;
         height: 80px;
         border-width: 8px;
     }
+
     .loader-spinner {
-        position: absolute;
-        top: 28vh;
-        left: 39vw;
+        top: 25vh;
+        left: 10.5vw;
     }
 }
 
-@media screen and (min-width: 1200px) {
+/* 1024px viewport */
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
     .loader {
         width: 100px;
         height: 100px;
@@ -190,23 +191,22 @@ html {
     }
 
     .loader-spinner {
-        position: absolute;
-        top: 28vh;
-        left: 12vw;
+        top: 25vh;
+        left: 10.5;
     }
 }
 
-@media screen and (min-width: 500px) {
+/* 1440px viewport */
+@media screen and (min-width: 1440px) {
     .loader {
         width: 100px;
         height: 100px;
         border-width: 10px;
     }
-    
+
     .loader-spinner {
-        position: absolute;
-        top: 27vh;
-        left: 9.5vw;
+        top: 25vh;
+        left: 10.5vw;
     }
 }
 
