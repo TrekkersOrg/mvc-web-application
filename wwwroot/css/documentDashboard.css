@@ -77,22 +77,22 @@ html {
     align-items: stretch;
 }
 
-    .input-group-append button,
-    .input-group-prepend button {
-        background: #3a516a;
-        color: #fff;
-        border: none;
-        padding: 10px 15px;
-        cursor: pointer;
-        border-radius: 4px;
-        margin-left: 5px;
-    }
+.input-group-append button,
+.input-group-prepend button {
+    background: #3a516a;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 5px;
+}
 
-        .input-group-append button:disabled,
-        .input-group-prepend button:disabled {
-            background: #bbb;
-            cursor: not-allowed;
-        }
+.input-group-append button:disabled,
+.input-group-prepend button:disabled {
+    background: #bbb;
+    cursor: not-allowed;
+}
 
 /* Chat Messages */
 .chat-output {
@@ -105,11 +105,11 @@ html {
     box-sizing: border-box;
 }
 
-    .chat-output.darker {
-        background: #3a516a;
-        color: white;
-        align-self: flex-end;
-    }
+.chat-output.darker {
+    background: #3a516a;
+    color: white;
+    align-self: flex-end;
+}
 
 /* Chart Container */
 .chart-container {
@@ -118,6 +118,8 @@ html {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 15px;
     margin-bottom: 20px;
+    position: relative;
+    /* Ensure the parent container is relative */
 }
 
 .chart-col {
@@ -150,13 +152,14 @@ html {
     font-weight: bold;
     color: #333;
 }
-
 /* Loader Spinner */
 .loader-spinner {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    z-index: 1000;
+    /* Ensure the loader is above other elements */
 }
 
 .loader {
@@ -165,18 +168,35 @@ html {
     border-radius: 50%;
     border: 0.75vw solid;
     border-color: #000 #0000;
-    animation: l1 1s infinite;
-    position: relative;
-    top: 40%;
-    left: 40%;
+    animation: l1 1s infinite linear;
 }
 
+/* Keyframes for the spinning animation */
 @keyframes l1 {
-    to {
-        transform: rotate(.5turn);
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }
 
+/* Media Query for small screens (e.g., mobile) */
+@media (max-width: 600px) {
+    .loader {
+        width: 10vw;
+        border: 1vw solid;
+    }
+}
+
+/* Media Query for large screens (e.g., desktops) */
+@media (min-width: 1200px) {
+    .loader {
+        width: 5vw;
+        border: 0.5vw solid;
+    }
+}
 /* File Upload Button */
 .new-upload {
     background-color: #212529 !important;
