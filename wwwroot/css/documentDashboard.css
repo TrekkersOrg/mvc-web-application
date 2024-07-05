@@ -155,8 +155,8 @@ html {
 /* Loader Spinner */
 .loader-spinner {
     position: absolute;
-    top: 28%;
-    left: 40%;
+    top: 29vh;
+    left: 39vw;
     /* transform: translate(-50%, -50%); */
 }
 
@@ -175,6 +175,11 @@ html {
         height: 80px;
         border-width: 8px;
     }
+    .loader-spinner {
+        position: absolute;
+        top: 28vh;
+        left: 39vw;
+    }
 }
 
 @media screen and (min-width: 1200px) {
@@ -182,6 +187,12 @@ html {
         width: 100px;
         height: 100px;
         border-width: 10px;
+    }
+
+    .loader-spinner {
+        position: absolute;
+        top: 28vh;
+        left: 12vw;
     }
 }
 
