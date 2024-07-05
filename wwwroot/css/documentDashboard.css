@@ -196,6 +196,20 @@ html {
     }
 }
 
+@media screen and (min-width: 500px) {
+    .loader {
+        width: 100px;
+        height: 100px;
+        border-width: 10px;
+    }
+    
+    .loader-spinner {
+        position: absolute;
+        top: 27vh;
+        left: 9.5vw;
+    }
+}
+
 @keyframes l1 {
     to {
         transform: rotate(.5turn);
