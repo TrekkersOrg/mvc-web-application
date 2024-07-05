@@ -77,22 +77,22 @@ html {
     align-items: stretch;
 }
 
-    .input-group-append button,
-    .input-group-prepend button {
-        background: #3a516a;
-        color: #fff;
-        border: none;
-        padding: 10px 15px;
-        cursor: pointer;
-        border-radius: 4px;
-        margin-left: 5px;
-    }
+.input-group-append button,
+.input-group-prepend button {
+    background: #3a516a;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 5px;
+}
 
-        .input-group-append button:disabled,
-        .input-group-prepend button:disabled {
-            background: #bbb;
-            cursor: not-allowed;
-        }
+.input-group-append button:disabled,
+.input-group-prepend button:disabled {
+    background: #bbb;
+    cursor: not-allowed;
+}
 
 /* Chat Messages */
 .chat-output {
@@ -105,11 +105,11 @@ html {
     box-sizing: border-box;
 }
 
-    .chat-output.darker {
-        background: #3a516a;
-        color: white;
-        align-self: flex-end;
-    }
+.chat-output.darker {
+    background: #3a516a;
+    color: white;
+    align-self: flex-end;
+}
 
 /* Chart Container */
 .chart-container {
@@ -151,24 +151,38 @@ html {
     color: #333;
 }
 
+
 /* Loader Spinner */
 .loader-spinner {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 28%;
+    left: 40%;
+    /* transform: translate(-50%, -50%); */
 }
 
 .loader {
-    width: 7vw;
-    aspect-ratio: 1;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    border: 0.75vw solid;
+    border: 6px solid;
     border-color: #000 #0000;
     animation: l1 1s infinite;
-    position: relative;
-    top: 40%;
-    left: 40%;
+}
+
+@media screen and (min-width: 768px) {
+    .loader {
+        width: 80px;
+        height: 80px;
+        border-width: 8px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .loader {
+        width: 100px;
+        height: 100px;
+        border-width: 10px;
+    }
 }
 
 @keyframes l1 {
@@ -188,9 +202,10 @@ html {
     align-items: center !important;
 }
 
-    .new-upload:hover {
+.new-upload:hover {
     background-color: gray;
 }
+
 .new-upload-container {
     display: flex;
     align-items: center;
@@ -274,7 +289,8 @@ html {
     justify-content: center;
     padding: 10px 15px;
     box-sizing: border-box;
-    }
+}
+
 .error-background {
     display: none;
     position: fixed;
@@ -285,8 +301,8 @@ html {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .error-container {
@@ -305,12 +321,12 @@ html {
     font-weight: bold;
 }
 
-    .error-close:hover,
-    .error-close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-    }
+.error-close:hover,
+.error-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 .error-title {
     color: red;
