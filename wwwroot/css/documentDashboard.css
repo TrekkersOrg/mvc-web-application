@@ -152,6 +152,8 @@ html {
     font-weight: bold;
     color: #333;
 }
+
+
 /* Loader Spinner */
 .loader-spinner {
     position: absolute;
@@ -197,6 +199,7 @@ html {
         border: 0.5vw solid;
     }
 }
+
 /* File Upload Button */
 .new-upload {
     background-color: #212529 !important;
