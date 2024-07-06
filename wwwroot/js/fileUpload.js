@@ -169,14 +169,14 @@ async function uploadDocumentToApplication()
 
         try
         {
+            showLoader();
             await sendFileToMongoDB(selectedFile);
             const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
             uploadedFiles.push(selectedFile.name);
             sessionStorage.setItem('uploadedFiles',JSON.stringify(uploadedFiles));
             sessionStorage.setItem('selectedFile',selectedFile.name);
-            populateUploadedFilesList(); // Call new function to populate list
             await customKeyword();
-            statusCell.textContent = 'Uploaded';
+            await populateUploadedFilesList();
             validateFiles();
             hideLoader();
         } catch (error)
