@@ -103,12 +103,71 @@ html {
     color: black;
     width: 100%;
     box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .chat-output.darker {
     background: #3a516a;
     color: white;
     align-self: flex-end;
+}
+
+.bubble-text {
+    width: max-content;
+    margin: 0;
+}
+
+.edit-button {
+    right: 10px;
+    background-color: #0066cc;
+    background: burlywood;
+    transform: scale(-1, 1);
+}
+
+.save-button, .cancel-button {
+    display: none;
+}
+
+.save-button {
+    right: 45px;
+    background-color: #28a745;
+    margin-right: 10px;
+    background: #bcffd3;
+}
+
+.cancel-button {
+    right: 10px;
+    background-color: #dc3545;
+    background: #fc6464;
+}
+
+    .edit-button:hover, .save-button:hover, .cancel-button:hover {
+        background-color: #555;
+    }
+
+.editable {
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 4px;
+    background: #fff;
+    color: #000;
+    outline: none;
+}
+
+.edit-button, .save-button, .cancel-button {
+    cursor: pointer;
+    border: none;
+    padding: 5px;
+    font-size: 14px;
+    color: black;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    float: right;
+    width: 30px;
+    height: 30px;
 }
 
 /* Chart Container */
