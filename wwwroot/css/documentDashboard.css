@@ -16,14 +16,17 @@ html {
 }
 
 .page-container {
-    width: 100%;
-    height: 100%;
     opacity: 0.5;
     z-index: 999;
     position: absolute;
     background: #f5f5f5;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Chat Container */
@@ -122,6 +125,8 @@ html {
 
 .chart-col {
     position: relative;
+    min-height: 300px;
+    /* Adjust this value as needed */
 }
 
 /* Risk Meter */
@@ -151,68 +156,79 @@ html {
     color: #333;
 }
 
-
 /* Base styles */
 .loader-spinner {
-    position: absolute;
-    top: 29vh;
-    left: 39vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38vw;
+    height: 60vh;
+    max-width: 400px;
+    /* Add a max-width to maintain proportions on larger screens */
+    max-height: 400px;
+    /* Add a max-height to maintain proportions on larger screens */
+    margin: 0 auto;
+    /* Center the loader horizontally */
 }
 
 .loader {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 6px solid;
-    border-color: #000 #0000;
-    animation: l1 1s infinite;
+    font-size: 25px;
 }
 
-/* 768px viewport */
-@media screen and (min-width: 768px) and (max-width: 1023px) {
-    .loader {
-        width: 80px;
-        height: 80px;
-        border-width: 8px;
+.loader .dot {
+    animation: blink 1.4s infinite both;
+    margin: 0 4px;
+    /* Add fixed space between dots */
+}
+
+.loader .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
     }
 
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Media queries for different screen sizes */
+@media screen and (max-width: 768px) {
     .loader-spinner {
-        top: 25vh;
-        left: 10.5vw;
+        width: 50vw;
+        /* Increase width for better visibility on smaller screens */
+        height: 50vh;
+        /* Adjust height to maintain aspect ratio */
     }
-}
 
-/* 1024px viewport */
-@media screen and (min-width: 1024px) and (max-width: 1439px) {
     .loader {
-        width: 100px;
-        height: 100px;
-        border-width: 10px;
-    }
-
-    .loader-spinner {
-        top: 25vh;
-        left: 10.5;
+        font-size: 22px;
+        /* Slightly reduce font size for medium screens */
     }
 }
 
-/* 1440px viewport */
-@media screen and (min-width: 1440px) {
+@media screen and (max-width: 480px) {
+    .loader-spinner {
+        width: 80vw;
+        /* Further increase width for mobile devices */
+        height: 40vh;
+        /* Adjust height for mobile devices */
+    }
+
     .loader {
-        width: 100px;
-        height: 100px;
-        border-width: 10px;
-    }
-
-    .loader-spinner {
-        top: 25vh;
-        left: 10.5vw;
-    }
-}
-
-@keyframes l1 {
-    to {
-        transform: rotate(.5turn);
+        font-size: 20px;
+        /* Further reduce font size for smallest screens */
     }
 }
 
@@ -234,17 +250,6 @@ html {
 .new-upload-container {
     display: flex;
     align-items: center;
-}
-
-.page-container {
-    width: 100%;
-    height: 100%;
-    opacity: 0.5;
-    z-index: 999;
-    position: absolute;
-    background: #f5f5f5;
-    top: 0;
-    left: 0;
 }
 
 .typing {
@@ -356,7 +361,6 @@ html {
 .error-title {
     color: red;
 }
-
 @keyframes l1 {
     to {
         transform: rotate(.5turn)
