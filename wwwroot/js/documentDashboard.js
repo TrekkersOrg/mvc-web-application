@@ -546,7 +546,6 @@ window.onload = async function ()
     showLoader();
     sessionStorage.setItem("conversationMemory",JSON.stringify([]));
     document.getElementById('queryInput').addEventListener('input',checkInput);
-    //generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
     checkInput();
 
     if (JSON.parse(sessionStorage.getItem('documentContext'))?.documentName != "")
