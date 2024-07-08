@@ -492,7 +492,6 @@ async function generateSummary()
     {
         sessionNamespace = sessionStorage.getItem('sessionNamespace');
         query = "Generate a 3-7 sentence summary on the document. Include what the document is about."
-        sendButton.disabled = true;
         const response = await fetch('/api/striveml/chatbot',{
             method: 'POST',
             headers: {
