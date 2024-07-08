@@ -16,14 +16,17 @@ html {
 }
 
 .page-container {
-    width: 100%;
-    height: 100%;
     opacity: 0.5;
     z-index: 999;
     position: absolute;
     background: #f5f5f5;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Chat Container */
@@ -77,22 +80,22 @@ html {
     align-items: stretch;
 }
 
-    .input-group-append button,
-    .input-group-prepend button {
-        background: #3a516a;
-        color: #fff;
-        border: none;
-        padding: 10px 15px;
-        cursor: pointer;
-        border-radius: 4px;
-        margin-left: 5px;
-    }
+.input-group-append button,
+.input-group-prepend button {
+    background: #3a516a;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 5px;
+}
 
-        .input-group-append button:disabled,
-        .input-group-prepend button:disabled {
-            background: #bbb;
-            cursor: not-allowed;
-        }
+.input-group-append button:disabled,
+.input-group-prepend button:disabled {
+    background: #bbb;
+    cursor: not-allowed;
+}
 
 /* Chat Messages */
 .chat-output {
@@ -103,13 +106,72 @@ html {
     color: black;
     width: 100%;
     box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
-    .chat-output.darker {
-        background: #3a516a;
-        color: white;
-        align-self: flex-end;
+.chat-output.darker {
+    background: #3a516a;
+    color: white;
+    align-self: flex-end;
+}
+
+.bubble-text {
+    width: max-content;
+    margin: 0;
+}
+
+.edit-button {
+    right: 10px;
+    background-color: #0066cc;
+    background: burlywood;
+    transform: scale(-1, 1);
+}
+
+.save-button, .cancel-button {
+    display: none;
+}
+
+.save-button {
+    right: 45px;
+    background-color: #28a745;
+    margin-right: 10px;
+    background: #bcffd3;
+}
+
+.cancel-button {
+    right: 10px;
+    background-color: #dc3545;
+    background: #fc6464;
+}
+
+    .edit-button:hover, .save-button:hover, .cancel-button:hover {
+        background-color: #555;
     }
+
+.editable {
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 4px;
+    background: #fff;
+    color: #000;
+    outline: none;
+}
+
+.edit-button, .save-button, .cancel-button {
+    cursor: pointer;
+    border: none;
+    padding: 5px;
+    font-size: 14px;
+    color: black;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    float: right;
+    width: 30px;
+    height: 30px;
+}
 
 /* Chart Container */
 .chart-container {
@@ -122,6 +184,8 @@ html {
 
 .chart-col {
     position: relative;
+    min-height: 300px;
+    /* Adjust this value as needed */
 }
 
 /* Risk Meter */
@@ -151,29 +215,79 @@ html {
     color: #333;
 }
 
-/* Loader Spinner */
+/* Base styles */
 .loader-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38vw;
+    height: 60vh;
+    max-width: 400px;
+    /* Add a max-width to maintain proportions on larger screens */
+    max-height: 400px;
+    /* Add a max-height to maintain proportions on larger screens */
+    margin: 0 auto;
+    /* Center the loader horizontally */
 }
 
 .loader {
-    width: 7vw;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    border: 0.75vw solid;
-    border-color: #000 #0000;
-    animation: l1 1s infinite;
-    position: relative;
-    top: 40%;
-    left: 40%;
+    font-size: 25px;
 }
 
-@keyframes l1 {
-    to {
-        transform: rotate(.5turn);
+.loader .dot {
+    animation: blink 1.4s infinite both;
+    margin: 0 4px;
+    /* Add fixed space between dots */
+}
+
+.loader .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Media queries for different screen sizes */
+@media screen and (max-width: 768px) {
+    .loader-spinner {
+        width: 50vw;
+        /* Increase width for better visibility on smaller screens */
+        height: 50vh;
+        /* Adjust height to maintain aspect ratio */
+    }
+
+    .loader {
+        font-size: 22px;
+        /* Slightly reduce font size for medium screens */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .loader-spinner {
+        width: 80vw;
+        /* Further increase width for mobile devices */
+        height: 40vh;
+        /* Adjust height for mobile devices */
+    }
+
+    .loader {
+        font-size: 20px;
+        /* Further reduce font size for smallest screens */
     }
 }
 
@@ -188,23 +302,13 @@ html {
     align-items: center !important;
 }
 
-    .new-upload:hover {
+.new-upload:hover {
     background-color: gray;
 }
+
 .new-upload-container {
     display: flex;
     align-items: center;
-}
-
-.page-container {
-    width: 100%;
-    height: 100%;
-    opacity: 0.5;
-    z-index: 999;
-    position: absolute;
-    background: #f5f5f5;
-    top: 0;
-    left: 0;
 }
 
 .typing {
@@ -274,7 +378,8 @@ html {
     justify-content: center;
     padding: 10px 15px;
     box-sizing: border-box;
-    }
+}
+
 .error-background {
     display: none;
     position: fixed;
@@ -285,8 +390,8 @@ html {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .error-container {
@@ -305,17 +410,16 @@ html {
     font-weight: bold;
 }
 
-    .error-close:hover,
-    .error-close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-    }
+.error-close:hover,
+.error-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 .error-title {
     color: red;
 }
-
 @keyframes l1 {
     to {
         transform: rotate(.5turn)

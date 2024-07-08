@@ -23,8 +23,8 @@
                             <h3 id="document-name"></h3>
                         </div>
                         <div class="new-upload-container">
-                            <button class="btn btn-primary btn-lg file-upload-button new-upload" type="button" id="upload-button"
-                                    onclick="newUpload()">
+                            <button class="btn btn-primary btn-lg file-upload-button new-upload" type="button"
+                                id="upload-button" onclick="newUpload()">
                                 New Upload
                             </button>
                         </div>
@@ -54,16 +54,20 @@
 
             <div class="col-md-4 chart-col">
                 <div id="page-container" class="page-container">
-                    <div id="loader" class="loader"></div>
+                    <div id="loader" class="loader loader-spinner">
+                        Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+                    </div>
                 </div>
                 <h4>Risk Analysis</h4>
-                <canvas id="spiderChart"></canvas>
+                <canvas id="spiderChart">
+                </canvas>
                 <h4>Risk Meter</h4>
                 <div id="riskMeter">
                     <div id="riskMeterFill"></div>
                     <div id="riskMeterLabel">0</div>
                 </div>
             </div>
+
         </div>
     </div>
 </body>

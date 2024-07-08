@@ -1,3 +1,4 @@
+﻿
 var generatingResponse = false;
 
 function displayError(errorMessage)
@@ -34,20 +35,139 @@ function submitChat(event)
     }
 }
 
-function generateUserBubble(message)
+function removeSubsequentBubbles(bubbleId)
+{
+    const bubbles = document.querySelectorAll('.chat-output');
+    let targetQueryIndex = Array.from(bubbles).indexOf(document.getElementById(bubbleId));
+    for (let i = 0; i < bubbles.length; i++)
+    {
+        if (i >= targetQueryIndex)
+        {
+            bubbles[i].remove();
+        }
+    }
+}
+
+async function generateUserBubble(message)
 {
     checkInput();
     var window = document.getElementById('chat-window');
     var bubble = document.createElement('div');
+    bubble.id = Date.now();
     bubble.classList.add('chat-output');
     bubble.classList.add('darker');
     var text = document.createElement('p');
+    text.classList.add('bubble-text')
     text.innerText = message;
     bubble.appendChild(text);
+    var editButton = document.createElement('button');
+    editButton.innerText = '✎';
+    editButton.classList.add('edit-button');
+    var saveButton = document.createElement('button');
+    saveButton.innerHTML = '✔';
+    saveButton.classList.add('save-button');
+    var cancelButton = document.createElement('button');
+    cancelButton.innerHTML = '✖';
+    cancelButton.classList.add('cancel-button');
+    var actionButtonContainer = document.createElement('div');
+    actionButtonContainer.appendChild(editButton);
+    actionButtonContainer.appendChild(cancelButton);
+    actionButtonContainer.appendChild(saveButton);
+    bubble.appendChild(actionButtonContainer);
     window.appendChild(bubble);
-    addChatbotLoader();
     window.scrollTop = window.scrollHeight;
+    editButton.addEventListener('click',function ()
+    {
+        text.contentEditable = 'true';
+        text.classList.add('editable');
+        editButton.style.display = 'none';
+        saveButton.style.display = 'inline';
+        cancelButton.style.display = 'inline';
+    });
+    saveButton.addEventListener('click',async function ()
+    {
+        text.contentEditable = 'false';
+        text.classList.remove('editable');
+        editButton.style.display = 'inline';
+        saveButton.style.display = 'none';
+        cancelButton.style.display = 'none';
+        removeSubsequentBubbles(bubble.id);
+        var sessionNamespace = '';
+        var context = '';
+        if (sessionStorage.getItem('documentContext'))
+        {
+            context = JSON.parse(sessionStorage.getItem('documentContext'))?.documentDescription;
+        }
+        if (!sessionStorage.getItem('sessionNamespace'))
+        {
+            sessionNamespace = 'TestSuite';
+        }
+        else
+        {
+            sessionNamespace = sessionStorage.getItem('sessionNamespace');
+        }
+        generatingResponse = true;
+        var query = text.innerText;
+        var baseQuery = query;
+        if (context != '')
+        {
+            query = "Use this as context for your response: " + context + ". Answer the following query: " + query;
+        }
+        document.getElementById('queryInput').value = "";
+        await generateUserBubble(baseQuery);
+        try
+        {
+            var sendButton = document.getElementById('send-button');
+            sendButton.disabled = true;
+            const response = await fetch('/api/striveml/chatbot',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    namespace: sessionNamespace,
+                    query: query,
+                    context: sessionStorage.getItem('conversationMemory')
+                })
+            });
+
+            var data = await response.json();
+            if (response.ok)
+            {
+                generateSystemBubble(data["data"]["response"]);
+                generatingResponse = false;
+                var newConversation = {
+                    "newQuery": query,
+                    "newResponse": data["data"]["response"]
+                };
+                sessionStorage.setItem("newConversation",JSON.stringify(newConversation));
+                conversationMemoryEntry();
+                checkInput();
+            } else
+            {
+                generateSystemBubble('ERROR GENERATING RESPONSE');
+                generatingResponse = false;
+                checkInput();
+            }
+        } catch (error)
+        {
+            console.error('Error: ',error.message);
+            generateSystemBubble('ERROR GENERATING RESPONSE');
+            generatingResponse = false;
+            checkInput();
+        }
+    });
+    cancelButton.addEventListener('click',function ()
+    {
+        text.contentEditable = 'false';
+        text.classList.remove('editable');
+        text.innerText = message; // Revert to original text
+        editButton.style.display = 'inline';
+        saveButton.style.display = 'none';
+        cancelButton.style.display = 'none';
+    });
     checkInput();
+    addChatbotLoader();
 }
 
 function generateSystemBubble(message)
@@ -56,6 +176,7 @@ function generateSystemBubble(message)
     var bubble = document.createElement('div');
     bubble.classList.add('chat-output');
     var text = document.createElement('p');
+    text.classList.add('bubble-text');
     bubble.appendChild(text);
     var window = document.getElementById('chat-window');
     removeChatbotLoader();
@@ -138,7 +259,7 @@ async function sendQuery()
         query = "Use this as context for your response: " + context + ". Answer the following query: " + query;
     }
     document.getElementById('queryInput').value = "";
-    generateUserBubble(baseQuery);
+    await generateUserBubble(baseQuery);
     try
     {
         var sendButton = document.getElementById('send-button');
@@ -365,6 +486,40 @@ async function systemQuery()
         });
 }
 
+async function generateSummary()
+{
+    try
+    {
+        sessionNamespace = sessionStorage.getItem('sessionNamespace');
+        query = "Generate a 3-7 sentence summary on the document. Include what the document is about."
+        sendButton.disabled = true;
+        const response = await fetch('/api/striveml/chatbot',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                namespace: sessionNamespace,
+                query: query,
+                context: sessionStorage.getItem('conversationMemory')
+            })
+        });
+
+        var data = await response.json();
+        if (response.ok)
+        {
+            var summary = data["data"]["response"];
+            // Inject summary into UI here
+        } else
+        {
+            displayError("ERROR GENERATING SUMMARY");
+        }
+    } catch (error)
+    {
+        displayError("ERROR GENERATING SUMMARY");
+    }
+}
+
 async function determineRiskScore()
 {
     await systemQuery();
@@ -439,7 +594,7 @@ window.onload = async function ()
             }
         }
     });
-
+    await generateSummary();
     await customRiskAssessment();
     await determineRiskScore();
     hideLoader();
