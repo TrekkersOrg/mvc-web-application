@@ -507,8 +507,8 @@ async function generateSummary()
         var data = await response.json();
         if (response.ok)
         {
-            var summary = data["data"]["response"];
-            // Inject summary into UI here
+            var summaryResponse = data["data"]["response"] + " Feel free to ask further questions regarding this document.";
+            generateSystemBubble(summaryResponse);
         } else
         {
             displayError("ERROR GENERATING SUMMARY");
@@ -546,7 +546,7 @@ window.onload = async function ()
     showLoader();
     sessionStorage.setItem("conversationMemory",JSON.stringify([]));
     document.getElementById('queryInput').addEventListener('input',checkInput);
-    generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
+    //generateSystemBubble("I am a helpful assistant! Just ask me anything about this document.");
     checkInput();
 
     if (JSON.parse(sessionStorage.getItem('documentContext'))?.documentName != "")
