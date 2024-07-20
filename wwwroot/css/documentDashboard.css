@@ -35,19 +35,30 @@ html {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    padding: 15px;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    width: calc(100% - 60px);
-    margin-left: 50px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    height: 50vh;
+    width: 40vw;
+    border: 1px solid black;
     transition: width 0.3s ease, margin-left 0.3s ease;
+}
+
+.chat-inner-container {
+    background: #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Chat Window */
 #chat-window {
-    max-height: 60vh;
-    height: 100vw;
+    flex-grow: 1;
     overflow-y: scroll;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -62,7 +73,6 @@ html {
 .input-group {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
     width: 100%;
 }
 
@@ -71,7 +81,7 @@ html {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    width: 100%;
+    width: calc(100% - 75px);
 }
 
 .input-group-append,
@@ -130,7 +140,8 @@ html {
     transform: scale(-1, 1);
 }
 
-.save-button, .cancel-button {
+.save-button,
+.cancel-button {
     display: none;
 }
 
@@ -147,9 +158,11 @@ html {
     background: #fc6464;
 }
 
-    .edit-button:hover, .save-button:hover, .cancel-button:hover {
-        background-color: #555;
-    }
+.edit-button:hover,
+.save-button:hover,
+.cancel-button:hover {
+    background-color: #555;
+}
 
 .editable {
     border: 1px solid #ddd;
@@ -160,7 +173,9 @@ html {
     outline: none;
 }
 
-.edit-button, .save-button, .cancel-button {
+.edit-button,
+.save-button,
+.cancel-button {
     cursor: pointer;
     border: none;
     padding: 5px;
@@ -185,6 +200,9 @@ html {
 .chart-col {
     position: relative;
     min-height: 300px;
+    height: calc(100vh - 340px);
+    /* Adjust height as needed */
+    width: 60%;
     /* Adjust this value as needed */
 }
 
@@ -353,7 +371,6 @@ html {
 .input-container {
     flex-grow: 1;
     height: 50px;
-    width: calc(100% - 75px);
 }
 
 #queryInput {
@@ -420,6 +437,7 @@ html {
 .error-title {
     color: red;
 }
+
 @keyframes l1 {
     to {
         transform: rotate(.5turn)
