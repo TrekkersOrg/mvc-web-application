@@ -345,7 +345,7 @@ async function customRiskAssessment()
         file_name: fileName
     };
     showLoader();
-    await fetch("https://strive-ml-api.azurewebsites.net/xgboostModel",{
+    await fetch("https://strive-core.azurewebsites.net/xgboostModel",{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -452,7 +452,7 @@ async function systemQuery()
         namespace: sessionStorage.getItem("sessionNamespace")
     };
     showLoader();
-    await fetch("https://strive-ml-api.azurewebsites.net/systemQueryModel",{
+    await fetch("https://strive-core.azurewebsites.net/systemQueryModel",{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
