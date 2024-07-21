@@ -26,7 +26,7 @@ namespace StriveAI.Controllers
         {
             _httpClient = new()
             {
-                BaseAddress = new Uri("http://strive-ml-api.azurewebsites.net/")
+                BaseAddress = new Uri("https://strive-core.azurewebsites.net/")
             };
 
         }

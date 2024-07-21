@@ -76,7 +76,7 @@ async function customKeyword()
         file_name: fileName
     };
     showLoader();
-    await fetch("https://strive-ml-api.azurewebsites.net/keywordsModel",{
+    await fetch("https://strive-core.azurewebsites.net/keywordsModel",{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -270,7 +270,7 @@ async function uploadDocumentToPinecone()
         namespace: sessionStorage.getItem("sessionNamespace"),
         fileName: sessionStorage.getItem("selectedFile")
     };
-    await fetch("https://strive-ml-api.azurewebsites.net/embedder",{
+    await fetch("https://strive-core.azurewebsites.net/embedder",{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
