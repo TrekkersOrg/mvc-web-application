@@ -206,7 +206,7 @@ async function newUpload()
     try
     {
         document.getElementById('upload-button').disabled = true;
-        const url = `https://strive-core.azurewebsites.net/api/pinecone/purgePinecone`;
+        const url = `https://strive-api.azurewebsites.net/api/pinecone/purgePinecone`;
         const pineconeResponse = await fetch(url,{
             method: 'POST',
             headers: {
