@@ -127,7 +127,7 @@ async function generateUserBubble(message)
                 body: JSON.stringify({
                     namespace: sessionNamespace,
                     query: query,
-                    context: sessionStorage.getItem('conversationMemory')
+                    file_name: sessionStorage.getItem('selectedFile')
                 })
             });
 
@@ -272,7 +272,7 @@ async function sendQuery()
             body: JSON.stringify({
                 namespace: sessionNamespace,
                 query: query,
-                context: sessionStorage.getItem('conversationMemory')
+                file_name: sessionStorage.getItem('selectedFile')
             })
         });
 
@@ -446,7 +446,7 @@ function conversationMemoryEntry()
     return;
 }
 
-async function systemQuery()
+/*async function systemQuery()
 {
     const requestBody = {
         namespace: sessionStorage.getItem("sessionNamespace")
@@ -484,7 +484,7 @@ async function systemQuery()
             displayError('Failed to process file.');
             console.error('Fetch error:',error);
         });
-}
+}*/
 
 async function generateSummary()
 {
@@ -521,7 +521,7 @@ async function generateSummary()
 
 async function determineRiskScore()
 {
-    await systemQuery();
+    //await systemQuery();
     var custom = JSON.parse(sessionStorage.getItem('custom')).data;
     var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
     var query = JSON.parse(sessionStorage.getItem('query')).data;

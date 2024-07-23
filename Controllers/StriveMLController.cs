@@ -38,7 +38,7 @@ namespace StriveAI.Controllers
             var httpContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
             try
             {
-                var httpResponse = await _httpClient.PostAsync("chatbot", httpContent);
+                var httpResponse = await _httpClient.PostAsync("chat", httpContent);
                 if (httpResponse.IsSuccessStatusCode)
                 {
                     var httpResponseContent = await httpResponse.Content.ReadAsStringAsync();
