@@ -624,3 +624,15 @@ window.onload = async function ()
         updateRiskMeter(finalScore);
     },2000); // Update every 2 seconds
 }
+
+function openNav() {
+    document.getElementById("sidebar").style.width = "250px";
+    document.getElementById("main-content").style.marginLeft = "250px";
+    document.querySelector('.chat-container').style.width = "30vw"; // Adjust the width of the chatbot
+}
+
+function closeNav() {
+    document.getElementById("sidebar").style.width = "0";
+    document.getElementById("main-content").style.marginLeft = "0";
+    document.querySelector('.chat-container').style.width = "40vw"; // Revert to the original width of the chatbot
+}
