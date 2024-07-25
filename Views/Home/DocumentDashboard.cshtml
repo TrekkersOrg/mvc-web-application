@@ -23,26 +23,23 @@
                     </div>
                 </div>
                 <h4>Risk Analysis</h4>
-                <canvas id="spiderChart">
-                </canvas>
+                <canvas id="spiderChart"></canvas>
                 <h4>Risk Meter</h4>
                 <div id="riskMeter">
                     <div id="riskMeterFill"></div>
                     <div id="riskMeterLabel">0</div>
                 </div>
             </div>
-
-            <div class="col-md-4">
+            <div class="col-md-4 d-flex flex-column">
                 <div class="chat-container d-flex flex-column">
-                    <div class="chat-inner-container">
-                        <div class="chatbot-messages-container rounded flex-grow-1 overflow-y" id="chat-window">
+                    <div class="chat-inner-container d-flex flex-column">
+                        <div class="chatbot-messages-container flex-grow-1 overflow-y-auto" id="response-container">
                             <!-- Chat messages will appear here -->
                         </div>
-                        <div class="chatInput-container d-flex align-items-center">
-                            <div class="input-container container-flex flex-grow-1">
+                        <div class="input-container d-flex align-items-center rounded" id="input-container">
+                            <div class="container-flex flex-grow-1">
                                 <input type="text" class="form-control flex-grow-1" id="queryInput"
-                                    placeholder="e.g. Explain this contract in plain English"
-                                    onkeypress="submitChat(event)">
+                                    placeholder="e.g. Explain this contract in plain English" onkeypress="submitChat(event)">
                             </div>
                             <div class="sendButton-container">
                                 <button class="btn btn-primary ml-3 send-button" id="send-button" onclick="sendQuery()"
