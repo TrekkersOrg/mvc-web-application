@@ -200,39 +200,39 @@ function generateSystemBubble(message)
     document.getElementById('send-button').disabled = false;
 }
 
-async function newUpload()
-{
-    var sessionNamespace = sessionStorage.getItem('sessionNamespace');
-    try
-    {
-        document.getElementById('upload-button').disabled = true;
-        const url = `https://strive-api.azurewebsites.net/api/pinecone/purgePinecone`;
-        const pineconeResponse = await fetch(url,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                namespace: sessionNamespace
-            })
-        });
+// async function newUpload()
+// {
+//     var sessionNamespace = sessionStorage.getItem('sessionNamespace');
+//     try
+//     {
+//         document.getElementById('upload-button').disabled = true;
+//         const url = `https://strive-api.azurewebsites.net/api/pinecone/purgePinecone`;
+//         const pineconeResponse = await fetch(url,{
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 namespace: sessionNamespace
+//             })
+//         });
 
-        var data = await pineconeResponse.json();
-        if (pineconeResponse.ok)
-        {
-            var documentAnalysisUrl = `${window.location.protocol}//${window.location.host}/Home/FileUpload`;
-            window.location.href = documentAnalysisUrl;
-        } else
-        {
-            displayError('Failed to process file.');
-        }
-    } catch (error)
-    {
-        displayError('Failed to process file.');
-        document.getElementById('upload-button').disabled = false;
-        return;
-    }
-}
+//         var data = await pineconeResponse.json();
+//         if (pineconeResponse.ok)
+//         {
+//             var documentAnalysisUrl = `${window.location.protocol}//${window.location.host}/Home/FileUpload`;
+//             window.location.href = documentAnalysisUrl;
+//         } else
+//         {
+//             displayError('Failed to process file.');
+//         }
+//     } catch (error)
+//     {
+//         displayError('Failed to process file.');
+//         document.getElementById('upload-button').disabled = false;
+//         return;
+//     }
+// }
 
 async function sendQuery()
 {
@@ -336,48 +336,48 @@ function hideLoader()
     document.getElementById("page-container").style.display = 'none';
 }
 
-async function customRiskAssessment()
-{
-    const fileName = sessionStorage.getItem('selectedFile');
-    const namespace = sessionStorage.getItem('sessionNamespace');
-    const requestBody = {
-        namespace: namespace,
-        file_name: fileName
-    };
-    showLoader();
-    await fetch("https://strive-core.azurewebsites.net/xgboostModel",{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Headers': '*'
-        },
-        body: JSON.stringify(requestBody)
-    })
-        .then(response =>
-        {
-            if (!response.ok)
-            {
-                hideLoader();
-                displayError('Failed to process file.');
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
+// async function customRiskAssessment()
+// {
+//     const fileName = sessionStorage.getItem('selectedFile');
+//     const namespace = sessionStorage.getItem('sessionNamespace');
+//     const requestBody = {
+//         namespace: namespace,
+//         file_name: fileName
+//     };
+//     showLoader();
+//     await fetch("https://strive-core.azurewebsites.net/xgboostModel",{
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Accept': 'application/json',
+//             'Access-Control-Allow-Origin': '*',
+//             'Access-Control-Allow-Methods': '*',
+//             'Access-Control-Allow-Headers': '*'
+//         },
+//         body: JSON.stringify(requestBody)
+//     })
+//         .then(response =>
+//         {
+//             if (!response.ok)
+//             {
+//                 hideLoader();
+//                 displayError('Failed to process file.');
+//                 throw new Error(`HTTP error! Status: ${response.status}`);
+//             }
 
-            return response.text();
-        })
-        .then(data =>
-        {
-            sessionStorage.setItem('custom',data);
-        })
-        .catch(error =>
-        {
-            hideLoader();
-            displayError('Failed to process file.');
-            console.error('Fetch error:',error);
-        });
-}
+//             return response.text();
+//         })
+//         .then(data =>
+//         {
+//             sessionStorage.setItem('custom',data);
+//         })
+//         .catch(error =>
+//         {
+//             hideLoader();
+//             displayError('Failed to process file.');
+//             console.error('Fetch error:',error);
+//         });
+// }
 
 function conversationMemoryEntry()
 {
@@ -446,45 +446,45 @@ function conversationMemoryEntry()
     return;
 }
 
-async function systemQuery()
-{
-    const requestBody = {
-        namespace: sessionStorage.getItem("sessionNamespace")
-    };
-    showLoader();
-    await fetch("https://strive-core.azurewebsites.net/systemQueryModel",{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Headers': '*'
-        },
-        body: JSON.stringify(requestBody)
-    })
-        .then(response =>
-        {
-            if (!response.ok)
-            {
-                hideLoader();
-                displayError('Failed to process file.');
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
+// async function systemQuery()
+// {
+//     const requestBody = {
+//         namespace: sessionStorage.getItem("sessionNamespace")
+//     };
+//     showLoader();
+//     await fetch("https://strive-core.azurewebsites.net/systemQueryModel",{
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Accept': 'application/json',
+//             'Access-Control-Allow-Origin': '*',
+//             'Access-Control-Allow-Methods': '*',
+//             'Access-Control-Allow-Headers': '*'
+//         },
+//         body: JSON.stringify(requestBody)
+//     })
+//         .then(response =>
+//         {
+//             if (!response.ok)
+//             {
+//                 hideLoader();
+//                 displayError('Failed to process file.');
+//                 throw new Error(`HTTP error! Status: ${response.status}`);
+//             }
 
-            return response.text();
-        })
-        .then(data =>
-        {
-            sessionStorage.setItem('query',data);
-        })
-        .catch(error =>
-        {
-            hideLoader();
-            displayError('Failed to process file.');
-            console.error('Fetch error:',error);
-        });
-}
+//             return response.text();
+//         })
+//         .then(data =>
+//         {
+//             sessionStorage.setItem('query',data);
+//         })
+//         .catch(error =>
+//         {
+//             hideLoader();
+//             displayError('Failed to process file.');
+//             console.error('Fetch error:',error);
+//         });
+// }
 
 async function generateSummary()
 {
