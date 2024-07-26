@@ -21,14 +21,13 @@ html {
     position: absolute;
     background: #f5f5f5;
     top: 0;
-    left: 0;
-    right: 0;
+    left: 1vw;
+    right: 3vw;
     bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
 
 /* Chat Container */
 .chat-container {
@@ -80,11 +79,8 @@ html {
     align-items: center;
     width: 100%;
     background: #e0e0e0;
-    /* padding: 10px; */
-    /* position: absolute; */
     bottom: 0;
     border-radius: 0 0 8px 8px;
-    /* margin-bottom: 20px; */
 }
 
 .form-control {
@@ -211,19 +207,27 @@ html {
     position: relative;
     min-height: 300px;
     height: calc(100vh - 340px);
-    /* Adjust height as needed */
-    width: 60%;
-    /* Adjust this value as needed */
+    width: 50%;
+    /* Adjust the width to include the 1vw margin */
+    margin-left: 3vw;
+    /* Ensure there's a 1vw margin on the left side */
+    transition: width 0.5s ease;
+    /* Smooth transition for resizing */
 }
 
 /* Risk Meter */
 #riskMeter {
-    width: 100%;
+    width: calc(100% - 1vw);
+    /* Ensure the width includes the 1vw margin */
     height: 50px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background: #f1f1f1;
     position: relative;
+    margin-left: 1vw;
+    /* Ensure there's a 1vw margin on the left side */
+    transition: width 0.5s ease;
+    /* Smooth transition for resizing */
 }
 
 #riskMeterFill {
@@ -231,7 +235,7 @@ html {
     height: 100%;
     background: #ff6b6b;
     border-radius: 8px 0 0 8px;
-    transition: width 0.3s ease;
+    transition: width 0.5s ease;
 }
 
 #riskMeterLabel {
@@ -251,11 +255,8 @@ html {
     width: 38vw;
     height: 60vh;
     max-width: 400px;
-    /* Add a max-width to maintain proportions on larger screens */
     max-height: 400px;
-    /* Add a max-height to maintain proportions on larger screens */
     margin: 0 auto;
-    /* Center the loader horizontally */
 }
 
 .loader {
@@ -265,7 +266,6 @@ html {
 .loader .dot {
     animation: blink 1.4s infinite both;
     margin: 0 4px;
-    /* Add fixed space between dots */
 }
 
 .loader .dot:nth-child(2) {
@@ -294,28 +294,22 @@ html {
 @media screen and (max-width: 768px) {
     .loader-spinner {
         width: 50vw;
-        /* Increase width for better visibility on smaller screens */
         height: 50vh;
-        /* Adjust height to maintain aspect ratio */
     }
 
     .loader {
         font-size: 22px;
-        /* Slightly reduce font size for medium screens */
     }
 }
 
 @media screen and (max-width: 480px) {
     .loader-spinner {
         width: 80vw;
-        /* Further increase width for mobile devices */
         height: 40vh;
-        /* Adjust height for mobile devices */
     }
 
     .loader {
         font-size: 20px;
-        /* Further reduce font size for smallest screens */
     }
 }
 
@@ -392,8 +386,6 @@ html {
 }
 
 .sendButton-container {
-    /* height: 50px; */
-    /* width: 75px; */
     display: flex;
     align-items: center;
     margin-left: 5px;
@@ -455,4 +447,3 @@ html {
         transform: rotate(.5turn)
     }
 }
-
