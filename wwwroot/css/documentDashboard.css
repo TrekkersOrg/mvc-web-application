@@ -34,7 +34,7 @@ html {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     display: flex;
     flex-direction: column;
     height: 45vh;
@@ -55,8 +55,17 @@ html {
 }
 
 .metrics-container {
-    height: 20%;
+    height: 25%;
     width: 100%;
+}
+
+.metric-1,
+.metric-2,
+.metric-3,
+.metric-4 {
+    height: 100%;
+    width: 25%;
+    border:1px black;
 }
 
 .title-file-container {
@@ -82,6 +91,27 @@ html {
     width: 100%;
 }
 
+.meter-container {
+    height: 100%;
+    width: 30%;
+}
+
+.label-container {
+    height: 25%;
+    width: 100%;
+    padding: 15px;
+}
+
+.o-meter-container {
+    height: 90%;
+    width: 100%;
+}
+
+.summary-container {
+    height: 100%;
+    width: 70%;
+    padding: 10px;
+}
 /* Chat Container */
 .chat-container {
     background: #fff;

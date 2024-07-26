@@ -507,8 +507,9 @@ async function generateSummary()
         var data = await response.json();
         if (response.ok)
         {
-            var summaryResponse = data["data"]["response"] + " Feel free to ask further questions regarding this document.";
-            generateSystemBubble(summaryResponse);
+            var summaryResponse = data["data"]["response"];
+            document.getElementById('injected-summary').innerText = summaryResponse;
+            
         } else
         {
             displayError("ERROR GENERATING SUMMARY");
