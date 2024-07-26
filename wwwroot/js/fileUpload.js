@@ -263,76 +263,6 @@ async function sendFileToMongoDB(selectedFile)
     const data = await response.json();
 }
 
-async function uploadDocumentToPinecone()
-{
-    storeDocumentDescription();
-    const requestBody = {
-        namespace: sessionStorage.getItem("sessionNamespace"),
-        fileName: sessionStorage.getItem("selectedFile")
-    };
-    await fetch("https://strive-core.azurewebsites.net/embedder",{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Headers': '*'
-        },
-        body: JSON.stringify(requestBody)
-    })
-        .then(response =>
-        {
-            console.log(response);
-            if (!response.ok)
-            {
-                hideLoader();
-                alert("System is under maintenance. Please try again later.");
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return Promise.resolve();
-        })
-        .catch(error =>
-        {
-            hideLoader();
-            alert("System is under maintenance. Please try again later.");
-            console.error('Fetch error:',error);
-        });
-}
-
-async function purgePinecone()
-{
-    var sessionNamespace = sessionStorage.getItem('sessionNamespace');
-    try
-    {
-        document.getElementById('upload-button').disabled = true;
-        const url = `https://strive-api.azurewebsites.net/api/pinecone/purgePinecone`;
-        const pineconeResponse = await fetch(url,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                namespace: sessionNamespace
-            })
-        });
-        var data = await pineconeResponse.json();
-        return Promise.resolve();
-    } catch (error)
-    {
-        displayError('Failed to process file.');
-        document.getElementById('upload-button').disabled = false;
-        return Promise.reject(error);
-    }
-}
-
-async function processPinecone()
-{
-    await purgePinecone();
-    await new Promise(resolve => setTimeout(resolve,10000));
-    await uploadDocumentToPinecone();
-}
-
 async function routeToDocumentAnalysis()
 {
     var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
@@ -342,16 +272,11 @@ async function routeToDocumentAnalysis()
 
 async function uploadFileFlow()
 {
-    showLoader();
     var fileUploadButtons = document.getElementsByClassName('file-upload-button');
     for (let btn of fileUploadButtons)
     {
         btn.disabled = true;
     }
-    await processPinecone()
-        .then(() => console.log("All operations completed"))
-        .catch((error) => console.error("An error occurred:",error));
-    hideLoader();
     await routeToDocumentAnalysis();
     localStorage.setItem('showDocumentDashboardWidget','true');
 }
