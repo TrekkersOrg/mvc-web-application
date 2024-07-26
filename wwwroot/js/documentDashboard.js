@@ -504,7 +504,7 @@ async function generateSummary()
             body: JSON.stringify({
                 namespace: sessionNamespace,
                 query: query,
-                context: sessionStorage.getItem('conversationMemory')
+                file_name: sessionStorage.getItem('selectedFile')
             })
         });
 
