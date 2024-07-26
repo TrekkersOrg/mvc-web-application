@@ -127,7 +127,7 @@ async function generateUserBubble(message)
                 body: JSON.stringify({
                     namespace: sessionNamespace,
                     query: query,
-                    context: sessionStorage.getItem('conversationMemory')
+                    file_name: sessionStorage.getItem('selectedFile')
                 })
             });
 
@@ -272,7 +272,7 @@ async function sendQuery()
             body: JSON.stringify({
                 namespace: sessionNamespace,
                 query: query,
-                context: sessionStorage.getItem('conversationMemory')
+                file_name: sessionStorage.getItem('selectedFile')
             })
         });
 
@@ -446,7 +446,7 @@ function conversationMemoryEntry()
     return;
 }
 
-async function systemQuery()
+/*async function systemQuery()
 {
     const requestBody = {
         namespace: sessionStorage.getItem("sessionNamespace")
@@ -461,7 +461,11 @@ async function systemQuery()
             'Access-Control-Allow-Methods': '*',
             'Access-Control-Allow-Headers': '*'
         },
-        body: JSON.stringify(requestBody)
+        body: {
+            namespace: sessionNamespace,
+            query: query,
+            file_name: sessionStorage.getItem('selectedFile')
+        }
     })
         .then(response =>
         {
@@ -484,7 +488,7 @@ async function systemQuery()
             displayError('Failed to process file.');
             console.error('Fetch error:',error);
         });
-}
+}*/
 
 async function generateSummary()
 {
@@ -500,7 +504,7 @@ async function generateSummary()
             body: JSON.stringify({
                 namespace: sessionNamespace,
                 query: query,
-                context: sessionStorage.getItem('conversationMemory')
+                file_name: sessionStorage.getItem('selectedFile')
             })
         });
 
@@ -521,10 +525,10 @@ async function generateSummary()
 
 async function determineRiskScore()
 {
-    await systemQuery();
+    //await systemQuery();
     var custom = JSON.parse(sessionStorage.getItem('custom')).data;
     var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
-    var query = JSON.parse(sessionStorage.getItem('query')).data;
+    var query = JSON.parse(sessionStorage.getItem('keywords')).data;
     var financialScoreAvg = Math.round((custom.financialScore + keywords.financialScore + query.financialScore) / 3);
     var operationalScoreAvg = Math.round((custom.operationalScore + keywords.operationalScore + query.operationalScore) / 3);
     var regulatoryScoreAvg = Math.round((custom.regulatoryScore + keywords.regulatoryScore + query.regulatoryScore) / 3);
@@ -547,16 +551,6 @@ window.onload = async function ()
     sessionStorage.setItem("conversationMemory",JSON.stringify([]));
     document.getElementById('queryInput').addEventListener('input',checkInput);
     checkInput();
-
-    if (JSON.parse(sessionStorage.getItem('documentContext'))?.documentName != "")
-    {
-
-        document.getElementById('document-name').innerText = JSON.parse(sessionStorage.getItem('documentContext'))?.documentName;
-    } else
-    {
-        document.getElementById('document-name').innerText = sessionStorage.getItem('selectedFile');
-
-    }
 
     // Chart.js and risk meter initialization
     var ctx = document.getElementById('spiderChart').getContext('2d');
