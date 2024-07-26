@@ -446,7 +446,7 @@ function conversationMemoryEntry()
     return;
 }
 
-/*async function systemQuery()
+async function systemQuery()
 {
     const requestBody = {
         namespace: sessionStorage.getItem("sessionNamespace")
@@ -461,11 +461,10 @@ function conversationMemoryEntry()
             'Access-Control-Allow-Methods': '*',
             'Access-Control-Allow-Headers': '*'
         },
-        body: {
+        body: JSON.stringify({
             namespace: sessionNamespace,
-            query: query,
             file_name: sessionStorage.getItem('selectedFile')
-        }
+        })
     })
         .then(response =>
         {
@@ -488,7 +487,7 @@ function conversationMemoryEntry()
             displayError('Failed to process file.');
             console.error('Fetch error:',error);
         });
-}*/
+}
 
 async function generateSummary()
 {
@@ -525,10 +524,11 @@ async function generateSummary()
 
 async function determineRiskScore()
 {
-    //await systemQuery();
+    await systemQuery();
+    await customRiskAssessment();
     var custom = JSON.parse(sessionStorage.getItem('custom')).data;
     var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
-    var query = JSON.parse(sessionStorage.getItem('keywords')).data;
+    var query = JSON.parse(sessionStorage.getItem('query')).data;
     var financialScoreAvg = Math.round((custom.financialScore + keywords.financialScore + query.financialScore) / 3);
     var operationalScoreAvg = Math.round((custom.operationalScore + keywords.operationalScore + query.operationalScore) / 3);
     var regulatoryScoreAvg = Math.round((custom.regulatoryScore + keywords.regulatoryScore + query.regulatoryScore) / 3);
@@ -587,7 +587,6 @@ window.onload = async function ()
         }
     });
     await generateSummary();
-    await customRiskAssessment();
     await determineRiskScore();
     hideLoader();
     var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'));
