@@ -24,11 +24,6 @@
                 </div>
                 <h4>Risk Analysis</h4>
                 <canvas id="spiderChart"></canvas>
-                <h4>Risk Meter</h4>
-                <div id="riskMeter">
-                    <div id="riskMeterFill"></div>
-                    <div id="riskMeterLabel">0</div>
-                </div>
             </div>
             <div class="col-md-4 d-flex flex-column">
                 <div class="scores-container d-flex flex-column">
@@ -38,16 +33,16 @@
                                 <!-- Title content will go here -->
                             </div>
                             <div class="view-file-container">
-                                <!-- View file content will go here -->
+                                <button class="view-file-button"></button>
                             </div>
                         </div>
                         <div class="meter-summary-container d-flex">
                             <div class="meter-container d-flex flex-column">
                                 <div class="label-container">
-                                    <!-- Label content will go here -->
+                                    <h5>Overall Score</h5>
                                 </div>
                                 <div class="o-meter-container">
-                                    <!-- O-Meter content will go here -->
+                                    <canvas id="circularRiskMeter" width="100px" height="100"></canvas>
                                 </div>
                             </div>
                             <div class="summary-container">
@@ -56,17 +51,25 @@
                         </div>
                     </div>
                     <div class="metrics-container d-flex">
-                        <div class="metric-1">
-                            <!-- Metric 1 content will go here -->
+                        <div class="metric-1 d-flex flex-column">
+                            <div class="metric-1-title-container" style="padding: 15px; border: 1px solid black; display: flex; align-items: center; justify-content: center;">
+                                <h6>Metric 1</h6>
+                            </div>
                         </div>
-                        <div class="metric-2">
-                            <!-- Metric 2 content will go here -->
+                        <div class="metric-2 d-flex flex-column">
+                            <div class="metric-2-title-container" style="padding: 15px; border: 1px solid black; display: flex; align-items: center; justify-content: center;">
+                                <h6>Metric 2</h6>
+                            </div>
                         </div>
-                        <div class="metric-3">
-                            <!-- Metric 3 content will go here -->
+                        <div class="metric-3 d-flex flex-column">
+                            <div class="metric-3-title-container" style="padding: 15px; border: 1px solid black; display: flex; align-items: center; justify-content: center;">
+                                <h6>Metric 3</h6>
+                            </div>
                         </div>
-                        <div class="metric-4">
-                            <!-- Metric 4 content will go here -->
+                        <div class="metric-4 d-flex flex-column">
+                            <div class="metric-4-title-container" style="padding: 15px; border: 1px solid black; display: flex; align-items: center; justify-content: center;">
+                                <h6>Metric 4</h6>
+                            </div>
                         </div>
                     </div>
                 </div>

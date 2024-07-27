@@ -127,7 +127,7 @@ async function generateUserBubble(message)
                 body: JSON.stringify({
                     namespace: sessionNamespace,
                     query: query,
-                    context: sessionStorage.getItem('conversationMemory')
+                    file_name: sessionStorage.getItem('selectedFile')
                 })
             });
 
@@ -200,39 +200,39 @@ function generateSystemBubble(message)
     document.getElementById('send-button').disabled = false;
 }
 
-// async function newUpload()
-// {
-//     var sessionNamespace = sessionStorage.getItem('sessionNamespace');
-//     try
-//     {
-//         document.getElementById('upload-button').disabled = true;
-//         const url = `https://strive-api.azurewebsites.net/api/pinecone/purgePinecone`;
-//         const pineconeResponse = await fetch(url,{
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({
-//                 namespace: sessionNamespace
-//             })
-//         });
+async function newUpload()
+{
+    var sessionNamespace = sessionStorage.getItem('sessionNamespace');
+    try
+    {
+        document.getElementById('upload-button').disabled = true;
+        const url = `https://strive-api.azurewebsites.net/api/pinecone/purgePinecone`;
+        const pineconeResponse = await fetch(url,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                namespace: sessionNamespace
+            })
+        });
 
-//         var data = await pineconeResponse.json();
-//         if (pineconeResponse.ok)
-//         {
-//             var documentAnalysisUrl = `${window.location.protocol}//${window.location.host}/Home/FileUpload`;
-//             window.location.href = documentAnalysisUrl;
-//         } else
-//         {
-//             displayError('Failed to process file.');
-//         }
-//     } catch (error)
-//     {
-//         displayError('Failed to process file.');
-//         document.getElementById('upload-button').disabled = false;
-//         return;
-//     }
-// }
+        var data = await pineconeResponse.json();
+        if (pineconeResponse.ok)
+        {
+            var documentAnalysisUrl = `${window.location.protocol}//${window.location.host}/Home/FileUpload`;
+            window.location.href = documentAnalysisUrl;
+        } else
+        {
+            displayError('Failed to process file.');
+        }
+    } catch (error)
+    {
+        displayError('Failed to process file.');
+        document.getElementById('upload-button').disabled = false;
+        return;
+    }
+}
 
 async function sendQuery()
 {
@@ -272,7 +272,7 @@ async function sendQuery()
             body: JSON.stringify({
                 namespace: sessionNamespace,
                 query: query,
-                context: sessionStorage.getItem('conversationMemory')
+                file_name: sessionStorage.getItem('selectedFile')
             })
         });
 
@@ -336,48 +336,48 @@ function hideLoader()
     document.getElementById("page-container").style.display = 'none';
 }
 
-// async function customRiskAssessment()
-// {
-//     const fileName = sessionStorage.getItem('selectedFile');
-//     const namespace = sessionStorage.getItem('sessionNamespace');
-//     const requestBody = {
-//         namespace: namespace,
-//         file_name: fileName
-//     };
-//     showLoader();
-//     await fetch("https://strive-core.azurewebsites.net/xgboostModel",{
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Accept': 'application/json',
-//             'Access-Control-Allow-Origin': '*',
-//             'Access-Control-Allow-Methods': '*',
-//             'Access-Control-Allow-Headers': '*'
-//         },
-//         body: JSON.stringify(requestBody)
-//     })
-//         .then(response =>
-//         {
-//             if (!response.ok)
-//             {
-//                 hideLoader();
-//                 displayError('Failed to process file.');
-//                 throw new Error(`HTTP error! Status: ${response.status}`);
-//             }
+async function customRiskAssessment()
+{
+    const fileName = sessionStorage.getItem('selectedFile');
+    const namespace = sessionStorage.getItem('sessionNamespace');
+    const requestBody = {
+        namespace: namespace,
+        file_name: fileName
+    };
+    showLoader();
+    await fetch("https://strive-core.azurewebsites.net/xgboostModel",{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': '*'
+        },
+        body: JSON.stringify(requestBody)
+    })
+        .then(response =>
+        {
+            if (!response.ok)
+            {
+                hideLoader();
+                displayError('Failed to process file.');
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
 
-//             return response.text();
-//         })
-//         .then(data =>
-//         {
-//             sessionStorage.setItem('custom',data);
-//         })
-//         .catch(error =>
-//         {
-//             hideLoader();
-//             displayError('Failed to process file.');
-//             console.error('Fetch error:',error);
-//         });
-// }
+            return response.text();
+        })
+        .then(data =>
+        {
+            sessionStorage.setItem('custom',data);
+        })
+        .catch(error =>
+        {
+            hideLoader();
+            displayError('Failed to process file.');
+            console.error('Fetch error:',error);
+        });
+}
 
 function conversationMemoryEntry()
 {
@@ -446,52 +446,54 @@ function conversationMemoryEntry()
     return;
 }
 
-// async function systemQuery()
-// {
-//     const requestBody = {
-//         namespace: sessionStorage.getItem("sessionNamespace")
-//     };
-//     showLoader();
-//     await fetch("https://strive-core.azurewebsites.net/systemQueryModel",{
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Accept': 'application/json',
-//             'Access-Control-Allow-Origin': '*',
-//             'Access-Control-Allow-Methods': '*',
-//             'Access-Control-Allow-Headers': '*'
-//         },
-//         body: JSON.stringify(requestBody)
-//     })
-//         .then(response =>
-//         {
-//             if (!response.ok)
-//             {
-//                 hideLoader();
-//                 displayError('Failed to process file.');
-//                 throw new Error(`HTTP error! Status: ${response.status}`);
-//             }
-
-//             return response.text();
-//         })
-//         .then(data =>
-//         {
-//             sessionStorage.setItem('query',data);
-//         })
-//         .catch(error =>
-//         {
-//             hideLoader();
-//             displayError('Failed to process file.');
-//             console.error('Fetch error:',error);
-//         });
-// }
+async function systemQuery()
+{
+    const requestBody = {
+        namespace: sessionStorage.getItem("sessionNamespace")
+    };
+    showLoader();
+    await fetch("https://strive-core.azurewebsites.net/systemQueryModel",{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': '*'
+        },
+        body: JSON.stringify({
+            namespace: sessionNamespace,
+            file_name: sessionStorage.getItem('selectedFile')
+        })
+    })
+        .then(response =>
+        {
+            if (!response.ok)
+            {
+                hideLoader();
+                displayError('Failed to process file.');
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(data =>
+        {
+            sessionStorage.setItem('query',data);
+        })
+        .catch(error =>
+        {
+            hideLoader();
+            displayError('Failed to process file.');
+            console.error('Fetch error:',error);
+        });
+}
 
 async function generateSummary()
 {
     try
     {
         sessionNamespace = sessionStorage.getItem('sessionNamespace');
-        query = "Generate a 3-7 sentence summary on the document. Include what the document is about."
+        query = "Generate a 3 sentence summary on the document. Include what the document is about."
         const response = await fetch('/api/striveml/chatbot',{
             method: 'POST',
             headers: {
@@ -500,7 +502,7 @@ async function generateSummary()
             body: JSON.stringify({
                 namespace: sessionNamespace,
                 query: query,
-                context: sessionStorage.getItem('conversationMemory')
+                file_name: sessionStorage.getItem('selectedFile')
             })
         });
 
@@ -523,6 +525,7 @@ async function generateSummary()
 async function determineRiskScore()
 {
     await systemQuery();
+    await customRiskAssessment();
     var custom = JSON.parse(sessionStorage.getItem('custom')).data;
     var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
     var query = JSON.parse(sessionStorage.getItem('query')).data;
@@ -539,26 +542,13 @@ async function determineRiskScore()
         finalScore: finalScore
     });
     sessionStorage.setItem('riskAssessment',averagedScores);
-
 }
-
 window.onload = async function ()
 {
     showLoader();
     sessionStorage.setItem("conversationMemory",JSON.stringify([]));
     document.getElementById('queryInput').addEventListener('input',checkInput);
     checkInput();
-
-    if (JSON.parse(sessionStorage.getItem('documentContext'))?.documentName != "")
-    {
-
-        document.getElementById('document-name').innerText = JSON.parse(sessionStorage.getItem('documentContext'))?.documentName;
-    } else
-    {
-        document.getElementById('document-name').innerText = sessionStorage.getItem('selectedFile');
-
-    }
-
     // Chart.js and risk meter initialization
     var ctx = document.getElementById('spiderChart').getContext('2d');
     var spiderChart = new Chart(ctx,{
@@ -594,8 +584,8 @@ window.onload = async function ()
         }
     });
     await generateSummary();
-    await customRiskAssessment();
     await determineRiskScore();
+
     hideLoader();
     var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'));
     var finalScore = riskAssessmentData.finalScore;
@@ -612,12 +602,10 @@ window.onload = async function ()
         var riskMeterLabel = document.getElementById('riskMeterLabel');
         var percentage = value * 20; // Percentage of risk meter fill
         riskMeterFill.style.width = percentage + '%';
-
         // Adjust label value based on percentage
         //var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
         riskMeterLabel.innerText = value.toFixed(1);
     }
-
     // Example usage with a random value between 0 and 1
     setInterval(function ()
     {
@@ -625,7 +613,6 @@ window.onload = async function ()
         updateRiskMeter(finalScore);
     },2000); // Update every 2 seconds
 }
-
 function openNav() {
     document.getElementById("sidebar").style.width = "250px";
     document.getElementById("main-content").style.marginLeft = "250px";
@@ -641,3 +628,47 @@ function closeNav() {
     document.querySelector('.chart-col').style.width = "60%"; // Revert to the original width of the risk chart
     document.querySelector('#riskMeter').style.width = "100%"; // Revert to the original width of the risk meter
 }
+
+
+function createCircularRiskMeter(percentage) {
+    var ctx = document.getElementById('circularRiskMeter').getContext('2d');
+    var data = {
+        datasets: [{
+            data: [percentage, 100 - percentage],
+            backgroundColor: ['#003f5c', '#d9d9d9'],
+            borderWidth: 0
+        }]
+    };
+
+    var options = {
+        cutout: '80%',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            tooltip: {
+                enabled: false
+            },
+            legend: {
+                display: false
+            },
+            datalabels: {
+                display: false
+            }
+        },
+        elements: {
+            center: {
+                text: percentage + '%',
+                color: '#003f5c',
+                fontStyle: 'Arial',
+                sidePadding: 20
+            }
+        }
+    };
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: data,
+        options: options
+    });
+}
+createCircularRiskMeter(47); 

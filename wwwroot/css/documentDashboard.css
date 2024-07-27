@@ -21,12 +21,13 @@ html {
     position: absolute;
     background: #f5f5f5;
     top: 0;
-    left: 1vw;
+    left: 0vw;
     right: 3vw;
     bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 32vw;
 }
 
 /* Scores Container */
@@ -65,7 +66,25 @@ html {
 .metric-4 {
     height: 100%;
     width: 25%;
-    border:1px black;
+    /* border-left: 1px solid black; */
+}
+
+.metric-1 {
+    border-left: none;
+    /* Remove border from the first metric */
+}
+
+.metric-1-title-container,
+.metric-2-title-container,
+.metric-3-title-container,
+.metric-4-title-container {
+    height: 15%;
+    width: 100%;
+    padding: 15px;
+    /* border: 1px solid black; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .title-file-container {
@@ -84,6 +103,18 @@ html {
 .view-file-container {
     height: 100%;
     width: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-file-button {
+    width: 100%;
+    height: 100%;
+    background: url('img/viewfile.png') no-repeat center center;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
 }
 
 .meter-summary-container {
@@ -94,6 +125,8 @@ html {
 .meter-container {
     height: 100%;
     width: 30%;
+    display: flex;
+    flex-direction: column;
 }
 
 .label-container {
@@ -103,8 +136,11 @@ html {
 }
 
 .o-meter-container {
-    height: 90%;
+    height: 60%;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .summary-container {
@@ -296,8 +332,8 @@ html {
     /* Ensure there's a 1vw margin on the left side */
     transition: width 0.5s ease;
     /* Smooth transition for resizing */
+    left: 5vw;
 }
-
 /* Risk Meter */
 #riskMeter {
     width: calc(100% - 1vw);
@@ -329,7 +365,6 @@ html {
     font-weight: bold;
     color: #333;
 }
-
 /* Base styles */
 .loader-spinner {
     display: flex;
@@ -484,10 +519,12 @@ html {
     box-sizing: border-box;
 }
 
+/* Error Container */
 .error-background {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1000;
+    /* Ensure the error container is on top */
     padding-top: 100px;
     left: 0;
     top: 0;
