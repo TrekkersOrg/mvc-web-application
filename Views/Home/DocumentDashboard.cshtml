@@ -39,36 +39,48 @@
                         <div class="meter-summary-container d-flex">
                             <div class="meter-container d-flex flex-column">
                                 <div class="label-container">
-                                    <h5>Overall Score</h5>
+                                    <h6>Overall Score</h6>
                                 </div>
                                 <div class="o-meter-container">
-                                    <canvas id="circularRiskMeter" width="100px" height="100"></canvas>
+                                    <canvas id="circularRiskMeter" width="344" height="206" style="display: block; box-sizing: border-box; height: 103px; width: 172px;"></canvas>
                                 </div>
                             </div>
                             <div class="summary-container">
-                                <p id="injected-summary"></p>
+                                <p class="injected-summary-container" id="injected-summary"></p>
                             </div>
                         </div>
                     </div>
                     <div class="metrics-container d-flex">
                         <div class="metric-1 d-flex flex-column">
-                            <div class="metric-1-title-container" style="padding: 15px; border: 1px solid black; display: flex; align-items: center; justify-content: center;">
-                                <h6>Metric 1</h6>
+                            <div class="metric-1-title-container">
+                                <h6>Operational</h6>
+                            </div>
+                            <div class="small-risk-meter">
+                                <div class="small-risk-meter-fill" style="width: 47%;"></div>
                             </div>
                         </div>
                         <div class="metric-2 d-flex flex-column">
-                            <div class="metric-2-title-container" style="padding: 15px; border: 1px solid black; display: flex; align-items: center; justify-content: center;">
-                                <h6>Metric 2</h6>
+                            <div class="metric-2-title-container">
+                                <h6>Financial</h6>
+                            </div>
+                            <div class="small-risk-meter">
+                                <div class="small-risk-meter-fill" style="width: 60%;"></div>
                             </div>
                         </div>
                         <div class="metric-3 d-flex flex-column">
-                            <div class="metric-3-title-container" style="padding: 15px; border: 1px solid black; display: flex; align-items: center; justify-content: center;">
-                                <h6>Metric 3</h6>
+                            <div class="metric-3-title-container">
+                                <h6>Compliance</h6>
+                            </div>
+                            <div class="small-risk-meter">
+                                <div class="small-risk-meter-fill" style="width: 30%;"></div>
                             </div>
                         </div>
                         <div class="metric-4 d-flex flex-column">
-                            <div class="metric-4-title-container" style="padding: 15px; border: 1px solid black; display: flex; align-items: center; justify-content: center;">
-                                <h6>Metric 4</h6>
+                            <div class="metric-4-title-container">
+                                <h6>Reputational</h6>
+                            </div>
+                            <div class="small-risk-meter">
+                                <div class="small-risk-meter-fill" style="width: 80%;"></div>
                             </div>
                         </div>
                     </div>
