@@ -672,3 +672,12 @@ function createCircularRiskMeter(percentage) {
     });
 }
 createCircularRiskMeter(47); 
+
+function toggleIconColor() {
+    var svgIcon = document.querySelector('.view-file-icon');
+    if (svgIcon.classList.contains('active')) {
+        svgIcon.classList.remove('active');
+    } else {
+        svgIcon.classList.add('active');
+    }
+}
