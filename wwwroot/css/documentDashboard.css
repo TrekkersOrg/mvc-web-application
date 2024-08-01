@@ -603,3 +603,52 @@ html {
         transform: rotate(.5turn)
     }
 }
+
+/* Suggested Steps Container */
+.suggested-steps-container {
+    background: #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 30vh;
+    width: 50vw;
+    border: 1px solid black;
+    position: relative;
+    margin-top: 20px;
+    margin-left: -2vw;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.steps-title-row {
+    height: 6vh;
+    width: 100%;
+    background: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.suggested-steps-text,
+.suggested-steps-number,
+.suggested-steps-etc {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.suggested-steps-text h4 {
+    margin: 0;
+}
+
+.steps-body-container {
+    height: 24vh;
+    /* Adjusted to fit the new container height */
+    width: 100%;
+    background: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
