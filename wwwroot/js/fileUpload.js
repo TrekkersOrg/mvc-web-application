@@ -268,8 +268,6 @@ async function routeToDocumentAnalysis()
     var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
     window.location.href = documentAnalysisUrl;
     return Promise.resolve();
-}
-
 async function deleteConversationMemory() {
     try {
         const response = await fetch('https://strive-core.azurewebsites.net/deleteConversationMemory', {
@@ -299,6 +297,7 @@ async function deleteConversationMemory() {
         // Continue execution by returning null or an alternative value
         return null;
     }
+
 }
 
 async function uploadFileFlow()
@@ -308,6 +307,7 @@ async function uploadFileFlow()
     {
         btn.disabled = true;
     }
+    storeDocumentDescription();
     await deleteConversationMemory();
     await routeToDocumentAnalysis();
     localStorage.setItem('showDocumentDashboardWidget','true');

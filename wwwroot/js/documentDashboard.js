@@ -51,7 +51,7 @@ function removeSubsequentBubbles(bubbleId)
 async function generateUserBubble(message)
 {
     checkInput();
-    var window = document.getElementById('chat-window');
+    var window = document.getElementById('response-container');
     var bubble = document.createElement('div');
     bubble.id = Date.now();
     bubble.classList.add('chat-output');
@@ -178,7 +178,7 @@ function generateSystemBubble(message)
     var text = document.createElement('p');
     text.classList.add('bubble-text');
     bubble.appendChild(text);
-    var window = document.getElementById('chat-window');
+    var window = document.getElementById('response-container');
     removeChatbotLoader();
     window.appendChild(bubble);
     var index = 0;
@@ -315,7 +315,7 @@ function addChatbotLoader()
     circle.classList.add('scaling');
     bubble.appendChild(circle);
     parent.appendChild(bubble);
-    var window = document.getElementById('chat-window');
+    var window = document.getElementById('response-container');
     window.appendChild(parent);
     checkInput();
 }
@@ -474,7 +474,6 @@ async function systemQuery()
                 displayError('Failed to process file.');
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             return response.text();
         })
         .then(data =>
@@ -494,7 +493,7 @@ async function generateSummary()
     try
     {
         sessionNamespace = sessionStorage.getItem('sessionNamespace');
-        query = "Generate a 3-7 sentence summary on the document. Include what the document is about."
+        query = "Generate 4 short sentence as a brief summary on the document. Include what the document is about."
         const response = await fetch('/api/striveml/chatbot',{
             method: 'POST',
             headers: {
@@ -510,8 +509,9 @@ async function generateSummary()
         var data = await response.json();
         if (response.ok)
         {
-            var summaryResponse = data["data"]["response"] + " Feel free to ask further questions regarding this document.";
-            generateSystemBubble(summaryResponse);
+            var summaryResponse = data["data"]["response"];
+            document.getElementById('injected-summary').innerText = summaryResponse;
+            
         } else
         {
             displayError("ERROR GENERATING SUMMARY");
@@ -522,6 +522,58 @@ async function generateSummary()
     }
 }
 
+function calculateAverage(scores)
+{
+    const scoreValues = Object.values(scores);
+    const total = scoreValues.reduce((sum,score) => sum + score,0);
+    const average = total / scoreValues.length;
+    const percentage = (average / 5) * 100;
+    return `${percentage.toFixed(2)}%`;
+}
+
+function createCircularRiskMeter(percentage)
+{
+    var ctx = document.getElementById('circularRiskMeter').getContext('2d');
+    var data = {
+        datasets: [{
+            data: [percentage,100 - percentage],
+            backgroundColor: ['#003f5c','#d9d9d9'],
+            borderWidth: 0
+        }]
+    };
+
+    var options = {
+        cutout: '80%',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            tooltip: {
+                enabled: false
+            },
+            legend: {
+                display: false
+            },
+            datalabels: {
+                display: false
+            }
+        },
+        elements: {
+            center: {
+                text: percentage + '%',
+                color: '#003f5c',
+                fontStyle: 'Arial',
+                sidePadding: 20
+            }
+        }
+    };
+
+    new Chart(ctx,{
+        type: 'doughnut',
+        data: data,
+        options: options
+    });
+}
+
 async function determineRiskScore()
 {
     await systemQuery();
@@ -529,11 +581,19 @@ async function determineRiskScore()
     var custom = JSON.parse(sessionStorage.getItem('custom')).data;
     var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
     var query = JSON.parse(sessionStorage.getItem('query')).data;
+    console.log(calculateAverage(query));
+    console.log(calculateAverage(keywords));
+    console.log(calculateAverage(custom));
+    document.getElementById('system-query').style.width = calculateAverage(query);
+    document.getElementById('keywords').style.width = calculateAverage(keywords);
+    document.getElementById('custom').style.width = calculateAverage(custom);
     var financialScoreAvg = Math.round((custom.financialScore + keywords.financialScore + query.financialScore) / 3);
     var operationalScoreAvg = Math.round((custom.operationalScore + keywords.operationalScore + query.operationalScore) / 3);
     var regulatoryScoreAvg = Math.round((custom.regulatoryScore + keywords.regulatoryScore + query.regulatoryScore) / 3);
     var reputationalScoreAvg = Math.round((custom.reputationalScore + keywords.reputationalScore + query.reputationalScore) / 3);
     var finalScore = Math.round((financialScoreAvg + regulatoryScoreAvg) / 2);
+    console.log(finalScore / 5);
+    createCircularRiskMeter((finalScore / 5) * 100);
     var averagedScores = JSON.stringify({
         financialScore: financialScoreAvg,
         operationalScore: operationalScoreAvg,
@@ -542,9 +602,7 @@ async function determineRiskScore()
         finalScore: finalScore
     });
     sessionStorage.setItem('riskAssessment',averagedScores);
-
 }
-
 function downloadExcel() {
     // Replace this with extrapolated Risk Assessment scores from MongoDB
     const riskAssessmentScores = {
@@ -607,7 +665,6 @@ window.onload = async function ()
     sessionStorage.setItem("conversationMemory",JSON.stringify([]));
     document.getElementById('queryInput').addEventListener('input',checkInput);
     checkInput();
-
     // Chart.js and risk meter initialization
     var ctx = document.getElementById('spiderChart').getContext('2d');
     var spiderChart = new Chart(ctx,{
@@ -644,6 +701,7 @@ window.onload = async function ()
     });
     await generateSummary();
     await determineRiskScore();
+
     hideLoader();
     var riskAssessmentData = JSON.parse(sessionStorage.getItem('riskAssessment'));
     var finalScore = riskAssessmentData.finalScore;
@@ -660,16 +718,38 @@ window.onload = async function ()
         var riskMeterLabel = document.getElementById('riskMeterLabel');
         var percentage = value * 20; // Percentage of risk meter fill
         riskMeterFill.style.width = percentage + '%';
-
         // Adjust label value based on percentage
         //var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
         riskMeterLabel.innerText = value.toFixed(1);
     }
-
     // Example usage with a random value between 0 and 1
     setInterval(function ()
     {
         //var randomValue = Math.random(); // Random value between 0 and 1
         updateRiskMeter(finalScore);
     },2000); // Update every 2 seconds
+}
+function openNav() {
+    document.getElementById("sidebar").style.width = "250px";
+    document.getElementById("main-content").style.marginLeft = "250px";
+    document.querySelector('.chat-container').style.width = "30vw"; // Adjust the width of the chatbot
+    document.querySelector('.chart-col').style.width = "50%"; // Adjust the width of the risk chart
+    document.querySelector('#riskMeter').style.width = "90%"; // Adjust the width of the risk meter
+}
+
+function closeNav() {
+    document.getElementById("sidebar").style.width = "0";
+    document.getElementById("main-content").style.marginLeft = "0";
+    document.querySelector('.chat-container').style.width = "40vw"; // Revert to the original width of the chatbot
+    document.querySelector('.chart-col').style.width = "60%"; // Revert to the original width of the risk chart
+    document.querySelector('#riskMeter').style.width = "100%"; // Revert to the original width of the risk meter
+}
+
+function toggleIconColor() {
+    var svgIcon = document.querySelector('.view-file-icon');
+    if (svgIcon.classList.contains('active')) {
+        svgIcon.classList.remove('active');
+    } else {
+        svgIcon.classList.add('active');
+    }
 }
