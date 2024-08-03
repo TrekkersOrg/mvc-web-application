@@ -76,7 +76,7 @@ async function customKeyword()
         file_name: fileName
     };
     showLoader();
-    await fetch("https://strive-ml-api.azurewebsites.net/keywordsModel",{
+    await fetch("https://strive-core.azurewebsites.net/keywordsModel",{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -169,14 +169,14 @@ async function uploadDocumentToApplication()
 
         try
         {
+            showLoader();
             await sendFileToMongoDB(selectedFile);
             const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
             uploadedFiles.push(selectedFile.name);
             sessionStorage.setItem('uploadedFiles',JSON.stringify(uploadedFiles));
             sessionStorage.setItem('selectedFile',selectedFile.name);
-            populateUploadedFilesList(); // Call new function to populate list
             await customKeyword();
-            statusCell.textContent = 'Uploaded';
+            await populateUploadedFilesList();
             validateFiles();
             hideLoader();
         } catch (error)
@@ -263,94 +263,52 @@ async function sendFileToMongoDB(selectedFile)
     const data = await response.json();
 }
 
-async function uploadDocumentToPinecone()
-{
-    storeDocumentDescription();
-    const requestBody = {
-        namespace: sessionStorage.getItem("sessionNamespace"),
-        fileName: sessionStorage.getItem("selectedFile")
-    };
-    await fetch("https://strive-ml-api.azurewebsites.net/embedder",{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Headers': '*'
-        },
-        body: JSON.stringify(requestBody)
-    })
-        .then(response =>
-        {
-            console.log(response);
-            if (!response.ok)
-            {
-                hideLoader();
-                alert("System is under maintenance. Please try again later.");
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return Promise.resolve();
-        })
-        .catch(error =>
-        {
-            hideLoader();
-            alert("System is under maintenance. Please try again later.");
-            console.error('Fetch error:',error);
-        });
-}
-
-async function purgePinecone()
-{
-    var sessionNamespace = sessionStorage.getItem('sessionNamespace');
-    try
-    {
-        document.getElementById('upload-button').disabled = true;
-        const url = `https://strive-api.azurewebsites.net/api/pinecone/purgePinecone`;
-        const pineconeResponse = await fetch(url,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                namespace: sessionNamespace
-            })
-        });
-        var data = await pineconeResponse.json();
-        return Promise.resolve();
-    } catch (error)
-    {
-        displayError('Failed to process file.');
-        document.getElementById('upload-button').disabled = false;
-        return Promise.reject(error);
-    }
-}
-
-async function processPinecone()
-{
-    await purgePinecone();  // Wait for this function to complete
-    await uploadDocumentToPinecone();  // Then wait for this function to complete
-}
-
 async function routeToDocumentAnalysis()
 {
     var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
     window.location.href = documentAnalysisUrl;
     return Promise.resolve();
+async function deleteConversationMemory() {
+    try {
+        const response = await fetch('https://strive-core.azurewebsites.net/deleteConversationMemory', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                namespace: sessionStorage.getItem('sessionNamespace')
+            })
+        });
+
+        // Check if the response is OK
+        if (!response.ok) {
+            if (response.status === 500) {
+                // Handle 500 error by logging or performing an alternative action
+                console.error('Error 500: Internal Server Error. Continuing execution.');
+                return; // Or you can return some default value or null
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Parse and return JSON if no error occurred
+        return response.json();
+    } catch (error) {
+        console.error('An error occurred:', error);
+        // Continue execution by returning null or an alternative value
+        return null;
+    }
+
 }
 
 async function uploadFileFlow()
 {
-    showLoader();
     var fileUploadButtons = document.getElementsByClassName('file-upload-button');
     for (let btn of fileUploadButtons)
     {
         btn.disabled = true;
     }
-    await processPinecone()
-        .then(() => console.log("All operations completed"))
-        .catch((error) => console.error("An error occurred:",error));
-    hideLoader();
+    storeDocumentDescription();
+    await deleteConversationMemory();
     await routeToDocumentAnalysis();
     localStorage.setItem('showDocumentDashboardWidget','true');
 }
