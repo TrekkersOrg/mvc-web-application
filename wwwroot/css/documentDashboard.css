@@ -606,7 +606,7 @@ html {
 
 /* Suggested Steps Container */
 .suggested-steps-container {
-    background: #ddd;
+    background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: 30vh;
@@ -622,8 +622,9 @@ html {
 
 .steps-title-row {
     height: 6vh;
+    border-radius: 8px;
     width: 100%;
-    background: #ccc;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -650,5 +651,26 @@ html {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    /* Changed to start to allow scrolling */
+    overflow-y: auto;
+    /* Allow vertical scrolling */
+    padding: 10px;
+    /* Optional padding */
+}
+
+.step-container {
+    height: 10vh;
+    width: 95%;
+    /* 95% of the suggested-steps-container */
+    border: 1px solid black;
+    margin-bottom: 10px;
+    /* Space between rows */
+    display: flex;
+    align-items: center;
     justify-content: center;
+    background: #f9f9f9;
+    /* Background color for the step container */
+    border-radius: 4px;
+    /* Rounded corners for the step container */
 }
