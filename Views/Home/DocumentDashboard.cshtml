@@ -33,7 +33,7 @@
                             <!-- Number content will go here -->
                         </div>
                         <div class="suggested-steps-etc">
-                            <!-- Etc content will go here -->
+                            <button class="export-button" onclick="downloadExcel()">Export</button>
                         </div>
                     </div>
                     <div class="steps-body-container">
@@ -97,34 +97,26 @@
                     <div class="metrics-container d-flex">
                         <div class="metric-1 d-flex flex-column">
                             <div class="metric-1-title-container">
-                                <h6>Operational</h6>
+                                <h6>Model 1</h6>
                             </div>
                             <div class="small-risk-meter">
-                                <div class="small-risk-meter-fill" style="width: 47%;"></div>
+                                <div id="system-query" class="small-risk-meter-fill"></div>
                             </div>
                         </div>
                         <div class="metric-2 d-flex flex-column">
                             <div class="metric-2-title-container">
-                                <h6>Financial</h6>
+                                <h6>Model 2</h6>
                             </div>
                             <div class="small-risk-meter">
-                                <div class="small-risk-meter-fill" style="width: 60%;"></div>
+                                <div id="keywords" class="small-risk-meter-fill"></div>
                             </div>
                         </div>
                         <div class="metric-3 d-flex flex-column">
                             <div class="metric-3-title-container">
-                                <h6>Compliance</h6>
+                                <h6>Model 3</h6>
                             </div>
                             <div class="small-risk-meter">
-                                <div class="small-risk-meter-fill" style="width: 30%;"></div>
-                            </div>
-                        </div>
-                        <div class="metric-4 d-flex flex-column">
-                            <div class="metric-4-title-container">
-                                <h6>Reputational</h6>
-                            </div>
-                            <div class="small-risk-meter">
-                                <div class="small-risk-meter-fill" style="width: 80%;"></div>
+                                <div id="custom" class="small-risk-meter-fill"></div>
                             </div>
                         </div>
                     </div>

@@ -698,6 +698,22 @@ html {
         background-color: #2e3d4f;
     }
 
+.export-button {
+    border: none;
+    border-radius: 20px; /* Rounded button */
+    background-color: #3a516a;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+    padding: 9px;
+    margin-left: 11vw;
+}
+
+    .export-button:hover {
+        background-color: #2e3d4f;
+    }
+
 .modification, .vulnerability {
     padding: 15px;
     margin: 0;

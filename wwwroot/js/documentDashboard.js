@@ -522,6 +522,58 @@ async function generateSummary()
     }
 }
 
+function calculateAverage(scores)
+{
+    const scoreValues = Object.values(scores);
+    const total = scoreValues.reduce((sum,score) => sum + score,0);
+    const average = total / scoreValues.length;
+    const percentage = (average / 5) * 100;
+    return `${percentage.toFixed(2)}%`;
+}
+
+function createCircularRiskMeter(percentage)
+{
+    var ctx = document.getElementById('circularRiskMeter').getContext('2d');
+    var data = {
+        datasets: [{
+            data: [percentage,100 - percentage],
+            backgroundColor: ['#003f5c','#d9d9d9'],
+            borderWidth: 0
+        }]
+    };
+
+    var options = {
+        cutout: '80%',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            tooltip: {
+                enabled: false
+            },
+            legend: {
+                display: false
+            },
+            datalabels: {
+                display: false
+            }
+        },
+        elements: {
+            center: {
+                text: percentage + '%',
+                color: '#003f5c',
+                fontStyle: 'Arial',
+                sidePadding: 20
+            }
+        }
+    };
+
+    new Chart(ctx,{
+        type: 'doughnut',
+        data: data,
+        options: options
+    });
+}
+
 async function determineRiskScore()
 {
     await systemQuery();
@@ -529,11 +581,19 @@ async function determineRiskScore()
     var custom = JSON.parse(sessionStorage.getItem('custom')).data;
     var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
     var query = JSON.parse(sessionStorage.getItem('query')).data;
+    console.log(calculateAverage(query));
+    console.log(calculateAverage(keywords));
+    console.log(calculateAverage(custom));
+    document.getElementById('system-query').style.width = calculateAverage(query);
+    document.getElementById('keywords').style.width = calculateAverage(keywords);
+    document.getElementById('custom').style.width = calculateAverage(custom);
     var financialScoreAvg = Math.round((custom.financialScore + keywords.financialScore + query.financialScore) / 3);
     var operationalScoreAvg = Math.round((custom.operationalScore + keywords.operationalScore + query.operationalScore) / 3);
     var regulatoryScoreAvg = Math.round((custom.regulatoryScore + keywords.regulatoryScore + query.regulatoryScore) / 3);
     var reputationalScoreAvg = Math.round((custom.reputationalScore + keywords.reputationalScore + query.reputationalScore) / 3);
     var finalScore = Math.round((financialScoreAvg + regulatoryScoreAvg) / 2);
+    console.log(finalScore / 5);
+    createCircularRiskMeter((finalScore / 5) * 100);
     var averagedScores = JSON.stringify({
         financialScore: financialScoreAvg,
         operationalScore: operationalScoreAvg,
@@ -628,50 +688,6 @@ function closeNav() {
     document.querySelector('.chart-col').style.width = "60%"; // Revert to the original width of the risk chart
     document.querySelector('#riskMeter').style.width = "100%"; // Revert to the original width of the risk meter
 }
-
-
-function createCircularRiskMeter(percentage) {
-    var ctx = document.getElementById('circularRiskMeter').getContext('2d');
-    var data = {
-        datasets: [{
-            data: [percentage, 100 - percentage],
-            backgroundColor: ['#003f5c', '#d9d9d9'],
-            borderWidth: 0
-        }]
-    };
-
-    var options = {
-        cutout: '80%',
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            tooltip: {
-                enabled: false
-            },
-            legend: {
-                display: false
-            },
-            datalabels: {
-                display: false
-            }
-        },
-        elements: {
-            center: {
-                text: percentage + '%',
-                color: '#003f5c',
-                fontStyle: 'Arial',
-                sidePadding: 20
-            }
-        }
-    };
-
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: data,
-        options: options
-    });
-}
-createCircularRiskMeter(47); 
 
 function toggleIconColor() {
     var svgIcon = document.querySelector('.view-file-icon');

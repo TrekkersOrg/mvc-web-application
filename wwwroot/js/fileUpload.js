@@ -277,6 +277,7 @@ async function uploadFileFlow()
     {
         btn.disabled = true;
     }
+    storeDocumentDescription();
     await routeToDocumentAnalysis();
     localStorage.setItem('showDocumentDashboardWidget','true');
 }
