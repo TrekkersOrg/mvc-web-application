@@ -609,12 +609,11 @@ html {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: 30vh;
-    width: 50vw;
+    width: 50vw; /* Retaining original width */
     border: 1px solid black;
-    position: relative;
+    position: relative; /* If you need it to be fixed, use position: fixed */
     margin-top: 20px;
-    margin-left: -2vw;
+    margin-left: -3vw;
     z-index: 1;
     display: flex;
     flex-direction: column;
@@ -622,9 +621,8 @@ html {
 
 .steps-title-row {
     height: 6vh;
-    border-radius: 8px;
     width: 100%;
-    background: #fff;
+    background: #ccc;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -639,38 +637,72 @@ html {
     justify-content: center;
 }
 
-.suggested-steps-text h4 {
-    margin: 0;
-}
+    .suggested-steps-text h4 {
+        margin: 0;
+    }
 
 .steps-body-container {
-    height: 24vh;
-    /* Adjusted to fit the new container height */
     width: 100%;
     background: #eee;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    /* Changed to start to allow scrolling */
-    overflow-y: auto;
-    /* Allow vertical scrolling */
-    padding: 10px;
-    /* Optional padding */
+    justify-content: flex-start; /* Changed to start to allow scrolling */
+    padding: 10px; /* Optional padding */
 }
 
 .step-container {
-    height: 10vh;
-    width: 95%;
-    /* 95% of the suggested-steps-container */
+    height: 25vh;
+    width: 90%; /* 95% of the suggested-steps-container */
     border: 1px solid black;
-    margin-bottom: 10px;
-    /* Space between rows */
+    margin-bottom: 10px; /* Space between rows */
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #f9f9f9;
-    /* Background color for the step container */
-    border-radius: 4px;
-    /* Rounded corners for the step container */
+    background: #f9f9f9; /* Background color for the step container */
+    border-radius: 4px; /* Rounded corners for the step container */
+    overflow: hidden;
+}
+
+.risk-container, .simulate-change-container {
+    height: 50%; /* Each container takes up 50% of the step-container */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+}
+
+.simulate-change-container {
+    background: #f1f1f1; /* Optional different background color */
+    display: flex;
+    justify-content: center;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+}
+
+.simulate-change-button {
+    border: none;
+    border-radius: 20px; /* Rounded button */
+    background-color: #3a516a;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+    margin-left: 35vw !important;
+    padding: 9px;
+}
+
+    .simulate-change-button:hover {
+        background-color: #2e3d4f;
+    }
+
+.modification, .vulnerability {
+    padding: 15px;
+    margin: 0;
+}
+
+.modification {
+    margin-top: -6.5vh !important;
 }
