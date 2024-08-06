@@ -19,7 +19,7 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: 'v6.0'
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
@@ -53,4 +53,4 @@ jobs:
           app-name: 'striveai-staging'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4D99968769584DEC96B3396378D060EF }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AC1CD0FB3A0B48878AD9F331D0063A50 }}
