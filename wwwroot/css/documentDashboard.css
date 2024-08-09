@@ -28,6 +28,7 @@ html {
     align-items: center;
     justify-content: center;
     width: 32vw;
+    height: 50vh;
 }
 
 /* Scores Container */
@@ -609,12 +610,11 @@ html {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 50vw; /* Retaining original width */
+    height: 50vh;
+    /* Fixed height */
+    width: 100%;
     border: 1px solid black;
-    position: relative; /* If you need it to be fixed, use position: fixed */
-    margin-top: 20px;
-    margin-left: -3vw;
-    z-index: 1;
+    position: relative;
     display: flex;
     flex-direction: column;
 }
@@ -626,6 +626,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 8px;
 }
 
 .suggested-steps-text,
@@ -636,35 +637,70 @@ html {
     align-items: center;
     justify-content: center;
 }
-
-    .suggested-steps-text h4 {
-        margin: 0;
-    }
-
 .steps-body-container {
-    width: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
     background: #eee;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start; /* Changed to start to allow scrolling */
-    padding: 10px; /* Optional padding */
+    border-radius: 8px;
+    height: 44vh;
 }
 
 .step-container {
-    height: 25vh;
-    width: 90%; /* 95% of the suggested-steps-container */
+    height: 150px;
+    /* Adjust height as needed */
+    width: 100%;
     border: 1px solid black;
-    margin-bottom: 10px; /* Space between rows */
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: #f9f9f9; /* Background color for the step container */
-    border-radius: 4px; /* Rounded corners for the step container */
+    background: #f9f9f9;
+    border-radius: 4px;
     overflow: hidden;
 }
 
+.risk-container {
+    flex: 2;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.simulate-change-container {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f1f1f1;
+}
+
+.simulate-button-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+}
+
+.simulate-change-button {
+    border: none;
+    border-radius: 20px;
+    background-color: #3a516a;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+    padding: 9px 15px;
+}
+
+.simulate-change-button:hover {
+    background-color: #2e3d4f;
+}
 .risk-container, .simulate-change-container {
     height: 50%; /* Each container takes up 50% of the step-container */
     width: 100%;
@@ -721,4 +757,13 @@ html {
 
 .modification {
     margin-top: -6.5vh !important;
+}
+
+.spiderChart {
+    margin-left: 100px;
+}
+
+#spiderChart {
+    height: 350px !important;
+    width: 350px !important;
 }
