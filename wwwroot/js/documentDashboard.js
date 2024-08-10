@@ -575,9 +575,6 @@ async function determineRiskScore()
     var custom = JSON.parse(sessionStorage.getItem('custom')).data;
     var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
     var query = JSON.parse(sessionStorage.getItem('query')).data;
-    console.log(calculateAverage(query));
-    console.log(calculateAverage(keywords));
-    console.log(calculateAverage(custom));
     document.getElementById('system-query').style.width = calculateAverage(query);
     document.getElementById('keywords').style.width = calculateAverage(keywords);
     document.getElementById('custom').style.width = calculateAverage(custom);
@@ -585,8 +582,7 @@ async function determineRiskScore()
     var operationalScoreAvg = Math.round((custom.operationalScore + keywords.operationalScore + query.operationalScore) / 3);
     var regulatoryScoreAvg = Math.round((custom.regulatoryScore + keywords.regulatoryScore + query.regulatoryScore) / 3);
     var reputationalScoreAvg = Math.round((custom.reputationalScore + keywords.reputationalScore + query.reputationalScore) / 3);
-    var finalScore = Math.round((financialScoreAvg + regulatoryScoreAvg) / 2);
-    console.log(finalScore / 5);
+    var finalScore = Math.round((operationalScoreAvg + regulatoryScoreAvg) / 2);
     createCircularRiskMeter((finalScore / 5) * 100);
     var averagedScores = JSON.stringify({
         financialScore: financialScoreAvg,
