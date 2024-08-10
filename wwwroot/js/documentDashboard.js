@@ -592,39 +592,90 @@ async function determineRiskScore()
         finalScore: finalScore
     });
     sessionStorage.setItem('riskAssessment',averagedScores);
+    const riskAssessmentBody = {
+        "namespace": sessionStorage.getItem('sessionNamespace'),
+        "file_name": sessionStorage.getItem('selectedFile'),
+        "riskAssessmentScore": finalScore,
+        "financialScore": financialScoreAvg,
+        "financialSystemQueryScore": query.financialScore,
+        "financialKeywordsScore": keywords.financialScore,
+        "financialXgbScore": custom.financialScore,
+        "reputationalScore": reputationalScoreAvg,
+        "reputationalSystemQueryScore": query.reputationalScore,
+        "reputationalKeywordsScore": keywords.reputationalScore,
+        "reputationalXgbScore": custom.reputationalScore,
+        "regulatoryScore": regulatoryScoreAvg,
+        "regulatorySystemQueryScore": query.regulatoryScore,
+        "regulatoryKeywordsScore": keywords.regulatoryScore,
+        "regulatoryXgbScore": custom.regulatoryScore,
+        "operationalScore": operationalScoreAvg,
+        "operationalSystemQueryScore": query.operationalScore,
+        "operationalKeywordsScore": keywords.operationalScore,
+        "operationalXgbScore": custom.operationalScore
+    };
+    try
+    {
+        const response = await fetch(`https://strive-api.azurewebsites.net/api/mongodb/addRiskAssessment`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(riskAssessmentBody)
+        });
+    } catch (error)
+    {
+        displayError('error');
+        return;
+    }
 }
-function downloadExcel() {
-    // Replace this with extrapolated Risk Assessment scores from MongoDB
+async function downloadExcel() {
+    try
+    {
+        var namespace = sessionStorage.getItem('sessionNamespace');
+        var fileName = sessionStorage.getItem('selectedFile');
+        var version = 0;
+        const url = `https://strive-api.azurewebsites.net/api/mongodb/getdocument?collectionName=${namespace}&fileName=${fileName}&version=${version}`;
+        const response = await fetch(url,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        var documentData = await response.json();
+    } catch (error)
+    {
+        displayError('error');
+        return;
+    }
     const riskAssessmentScores = {
         risk_assessment: {
-            score: 3,
+            score: documentData.data.riskAssessmentScore,
             financial: {
-                score: 3,
-                system_query: 2,
-                keywords: 1,
-                xgb: 1
+                score: documentData.data.financialScore,
+                system_query: documentData.data.financialSystemQueryScore,
+                keywords: documentData.data.financialKeywordsScore,
+                xgb: documentData.data.financialXgbScore
             },
             reputational: {
-                score: 2,
-                system_query: 1,
-                keywords: 4,
-                xgb: 1
+                score: documentData.data.reputationalScore,
+                system_query: documentData.data.reputationalSystemQueryScore,
+                keywords: documentData.data.reputationalKeywordsScore,
+                xgb: documentData.data.reputationalXgbScore
             },
             regulatory: {
-                score: 1,
-                system_query: 3,
-                keywords: 4,
-                xgb: 1
+                score: documentData.data.regulatoryScore,
+                system_query: documentData.data.regulatorySystemQueryScore,
+                keywords: documentData.data.regulatoryKeywordsScore,
+                xgb: documentData.data.regulatoryXgbScore
             },
             operational: {
-                score: 1,
-                system_query: 3,
-                keywords: 4,
-                xgb: 1
+                score: documentData.data.operationalScore,
+                system_query: documentData.data.operationalSystemQueryScore,
+                keywords: documentData.data.operationalKeywordsScore,
+                xgb: documentData.data.operationalXgbScore
             }
         }
     }; 
-
     const data = [
         ["Document Name", sessionStorage.getItem("selectedFile"), "", "", ""],
         ["Date", new Date().toLocaleString(), "", "", ""],
