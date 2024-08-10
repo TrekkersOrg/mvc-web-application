@@ -661,9 +661,28 @@ async function viewDocument()
         displayError('error');
         return;
     }
+}
 
-function downloadExcel() {
-    // Replace this with extrapolated Risk Assessment scores from MongoDB
+async function downloadExcel()
+{
+    try
+    {
+        var namespace = sessionStorage.getItem('sessionNamespace');
+        var fileName = sessionStorage.getItem('selectedFile');
+        var version = 0;
+        const url = `https://strive-api.azurewebsites.net/api/mongodb/getdocument?collectionName=${namespace}&fileName=${fileName}&version=${version}`;
+        const response = await fetch(url,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        var documentData = await response.json();
+    } catch (error)
+    {
+        displayError('error');
+        return;
+    }
     const riskAssessmentScores = {
         risk_assessment: {
             score: documentData.data.riskAssessmentScore,
@@ -692,23 +711,23 @@ function downloadExcel() {
                 xgb: documentData.data.operationalXgbScore
             }
         }
-    }; 
+    };
     const data = [
-        ["Document Name", sessionStorage.getItem("selectedFile"), "", "", ""],
-        ["Date", new Date().toLocaleString(), "", "", ""],
-        ["Risk Assessment Score", riskAssessmentScores.risk_assessment.score, "", "", ""],
-        ["", "", "", "", ""],
-        ["", "Model 1", "Model 2", "Model 3", "Weighted Score"],
-        ["Operational", riskAssessmentScores.risk_assessment.operational.system_query, riskAssessmentScores.risk_assessment.operational.keywords, riskAssessmentScores.risk_assessment.operational.xgb, riskAssessmentScores.risk_assessment.operational.score],
-        ["Compliance", riskAssessmentScores.risk_assessment.regulatory.system_query, riskAssessmentScores.risk_assessment.regulatory.keywords, riskAssessmentScores.risk_assessment.regulatory.xgb, riskAssessmentScores.risk_assessment.regulatory.score],
-        ["Reputational", riskAssessmentScores.risk_assessment.reputational.system_query, riskAssessmentScores.risk_assessment.reputational.keywords, riskAssessmentScores.risk_assessment.reputational.xgb, riskAssessmentScores.risk_assessment.reputational.score],
-        ["Financial", riskAssessmentScores.risk_assessment.financial.system_query, riskAssessmentScores.risk_assessment.financial.keywords, riskAssessmentScores.risk_assessment.financial.xgb, riskAssessmentScores.risk_assessment.financial.score]
+        ["Document Name",sessionStorage.getItem("selectedFile"),"","",""],
+        ["Date",new Date().toLocaleString(),"","",""],
+        ["Risk Assessment Score",riskAssessmentScores.risk_assessment.score,"","",""],
+        ["","","","",""],
+        ["","Model 1","Model 2","Model 3","Weighted Score"],
+        ["Operational",riskAssessmentScores.risk_assessment.operational.system_query,riskAssessmentScores.risk_assessment.operational.keywords,riskAssessmentScores.risk_assessment.operational.xgb,riskAssessmentScores.risk_assessment.operational.score],
+        ["Compliance",riskAssessmentScores.risk_assessment.regulatory.system_query,riskAssessmentScores.risk_assessment.regulatory.keywords,riskAssessmentScores.risk_assessment.regulatory.xgb,riskAssessmentScores.risk_assessment.regulatory.score],
+        ["Reputational",riskAssessmentScores.risk_assessment.reputational.system_query,riskAssessmentScores.risk_assessment.reputational.keywords,riskAssessmentScores.risk_assessment.reputational.xgb,riskAssessmentScores.risk_assessment.reputational.score],
+        ["Financial",riskAssessmentScores.risk_assessment.financial.system_query,riskAssessmentScores.risk_assessment.financial.keywords,riskAssessmentScores.risk_assessment.financial.xgb,riskAssessmentScores.risk_assessment.financial.score]
     ];
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Risk Assessment');
-    const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([wbout], { type: 'application/octet-stream' });
+    XLSX.utils.book_append_sheet(workbook,worksheet,'Risk Assessment');
+    const wbout = XLSX.write(workbook,{ bookType: 'xlsx',type: 'array' });
+    const blob = new Blob([wbout],{ type: 'application/octet-stream' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = 'RiskAssessment- ' + new Date().toISOString() + '.xlsx';
