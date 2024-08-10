@@ -628,13 +628,15 @@ async function determineRiskScore()
         return;
     }
 }
-async function downloadExcel() {
+
+async function viewDocument()
+{
     try
     {
         var namespace = sessionStorage.getItem('sessionNamespace');
         var fileName = sessionStorage.getItem('selectedFile');
         var version = 0;
-        const url = `https://strive-api.azurewebsites.net/api/mongodb/getdocument?collectionName=${namespace}&fileName=${fileName}&version=${version}`;
+        const url = `https://strive-api.azurewebsites.net/api/mongodb/getdocumentcontent?collectionName=${namespace}&fileName=${fileName}&version=${version}`;
         const response = await fetch(url,{
             method: 'GET',
             headers: {
@@ -642,11 +644,26 @@ async function downloadExcel() {
             }
         });
         var documentData = await response.json();
+        var content = documentData.data.content;
+        const openDocument = window.open();
+        openDocument.document.write(`
+            <html>
+                <body>
+                    <h2>Document Name: ${fileName}</h2>
+                    <h2>Version: ${version}</h2>
+                    <p>${content}</p>
+                </body>
+            </html>
+        `);
+        openDocument.document.close();
     } catch (error)
     {
         displayError('error');
         return;
     }
+
+function downloadExcel() {
+    // Replace this with extrapolated Risk Assessment scores from MongoDB
     const riskAssessmentScores = {
         risk_assessment: {
             score: documentData.data.riskAssessmentScore,
