@@ -242,14 +242,7 @@ async function sendQuery()
     {
         context = JSON.parse(sessionStorage.getItem('documentContext'))?.documentDescription;
     }
-    if (!sessionStorage.getItem('sessionNamespace'))
-    {
-        sessionNamespace = 'TestSuite';
-    }
-    else
-    {
-        sessionNamespace = sessionStorage.getItem('sessionNamespace');
-    }
+    sessionNamespace = sessionStorage.getItem('sessionNamespace');
     generatingResponse = true;
     checkInput();
     var query = document.getElementById('queryInput').value;
@@ -665,6 +658,17 @@ window.onload = async function ()
     showLoader();
     sessionStorage.setItem("conversationMemory",JSON.stringify([]));
     document.getElementById('queryInput').addEventListener('input',checkInput);
+    var documentData = JSON.parse(sessionStorage.getItem('documentContext'));
+    var documentName = '';
+    if (documentData['documentName'])
+    {
+        documentName = documentData['documentName'];
+    }
+    else
+    {
+        documentName = sessionStorage.getItem('selectedFile');
+    }
+    document.getElementById('document-title').innerText = documentName;
     checkInput();
     // Chart.js and risk meter initialization
     var ctx = document.getElementById('spiderChart').getContext('2d');
