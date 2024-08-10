@@ -23,11 +23,11 @@
                     </div>
                 </div>
                 <h4>Risk Analysis</h4>
-                <canvas id="spiderChart"></canvas>
+                <canvas class="spiderChart" id="spiderChart" width="350 !important" height="350 !important"></canvas>
                 <div class="suggested-steps-container">
                     <div class="steps-title-row">
                         <div class="suggested-steps-text">
-                            <h4>Suggested Steps</h4>
+                            <h4>Simulations</h4>
                         </div>
                         <div class="suggested-steps-number">
                             <!-- Number content will go here -->
@@ -39,25 +39,39 @@
                     <div class="steps-body-container">
                         <div class="step-container">
                             <div class="risk-container">
-                                <!-- Risk content will go here -->
-                                <p class="vulnerability">Information is available prior to the approval process.</p>
+                                <p class="vulnerability">Risk: Information is available prior to approval process.</p>
                             </div>
                             <div class="simulate-change-container">
-                                <p class="modification">Implement role-based access controls (RBAC).</p>
-                                <button class="simulate-change-button">Simulate Change</button>
+                                <p class="modification">Modification: Implement role-based access controls (RBAC).</p>
+                                <div class="simulate-button-container">
+                                    <button class="simulate-change-button">Try Sim</button>
+                                </div>
                             </div>
                         </div>
                         <div class="step-container">
                             <div class="risk-container">
-                                <!-- Risk content will go here -->
-                                <p class="vulnerability">Inclement weather is causing issues for data storage.</p>
+                                <p class="vulnerability">Risk: Inclement weather is causing issues for data storage.</p>
                             </div>
                             <div class="simulate-change-container">
-                                <p class="modification">Implement improved backup and recovery in a seperate location.</p>
-                                <button class="simulate-change-button">Simulate Change</button>
+                                <p class="modification">Modification: Implement improved backup and recovery in a
+                                    separate location.</p>
+                                <div class="simulate-button-container">
+                                    <button class="simulate-change-button">Try Sim</button>
+                                </div>
                             </div>
                         </div>
-                        <!-- Add more step-container divs as needed -->
+                        <div class="step-container">
+                            <div class="risk-container">
+                                <p class="vulnerability">Risk: Unauthorized access to sensitive data detected.</p>
+                            </div>
+                            <div class="simulate-change-container">
+                                <p class="modification">Modification: Strengthen encryption and access control policies.
+                                </p>
+                                <div class="simulate-button-container">
+                                    <button class="simulate-change-button">Try Sim</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
