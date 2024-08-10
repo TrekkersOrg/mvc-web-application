@@ -554,8 +554,8 @@ function createCircularRiskMeter(percentage)
                 display: false
             },
             datalabels: {
-                display: false
-            }
+                display: true
+            },
         },
         elements: {
             center: {
@@ -573,6 +573,7 @@ function createCircularRiskMeter(percentage)
         options: options
     });
 }
+
 
 async function determineRiskScore()
 {
@@ -712,22 +713,22 @@ window.onload = async function ()
     spiderChart.data.datasets[0].data = [operationalScore,financialScore,reputationalScore,regulatoryScore];
     spiderChart.update();
     // Risk Meter
-    function updateRiskMeter(value)
-    {
-        var riskMeterFill = document.getElementById('riskMeterFill');
-        var riskMeterLabel = document.getElementById('riskMeterLabel');
-        var percentage = value * 20; // Percentage of risk meter fill
-        riskMeterFill.style.width = percentage + '%';
-        // Adjust label value based on percentage
-        //var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
-        riskMeterLabel.innerText = value.toFixed(1);
-    }
+    // function updateRiskMeter(value)
+    // {
+    //     var riskMeterFill = document.getElementById('riskMeterFill');
+    //     var riskMeterLabel = document.getElementById('riskMeterLabel');
+    //     var percentage = value * 20; // Percentage of risk meter fill
+    //     riskMeterFill.style.width = percentage + '%';
+    //     // Adjust label value based on percentage
+    //     //var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
+    //     riskMeterLabel.innerText = value.toFixed(1);
+    // }
     // Example usage with a random value between 0 and 1
-    setInterval(function ()
-    {
-        //var randomValue = Math.random(); // Random value between 0 and 1
-        updateRiskMeter(finalScore);
-    },2000); // Update every 2 seconds
+    // setInterval(function ()
+    // {
+    //     //var randomValue = Math.random(); // Random value between 0 and 1
+    //     updateRiskMeter(finalScore);
+    // },2000); // Update every 2 seconds
 }
 function openNav() {
     document.getElementById("sidebar").style.width = "250px";
