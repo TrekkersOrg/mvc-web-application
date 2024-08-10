@@ -547,8 +547,8 @@ function createCircularRiskMeter(percentage)
                 display: false
             },
             datalabels: {
-                display: false
-            }
+                display: true
+            },
         },
         elements: {
             center: {
@@ -567,6 +567,7 @@ function createCircularRiskMeter(percentage)
     });
 }
 
+
 async function determineRiskScore()
 {
     await systemQuery();
@@ -574,9 +575,6 @@ async function determineRiskScore()
     var custom = JSON.parse(sessionStorage.getItem('custom')).data;
     var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
     var query = JSON.parse(sessionStorage.getItem('query')).data;
-    console.log(calculateAverage(query));
-    console.log(calculateAverage(keywords));
-    console.log(calculateAverage(custom));
     document.getElementById('system-query').style.width = calculateAverage(query);
     document.getElementById('keywords').style.width = calculateAverage(keywords);
     document.getElementById('custom').style.width = calculateAverage(custom);
@@ -584,8 +582,7 @@ async function determineRiskScore()
     var operationalScoreAvg = Math.round((custom.operationalScore + keywords.operationalScore + query.operationalScore) / 3);
     var regulatoryScoreAvg = Math.round((custom.regulatoryScore + keywords.regulatoryScore + query.regulatoryScore) / 3);
     var reputationalScoreAvg = Math.round((custom.reputationalScore + keywords.reputationalScore + query.reputationalScore) / 3);
-    var finalScore = Math.round((financialScoreAvg + regulatoryScoreAvg) / 2);
-    console.log(finalScore / 5);
+    var finalScore = Math.round((operationalScoreAvg + regulatoryScoreAvg) / 2);
     createCircularRiskMeter((finalScore / 5) * 100);
     var averagedScores = JSON.stringify({
         financialScore: financialScoreAvg,
@@ -595,6 +592,41 @@ async function determineRiskScore()
         finalScore: finalScore
     });
     sessionStorage.setItem('riskAssessment',averagedScores);
+    const riskAssessmentBody = {
+        "namespace": sessionStorage.getItem('sessionNamespace'),
+        "file_name": sessionStorage.getItem('selectedFile'),
+        "riskAssessmentScore": finalScore,
+        "financialScore": financialScoreAvg,
+        "financialSystemQueryScore": query.financialScore,
+        "financialKeywordsScore": keywords.financialScore,
+        "financialXgbScore": custom.financialScore,
+        "reputationalScore": reputationalScoreAvg,
+        "reputationalSystemQueryScore": query.reputationalScore,
+        "reputationalKeywordsScore": keywords.reputationalScore,
+        "reputationalXgbScore": custom.reputationalScore,
+        "regulatoryScore": regulatoryScoreAvg,
+        "regulatorySystemQueryScore": query.regulatoryScore,
+        "regulatoryKeywordsScore": keywords.regulatoryScore,
+        "regulatoryXgbScore": custom.regulatoryScore,
+        "operationalScore": operationalScoreAvg,
+        "operationalSystemQueryScore": query.operationalScore,
+        "operationalKeywordsScore": keywords.operationalScore,
+        "operationalXgbScore": custom.operationalScore
+    };
+    try
+    {
+        const response = await fetch(`https://strive-api.azurewebsites.net/api/mongodb/addRiskAssessment`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(riskAssessmentBody)
+        });
+    } catch (error)
+    {
+        displayError('error');
+        return;
+    }
 }
 
 async function viewDocument()
@@ -629,40 +661,38 @@ async function viewDocument()
         displayError('error');
         return;
     }
-}
 
 function downloadExcel() {
     // Replace this with extrapolated Risk Assessment scores from MongoDB
     const riskAssessmentScores = {
         risk_assessment: {
-            score: 3,
+            score: documentData.data.riskAssessmentScore,
             financial: {
-                score: 3,
-                system_query: 2,
-                keywords: 1,
-                xgb: 1
+                score: documentData.data.financialScore,
+                system_query: documentData.data.financialSystemQueryScore,
+                keywords: documentData.data.financialKeywordsScore,
+                xgb: documentData.data.financialXgbScore
             },
             reputational: {
-                score: 2,
-                system_query: 1,
-                keywords: 4,
-                xgb: 1
+                score: documentData.data.reputationalScore,
+                system_query: documentData.data.reputationalSystemQueryScore,
+                keywords: documentData.data.reputationalKeywordsScore,
+                xgb: documentData.data.reputationalXgbScore
             },
             regulatory: {
-                score: 1,
-                system_query: 3,
-                keywords: 4,
-                xgb: 1
+                score: documentData.data.regulatoryScore,
+                system_query: documentData.data.regulatorySystemQueryScore,
+                keywords: documentData.data.regulatoryKeywordsScore,
+                xgb: documentData.data.regulatoryXgbScore
             },
             operational: {
-                score: 1,
-                system_query: 3,
-                keywords: 4,
-                xgb: 1
+                score: documentData.data.operationalScore,
+                system_query: documentData.data.operationalSystemQueryScore,
+                keywords: documentData.data.operationalKeywordsScore,
+                xgb: documentData.data.operationalXgbScore
             }
         }
     }; 
-
     const data = [
         ["Document Name", sessionStorage.getItem("selectedFile"), "", "", ""],
         ["Date", new Date().toLocaleString(), "", "", ""],
@@ -751,22 +781,22 @@ window.onload = async function ()
     spiderChart.data.datasets[0].data = [operationalScore,financialScore,reputationalScore,regulatoryScore];
     spiderChart.update();
     // Risk Meter
-    function updateRiskMeter(value)
-    {
-        var riskMeterFill = document.getElementById('riskMeterFill');
-        var riskMeterLabel = document.getElementById('riskMeterLabel');
-        var percentage = value * 20; // Percentage of risk meter fill
-        riskMeterFill.style.width = percentage + '%';
-        // Adjust label value based on percentage
-        //var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
-        riskMeterLabel.innerText = value.toFixed(1);
-    }
+    // function updateRiskMeter(value)
+    // {
+    //     var riskMeterFill = document.getElementById('riskMeterFill');
+    //     var riskMeterLabel = document.getElementById('riskMeterLabel');
+    //     var percentage = value * 20; // Percentage of risk meter fill
+    //     riskMeterFill.style.width = percentage + '%';
+    //     // Adjust label value based on percentage
+    //     //var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
+    //     riskMeterLabel.innerText = value.toFixed(1);
+    // }
     // Example usage with a random value between 0 and 1
-    setInterval(function ()
-    {
-        //var randomValue = Math.random(); // Random value between 0 and 1
-        updateRiskMeter(finalScore);
-    },2000); // Update every 2 seconds
+    // setInterval(function ()
+    // {
+    //     //var randomValue = Math.random(); // Random value between 0 and 1
+    //     updateRiskMeter(finalScore);
+    // },2000); // Update every 2 seconds
 }
 function openNav() {
     document.getElementById("sidebar").style.width = "250px";

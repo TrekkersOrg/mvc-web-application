@@ -10,6 +10,26 @@ function validateFiles()
     const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
     nextButton.disabled = uploadedFiles.length === 0;
 }
+
+async function validateFileExistence()
+{
+    var namespace = sessionStorage.getItem('sessionNamespace');
+    var fileName = sessionStorage.getItem('selectedFile');
+    const url = `https://strive-api.azurewebsites.net/api/MongoDB/getdocument?collectionName=${namespace}&fileName=${fileName}&version=0`;
+
+    const response = await fetch(url,{
+        method: 'GET'
+    });
+
+    if (!response.ok)
+    {
+        displayError('Failed to upload file.');
+        throw new Error('Failed to upload file to MongoDB collection.');
+    }
+
+    const data = await response.json();
+    return data.data.fileExists;
+}
 function displayError(errorMessage)
 {
     var errorBackground = document.getElementById("error-background");
@@ -123,13 +143,18 @@ async function uploadDocumentToApplication()
         const selectedFile = event.target.files[0];
         const allowedExtensions = ['pdf','docx','doc'];
         const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
-
         if (!allowedExtensions.includes(fileExtension))
         {
             alert("Only PDF, DOCX, DOC files are allowed.");
             return;
         }
-
+        sessionStorage.setItem('selectedFile',selectedFile.name);
+        var fileExists = await validateFileExistence();
+        if (fileExists)
+        {
+            displayError('File already exists.');
+            return;
+        }
         const tableBody = document.getElementById('uploadedFilesTableBody');
         const tableRow = document.createElement('tr');
 
@@ -267,7 +292,6 @@ async function routeToDocumentAnalysis()
 {
     var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
     window.location.href = documentAnalysisUrl;
-    return Promise.resolve();
 }
 
 async function deleteConversationMemory() {
