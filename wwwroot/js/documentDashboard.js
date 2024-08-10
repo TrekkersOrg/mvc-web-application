@@ -524,13 +524,13 @@ function calculateAverage(scores)
     return `${percentage.toFixed(2)}%`;
 }
 
-function createCircularRiskMeter(percentage)
-{
+
+function createCircularRiskMeter(percentage) {
     var ctx = document.getElementById('circularRiskMeter').getContext('2d');
     var data = {
         datasets: [{
-            data: [percentage,100 - percentage],
-            backgroundColor: ['#003f5c','#d9d9d9'],
+            data: [percentage, 100 - percentage],
+            backgroundColor: ['#003f5c', '#d9d9d9'],
             borderWidth: 0
         }]
     };
@@ -545,27 +545,49 @@ function createCircularRiskMeter(percentage)
             },
             legend: {
                 display: false
-            },
-            datalabels: {
-                display: true
-            },
-        },
-        elements: {
-            center: {
-                text: percentage + '%',
-                color: '#003f5c',
-                fontStyle: 'Arial',
-                sidePadding: 20
             }
-        }
+        },
+        animation: {
+            onComplete: function(animation) {
+                var chartInstance = animation.chart;
+                if (!chartInstance) {
+                    console.error("Chart instance is undefined.");
+                    return;
+                }
+                var ctx = chartInstance.ctx;
+                if (!ctx) {
+                    console.error("Chart context is undefined.");
+                    return;
+                }
+
+                requestAnimationFrame(() => {
+                    ctx.font = 'bold 2em Arial'; // Smaller font size to fit within the doughnut hole
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = 'black'; // Adjust the color as needed
+
+                    var text = Math.round(percentage) + "%", // Convert to whole number
+                        centerX = (chartInstance.chartArea.left + chartInstance.chartArea.right) / 2,
+                        centerY = (chartInstance.chartArea.top + chartInstance.chartArea.bottom) / 2;
+
+                    ctx.fillText(text, centerX, centerY);
+                });
+            }
+        },
+        events: [] // Disable hover events to prevent redrawing
     };
 
-    new Chart(ctx,{
-        type: 'doughnut',
-        data: data,
-        options: options
-    });
+    try {
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: options
+        });
+    } catch (error) {
+        console.error("Error creating chart: ", error.message);
+    }
 }
+
 
 
 async function determineRiskScore()
@@ -799,23 +821,7 @@ window.onload = async function ()
     var reputationalScore = riskAssessmentData.reputationalScore;
     spiderChart.data.datasets[0].data = [operationalScore,financialScore,reputationalScore,regulatoryScore];
     spiderChart.update();
-    // Risk Meter
-    // function updateRiskMeter(value)
-    // {
-    //     var riskMeterFill = document.getElementById('riskMeterFill');
-    //     var riskMeterLabel = document.getElementById('riskMeterLabel');
-    //     var percentage = value * 20; // Percentage of risk meter fill
-    //     riskMeterFill.style.width = percentage + '%';
-    //     // Adjust label value based on percentage
-    //     //var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
-    //     riskMeterLabel.innerText = value.toFixed(1);
-    // }
-    // Example usage with a random value between 0 and 1
-    // setInterval(function ()
-    // {
-    //     //var randomValue = Math.random(); // Random value between 0 and 1
-    //     updateRiskMeter(finalScore);
-    // },2000); // Update every 2 seconds
+
 }
 function openNav() {
     document.getElementById("sidebar").style.width = "250px";
