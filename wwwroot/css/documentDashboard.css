@@ -365,7 +365,7 @@ html {
     height: calc(100vh - 340px);
     width: 50%;
     /* Adjust the width to include the 1vw margin */
-    margin-left: 3vw;
+    margin-left: 2vw;
     /* Ensure there's a 1vw margin on the left side */
     transition: width 0.5s ease;
     /* Smooth transition for resizing */
@@ -617,12 +617,14 @@ html {
     position: relative;
     display: flex;
     flex-direction: column;
+    top: -4vh;
+    margin-top: 4vh;
 }
 
 .steps-title-row {
     height: 6vh;
     width: 100%;
-    background: #ccc;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -636,7 +638,14 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
+
 }
+
+.suggested-steps-text {
+    margin-left: -1vw;
+    margin-top: 1vh;
+}
+
 .steps-body-container {
     flex-grow: 1;
     overflow-y: auto;
@@ -727,7 +736,9 @@ html {
     font-size: 15px;
     transition: background-color 0.3s ease;
     margin-left: 35vw !important;
-    padding: 9px;
+    padding: 5px;
+    height: 4vh;
+    width: 5vw;
 }
 
     .simulate-change-button:hover {
@@ -742,8 +753,10 @@ html {
     cursor: pointer;
     font-size: 15px;
     transition: background-color 0.3s ease;
-    padding: 9px;
-    margin-left: 11vw;
+    padding: 5px;
+    margin-left: 10vw;
+    width: 5vw;
+    height: 4vh;
 }
 
     .export-button:hover {
@@ -756,14 +769,15 @@ html {
 }
 
 .modification {
-    margin-top: -6.5vh !important;
+    margin-top: -5.5vh !important;
 }
 
 .spiderChart {
-    margin-left: 100px;
+    margin-left: 175px;
 }
 
 #spiderChart {
     height: 350px !important;
     width: 350px !important;
+    margin-top: -4.5vh;
 }
