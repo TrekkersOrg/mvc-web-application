@@ -597,6 +597,15 @@ async function determineRiskScore()
     var custom = JSON.parse(sessionStorage.getItem('custom')).data;
     var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
     var query = JSON.parse(sessionStorage.getItem('query')).data;
+    const model1Average = Math.round((query.operationalScore + query.regulatoryScore + query.reputationalScore + query.financialScore) / 4);
+    const model2Average = Math.round((keywords.operationalScore + keywords.regulatoryScore + keywords.reputationalScore + keywords.financialScore) / 4);
+    const model3Average = Math.round((custom.operationalScore + custom.regulatoryScore + custom.reputationalScore + custom.financialScore) / 4);
+    document.getElementById('system-query').parentElement.setAttribute('data-score', model1Average);
+    document.getElementById('keywords').parentElement.setAttribute('data-score', model2Average);
+    document.getElementById('custom').parentElement.setAttribute('data-score', model3Average);
+    document.getElementById('system-query').style.width = `${model1Average * 10}%`;
+    document.getElementById('keywords').style.width = `${model2Average * 10}%`;
+    document.getElementById('custom').style.width = `${model3Average * 10}%`;
     document.getElementById('system-query').style.width = calculateAverage(query);
     document.getElementById('keywords').style.width = calculateAverage(keywords);
     document.getElementById('custom').style.width = calculateAverage(custom);
@@ -847,3 +856,24 @@ function toggleIconColor() {
         svgIcon.classList.add('active');
     }
 }
+
+document.querySelectorAll('.small-risk-meter').forEach(function(meter) {
+    meter.addEventListener('mouseenter', function() {
+        const score = this.getAttribute('data-score');  // Get the score from the data attribute
+
+        // Create tooltip to show the score
+        const tooltip = document.createElement('div');
+        tooltip.className = 'hover-tooltip';
+        tooltip.innerText = `${score}/10`;  // Show the score out of 10
+
+        this.appendChild(tooltip);
+    });
+    
+    meter.addEventListener('mouseleave', function() {
+        const tooltip = this.querySelector('.hover-tooltip');
+        if (tooltip) {
+            tooltip.remove();
+        }
+    });
+});
+

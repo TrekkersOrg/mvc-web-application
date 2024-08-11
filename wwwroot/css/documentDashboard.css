@@ -786,3 +786,18 @@ html {
     width: 350px !important;
     margin-top: -4.5vh;
 }
+
+.hover-tooltip {
+    position: absolute;
+    background-color: black;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    top: -25px;
+    /* Position it above the meter */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    white-space: nowrap;
+}
