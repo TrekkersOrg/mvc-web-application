@@ -803,8 +803,16 @@ window.onload = async function ()
                 ticks: {
                     beginAtZero: true,
                     stepSize: 1,
-                    count: 6
+                    count: 6,
+                    font: {
+                        size: 16 // Increase tick font size
+                    },
                 },
+                pointLabels: {
+                    font: {
+                        size: 18 // Increase label font size
+                }
+            },
                 r: {
                     suggestedMin: 0,
                     suggestedMax: 5
