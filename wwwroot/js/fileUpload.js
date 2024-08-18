@@ -256,7 +256,7 @@ async function populateUploadedFilesList()
         tableRow.appendChild(fileNameCell);
         tableRow.appendChild(actionsCell);
         tableRow.appendChild(selectCell);
-        uploadedFilesTableBody.appendChild(tableRow);
+        uploadedFilesTableBody.insertBefore(tableRow,uploadedFilesTableBody.firstChild);
     }
     validateFiles();
 }
