@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Strive</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="~/css/_hamburgerBar.css" asp-append-version="true" /> *@
+    <style>
+        .sidebar {
+            height: 100%;
+            width: 60px !important;
+            /* Explicitly set the sidebar width */
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #643232;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            overflow-x: hidden;
+            /* Prevent horizontal scrolling */
+        }
+
+        .sidebar a {
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 20px;
+            color: white;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .sidebar a:hover {
+            background-color: #5a2c2c;
+        }
+
+        .sidebar a svg {
+            fill: white;
+            width: 25px;
+            height: 25px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-bottom: 20px;
+        }
+
+        #main-content {
+            margin-left: 60px;
+            /* Match the sidebar width */
+            padding: 20px;
+            /* Optional padding to adjust content spacing */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mySidebar" class="sidebar">
+        <a href="/Home/ServiceDashboard">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                <path d="M8 .5l6 6V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6.5l6-6zM7 13V9H5v4h2zm4 0V9H9v4h2z" />
+            </svg>
+        </a>
+        <a href="javascript:void(0)" onclick="downloadExcel()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-file-earmark-excel"
+                viewBox="0 0 16 16">
+                <path
+                    d="M8.5 0H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2A2 2 0 0 1 2 0h6.5zm0 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-5.5z" />
+                <path
+                    d="M5.854 6.646a.5.5 0 0 1 .708 0l1.5 1.5 1.5-1.5a.5.5 0 0 1 .708.708L8.707 8l1.5 1.5a.5.5 0 0 1-.708.708l-1.5-1.5-1.5 1.5a.5.5 0 0 1-.708-.708L7.293 8l-1.5-1.5z" />
+            </svg>
+        </a>
+        <a href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+                <path
+                    d="M9.828 3a.5.5 0 0 0-.354-.146H7.5l-2-2H2.5A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 13.5 3H9.828zM2 3.5A.5.5 0 0 1 2.5 3h3.75L7.5 4.5H13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11z" />
+            </svg>
+        </a>
+        <a href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path
+                    d="M15.502 1.94a.5.5 0 0 1 0 .706l-9 9a.5.5 0 0 1-.168.11l-4 1a.5.5 0 0 1-.635-.634l1-4a.5.5 0 0 1 .11-.168l9-9a.5.5 0 0 1 .707 0zm-2.354 2.854L5.207 12H4v-1.207l7.793-7.793 1.146 1.147zm1.146-1.146L13.207 3 10 6.207V5h-.793L4.5 9.707l-.793 3.172 3.172-.793L14 3.793l.293-.293z" />
+            </svg>
+        </a>
+        <div class="sidebar-bottom">
+            <a asp-area="Identity" asp-page="/Account/Manage/Index">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                    <path
+                        d="M9.605 1.05c.413-1.176 1.977-1.176 2.39 0l.276.787c.19.542.678.917 1.248.937l.866.027c1.227.038 1.752 1.522.802 2.42l-.654.632c-.392.378-.587.916-.525 1.455l.092.873c.12 1.13-.988 2.065-2.02 1.524l-.742-.382a1.007 1.007 0 0 0-1.092.001l-.742.382c-1.032.541-2.14-.394-2.02-1.524l.092-.873c.062-.54-.133-1.077-.525-1.455l-.654-.632c-.95-.898-.425-2.382.802-2.42l.866-.027c.57-.02 1.058-.395 1.248-.937l.276-.787zM8 5.495c-.89 0-1.612.72-1.612 1.611 0 .892.722 1.612 1.612 1.612.892 0 1.612-.72 1.612-1.612 0-.891-.72-1.611-1.612-1.611z" />
+                </svg>
+            </a>
+            <a asp-area="Identity" asp-page="/Account/Logout">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
+                    <path fill-rule="evenodd"
+                        d="M8 10a5 5 0 0 0-4.78 3.325 7.99 7.99 0 0 0 9.56 0A5 5 0 0 0 8 10zm-3.978 3.797A6.978 6.978 0 0 1 8 11a6.978 6.978 0 0 1 3.978 1.797c-.858 1.225-2.233 2.203-3.978 2.203-1.745 0-3.12-.978-3.978-2.203z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <div id="main-content" class="container-fluid p-0">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/_hamburgerBar.js"></script>
+</body>
+
+</html>
