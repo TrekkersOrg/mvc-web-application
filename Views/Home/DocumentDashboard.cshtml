@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Service Dashboard";
-    Layout = "~/Views/Shared/_HamburgerBar.cshtml";
+    Layout = "~/Views/Shared/_DDHamburgerBar.cshtml";
 }
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
 <link rel="stylesheet" href="~/css/documentDashboard.css">
@@ -22,12 +22,12 @@
                         Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
                     </div>
                 </div>
-                <h4>Risk Analysis</h4>
-                <canvas id="spiderChart"></canvas>
+                <h4 class="RAText">Risk Analysis</h4>
+                <canvas class="spiderChart" id="spiderChart" width="350 !important" height="350 !important"></canvas>
                 <div class="suggested-steps-container">
                     <div class="steps-title-row">
                         <div class="suggested-steps-text">
-                            <h4>Suggested Steps</h4>
+                            <h4>Simulations</h4>
                         </div>
                         <div class="suggested-steps-number">
                             <!-- Number content will go here -->
@@ -39,25 +39,39 @@
                     <div class="steps-body-container">
                         <div class="step-container">
                             <div class="risk-container">
-                                <!-- Risk content will go here -->
-                                <p class="vulnerability">Information is available prior to the approval process.</p>
+                                <p class="vulnerability">Risk: Information is available prior to approval process.</p>
                             </div>
                             <div class="simulate-change-container">
-                                <p class="modification">Implement role-based access controls (RBAC).</p>
-                                <button class="simulate-change-button">Simulate Change</button>
+                                <p class="modification">Modification: Implement role-based access controls (RBAC).</p>
+                                <div class="simulate-button-container">
+                                    <button class="simulate-change-button">Try Sim</button>
+                                </div>
                             </div>
                         </div>
                         <div class="step-container">
                             <div class="risk-container">
-                                <!-- Risk content will go here -->
-                                <p class="vulnerability">Inclement weather is causing issues for data storage.</p>
+                                <p class="vulnerability">Risk: Inclement weather is causing issues for data storage.</p>
                             </div>
                             <div class="simulate-change-container">
-                                <p class="modification">Implement improved backup and recovery in a seperate location.</p>
-                                <button class="simulate-change-button">Simulate Change</button>
+                                <p class="modification">Modification: Implement improved backup and recovery in a
+                                    separate location.</p>
+                                <div class="simulate-button-container">
+                                    <button class="simulate-change-button">Try Sim</button>
+                                </div>
                             </div>
                         </div>
-                        <!-- Add more step-container divs as needed -->
+                        <div class="step-container">
+                            <div class="risk-container">
+                                <p class="vulnerability">Risk: Unauthorized access to sensitive data detected.</p>
+                            </div>
+                            <div class="simulate-change-container">
+                                <p class="modification">Modification: Strengthen encryption and access control policies.
+                                </p>
+                                <div class="simulate-button-container">
+                                    <button class="simulate-change-button">Try Sim</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -65,8 +79,8 @@
                 <div class="scores-container d-flex flex-column">
                     <div class="breakdowns-container d-flex flex-column">
                         <div class="title-file-container d-flex">
-                            <div class="title-container">
-                                <!-- Title content will go here -->
+                            <div id="document-title" class="title-container">
+                                <span data-title="Document Title"></span>
                             </div>
                             <div class="view-file-container">
                                 <button class="view-file-button" onclick="toggleIconColor()">
@@ -99,24 +113,24 @@
                             <div class="metric-1-title-container">
                                 <h6>Model 1</h6>
                             </div>
-                            <div class="small-risk-meter">
-                                <div id="system-query" class="small-risk-meter-fill"></div>
+                            <div class="small-risk-meter" data-score="7">
+                                <div id="system-query" class="small-risk-meter-fill" style="width: 100%;"></div>
                             </div>
                         </div>
                         <div class="metric-2 d-flex flex-column">
                             <div class="metric-2-title-container">
                                 <h6>Model 2</h6>
                             </div>
-                            <div class="small-risk-meter">
-                                <div id="keywords" class="small-risk-meter-fill"></div>
+                            <div class="small-risk-meter" data-score="8">
+                                <div id="keywords" class="small-risk-meter-fill" style="width: 100%;"></div>
                             </div>
                         </div>
                         <div class="metric-3 d-flex flex-column">
                             <div class="metric-3-title-container">
                                 <h6>Model 3</h6>
                             </div>
-                            <div class="small-risk-meter">
-                                <div id="custom" class="small-risk-meter-fill"></div>
+                            <div class="small-risk-meter" data-score="9">
+                                <div id="custom" class="small-risk-meter-fill" style="width: 100%;"></div>
                             </div>
                         </div>
                     </div>

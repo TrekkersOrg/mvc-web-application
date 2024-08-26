@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Strive</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="~/css/_hamburgerBar.css" asp-append-version="true" /> *@
+    <style>
+        .sidebar {
+            height: 100%;
+            width: 60px !important;
+            /* Explicitly set the sidebar width */
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #282222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            overflow-x: hidden;
+            /* Prevent horizontal scrolling */
+        }
+
+        .sidebar a {
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 20px;
+            color: white;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .sidebar a:hover {
+            background-color: #726c6c;
+        }
+
+        .sidebar a svg {
+            fill: white;
+            width: 25px;
+            height: 25px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-bottom: 20px;
+        }
+
+        #main-content {
+            margin-left: 60px;
+            /* Match the sidebar width */
+            padding: 20px;
+            /* Optional padding to adjust content spacing */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mySidebar" class="sidebar">
+        <a href="/Home/ServiceDashboard">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                <path d="M8 .5l6 6V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6.5l6-6zM7 13V9H5v4h2zm4 0V9H9v4h2z" />
+            </svg>
+        </a>
+        <a href="export" onclick="downloadExcel()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.5"
+                class="bi bi-file-export" width="24" height="24">
+                <!-- File outline -->
+                <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h6.5L14 4.5z" fill="black" />
+                <path d="M9.5 0v4a1.5 1.5 0 0 0 1.5 1.5h4L9.5 0z" fill="black" />
+                <!-- Arrow pointing out of the file -->
+                <path d="M6 8.5H10.5M8 6l2.5 2.5L8 11" fill="black" stroke="white" />
+            </svg>
+        </a>
+
+        <a href="#" onclick="newUpload()" id="upload-button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+                <path
+                    d="M9.828 3a.5.5 0 0 0-.354-.146H7.5l-2-2H2.5A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 13.5 3H9.828zM2 3.5A.5.5 0 0 1 2.5 3h3.75L7.5 4.5H13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11z" />
+            </svg>
+        </a>
+        <div class="sidebar-bottom">
+            <a asp-area="Identity" asp-page="/Account/Logout">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
+                    <path fill-rule="evenodd"
+                        d="M8 10a5 5 0 0 0-4.78 3.325 7.99 7.99 0 0 0 9.56 0A5 5 0 0 0 8 10zm-3.978 3.797A6.978 6.978 0 0 1 8 11a6.978 6.978 0 0 1 3.978 1.797c-.858 1.225-2.233 2.203-3.978 2.203-1.745 0-3.12-.978-3.978-2.203z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <div id="main-content" class="container-fluid p-0">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/_hamburgerBar.js"></script>
+</body>
+
+</html>

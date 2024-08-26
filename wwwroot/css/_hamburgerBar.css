@@ -102,7 +102,7 @@ body {
 .sidebar-open #main-content {
     margin-left: 250px;
     width: calc(100% - 250px);
-}
+} 
 
 .widget {
     border-radius: 20px !important;
