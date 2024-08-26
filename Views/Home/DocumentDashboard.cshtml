@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Service Dashboard";
-    Layout = "~/Views/Shared/_HamburgerBar.cshtml";
+    Layout = "~/Views/Shared/_DDHamburgerBar.cshtml";
 }
 <link rel="stylesheet" href="~/Views/Home/Index.css" asp-append-version="true">
 <link rel="stylesheet" href="~/css/documentDashboard.css">
@@ -22,7 +22,7 @@
                         Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
                     </div>
                 </div>
-                <h4>Risk Analysis</h4>
+                <h4 class="RAText">Risk Analysis</h4>
                 <canvas class="spiderChart" id="spiderChart" width="350 !important" height="350 !important"></canvas>
                 <div class="suggested-steps-container">
                     <div class="steps-title-row">
@@ -80,7 +80,7 @@
                     <div class="breakdowns-container d-flex flex-column">
                         <div class="title-file-container d-flex">
                             <div id="document-title" class="title-container">
-                                <!-- Title content will go here -->
+                                <span data-title="Document Title"></span>
                             </div>
                             <div class="view-file-container">
                                 <button class="view-file-button" onclick="toggleIconColor()">
@@ -113,24 +113,24 @@
                             <div class="metric-1-title-container">
                                 <h6>Model 1</h6>
                             </div>
-                            <div class="small-risk-meter">
-                                <div id="system-query" class="small-risk-meter-fill"></div>
+                            <div class="small-risk-meter" data-score="7">
+                                <div id="system-query" class="small-risk-meter-fill" style="width: 100%;"></div>
                             </div>
                         </div>
                         <div class="metric-2 d-flex flex-column">
                             <div class="metric-2-title-container">
                                 <h6>Model 2</h6>
                             </div>
-                            <div class="small-risk-meter">
-                                <div id="keywords" class="small-risk-meter-fill"></div>
+                            <div class="small-risk-meter" data-score="8">
+                                <div id="keywords" class="small-risk-meter-fill" style="width: 100%;"></div>
                             </div>
                         </div>
                         <div class="metric-3 d-flex flex-column">
                             <div class="metric-3-title-container">
                                 <h6>Model 3</h6>
                             </div>
-                            <div class="small-risk-meter">
-                                <div id="custom" class="small-risk-meter-fill"></div>
+                            <div class="small-risk-meter" data-score="9">
+                                <div id="custom" class="small-risk-meter-fill" style="width: 100%;"></div>
                             </div>
                         </div>
                     </div>

@@ -524,13 +524,13 @@ function calculateAverage(scores)
     return `${percentage.toFixed(2)}%`;
 }
 
-function createCircularRiskMeter(percentage)
-{
+
+function createCircularRiskMeter(percentage) {
     var ctx = document.getElementById('circularRiskMeter').getContext('2d');
     var data = {
         datasets: [{
-            data: [percentage,100 - percentage],
-            backgroundColor: ['#003f5c','#d9d9d9'],
+            data: [percentage, 100 - percentage],
+            backgroundColor: ['#003f5c', '#d9d9d9'],
             borderWidth: 0
         }]
     };
@@ -545,27 +545,49 @@ function createCircularRiskMeter(percentage)
             },
             legend: {
                 display: false
-            },
-            datalabels: {
-                display: true
-            },
-        },
-        elements: {
-            center: {
-                text: percentage + '%',
-                color: '#003f5c',
-                fontStyle: 'Arial',
-                sidePadding: 20
             }
-        }
+        },
+        animation: {
+            onComplete: function(animation) {
+                var chartInstance = animation.chart;
+                if (!chartInstance) {
+                    console.error("Chart instance is undefined.");
+                    return;
+                }
+                var ctx = chartInstance.ctx;
+                if (!ctx) {
+                    console.error("Chart context is undefined.");
+                    return;
+                }
+
+                requestAnimationFrame(() => {
+                    ctx.font = 'bold 2em Arial'; // Smaller font size to fit within the doughnut hole
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = 'black'; // Adjust the color as needed
+
+                    var text = Math.round(percentage) + "%", // Convert to whole number
+                        centerX = (chartInstance.chartArea.left + chartInstance.chartArea.right) / 2,
+                        centerY = (chartInstance.chartArea.top + chartInstance.chartArea.bottom) / 2;
+
+                    ctx.fillText(text, centerX, centerY);
+                });
+            }
+        },
+        events: [] // Disable hover events to prevent redrawing
     };
 
-    new Chart(ctx,{
-        type: 'doughnut',
-        data: data,
-        options: options
-    });
+    try {
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: options
+        });
+    } catch (error) {
+        console.error("Error creating chart: ", error.message);
+    }
 }
+
 
 
 async function determineRiskScore()
@@ -575,6 +597,15 @@ async function determineRiskScore()
     var custom = JSON.parse(sessionStorage.getItem('custom')).data;
     var keywords = JSON.parse(sessionStorage.getItem('keywords')).data;
     var query = JSON.parse(sessionStorage.getItem('query')).data;
+    const model1Average = Math.round((query.operationalScore + query.regulatoryScore + query.reputationalScore + query.financialScore) / 4);
+    const model2Average = Math.round((keywords.operationalScore + keywords.regulatoryScore + keywords.reputationalScore + keywords.financialScore) / 4);
+    const model3Average = Math.round((custom.operationalScore + custom.regulatoryScore + custom.reputationalScore + custom.financialScore) / 4);
+    document.getElementById('system-query').parentElement.setAttribute('data-score', model1Average);
+    document.getElementById('keywords').parentElement.setAttribute('data-score', model2Average);
+    document.getElementById('custom').parentElement.setAttribute('data-score', model3Average);
+    document.getElementById('system-query').style.width = `${model1Average * 10}%`;
+    document.getElementById('keywords').style.width = `${model2Average * 10}%`;
+    document.getElementById('custom').style.width = `${model3Average * 10}%`;
     document.getElementById('system-query').style.width = calculateAverage(query);
     document.getElementById('keywords').style.width = calculateAverage(keywords);
     document.getElementById('custom').style.width = calculateAverage(custom);
@@ -772,8 +803,16 @@ window.onload = async function ()
                 ticks: {
                     beginAtZero: true,
                     stepSize: 1,
-                    count: 6
+                    count: 6,
+                    font: {
+                        size: 16 // Increase tick font size
+                    },
                 },
+                pointLabels: {
+                    font: {
+                        size: 18 // Increase label font size
+                }
+            },
                 r: {
                     suggestedMin: 0,
                     suggestedMax: 5
@@ -799,23 +838,7 @@ window.onload = async function ()
     var reputationalScore = riskAssessmentData.reputationalScore;
     spiderChart.data.datasets[0].data = [operationalScore,financialScore,reputationalScore,regulatoryScore];
     spiderChart.update();
-    // Risk Meter
-    // function updateRiskMeter(value)
-    // {
-    //     var riskMeterFill = document.getElementById('riskMeterFill');
-    //     var riskMeterLabel = document.getElementById('riskMeterLabel');
-    //     var percentage = value * 20; // Percentage of risk meter fill
-    //     riskMeterFill.style.width = percentage + '%';
-    //     // Adjust label value based on percentage
-    //     //var labelValue = percentage < 50 ? percentage / 10 : percentage / 20 + 2.5;
-    //     riskMeterLabel.innerText = value.toFixed(1);
-    // }
-    // Example usage with a random value between 0 and 1
-    // setInterval(function ()
-    // {
-    //     //var randomValue = Math.random(); // Random value between 0 and 1
-    //     updateRiskMeter(finalScore);
-    // },2000); // Update every 2 seconds
+
 }
 function openNav() {
     document.getElementById("sidebar").style.width = "250px";
@@ -841,3 +864,24 @@ function toggleIconColor() {
         svgIcon.classList.add('active');
     }
 }
+
+document.querySelectorAll('.small-risk-meter').forEach(function(meter) {
+    meter.addEventListener('mouseenter', function() {
+        const score = this.getAttribute('data-score');  // Get the score from the data attribute
+
+        // Create tooltip to show the score
+        const tooltip = document.createElement('div');
+        tooltip.className = 'hover-tooltip';
+        tooltip.innerText = `${score}/10`;  // Show the score out of 10
+
+        this.appendChild(tooltip);
+    });
+    
+    meter.addEventListener('mouseleave', function() {
+        const tooltip = this.querySelector('.hover-tooltip');
+        if (tooltip) {
+            tooltip.remove();
+        }
+    });
+});
+
