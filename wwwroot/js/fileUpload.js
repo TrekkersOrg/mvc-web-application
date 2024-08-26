@@ -381,7 +381,6 @@ async function deleteFileFromMongo(fileName,collectionName,tableRow)
 {
     try
     {
-        const fileName = sessionStorage.getItem('selectedFile');
         const sessionName = sessionStorage.getItem('sessionNamespace');
         var url = `https://strive-api.azurewebsites.net/api/MongoDB/DeleteAllVersions?fileName=${fileName}&collectionName=${sessionName}`;
         const response = await fetch(url,{
