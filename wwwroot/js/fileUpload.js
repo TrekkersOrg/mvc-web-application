@@ -216,7 +216,24 @@ async function uploadDocumentToApplication()
 
 async function populateUploadedFilesList()
 {
-    const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
+    const namespace = sessionStorage.getItem('sessionNamespace');
+    const response = await fetch(`https://strive-api.azurewebsites.net/api/MongoDB/GetAllDocuments?collectionName=${namespace}`,{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    var responseData = await response.json();
+    const uploadedFiles = [];
+    responseData.data.forEach(document =>
+    {
+        if (document.fileExists)
+        {
+            uploadedFiles.push(document.fileName);
+        }
+    });
+
+    //const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
     const uploadedFilesTableBody = document.getElementById('uploadedFilesTableBody');
     uploadedFilesTableBody.innerHTML = ""; // Clear existing entries
 
