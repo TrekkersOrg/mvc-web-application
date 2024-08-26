@@ -167,7 +167,8 @@ async function uploadDocumentToApplication()
         deleteButton.classList.add('btn','btn-danger');
         deleteButton.addEventListener('click',() =>
         {
-            deleteFile(selectedFile.name,tableRow);
+            deleteFileFromMongo(selectedFile.name,sessionStorage.getItem('sessionNamespace'),tableRow);
+            //deleteFile(selectedFile.name,tableRow);
         });
         actionsCell.appendChild(deleteButton);
 
@@ -235,7 +236,8 @@ async function populateUploadedFilesList()
         deleteButton.classList.add('btn','btn-danger');
         deleteButton.addEventListener('click',() =>
         {
-            deleteFile(fileName,tableRow);
+            deleteFileFromMongo(fileName,sessionStorage.getItem('sessionNamespace'),tableRow);
+            //deleteFile(fileName,tableRow);
         });
         actionsCell.appendChild(deleteButton);
 
@@ -356,6 +358,44 @@ async function deleteFile(fileName,tableRow)
     sessionStorage.setItem('uploadedFiles',JSON.stringify(uploadedFiles));
     tableRow.remove();
     validateFiles();
+}
+
+async function deleteFileFromMongo(fileName,collectionName,tableRow)
+{
+    try
+    {
+        const fileName = sessionStorage.getItem('selectedFile');
+        const sessionName = sessionStorage.getItem('sessionNamespace');
+        var url = `https://strive-api.azurewebsites.net/api/MongoDB/DeleteAllVersions?fileName=${fileName}&collectionName=${sessionName}`;
+        const response = await fetch(url,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // Check if the response is OK
+        if (!response.ok)
+        {
+            if (response.status === 500)
+            {
+                // Handle 500 error by logging or performing an alternative action
+                console.error('Error 500: Internal Server Error. Continuing execution.');
+                return; // Or you can return some default value or null
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Parse and return JSON if no error occurred
+        tableRow.remove();
+        return response.json();
+    } catch (error)
+    {
+        console.error('An error occurred:',error);
+        // Continue execution by returning null or an alternative value
+        return null;
+    }
+
 }
 
 window.addEventListener('load',populateUploadedFilesList);
