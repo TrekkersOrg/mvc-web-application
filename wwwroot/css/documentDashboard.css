@@ -765,7 +765,8 @@ html {
     cursor: pointer;
     font-size: 15px;
     transition: background-color 0.3s ease;
-    padding: 9px 15px;
+    padding: 7px;
+    height:5vh !important;
 }
 
 .simulate-change-button:hover {
@@ -821,9 +822,9 @@ html {
     font-size: 15px;
     transition: background-color 0.3s ease;
     padding: 5px;
-    margin-left: 10vw;
+    margin-left: 11vw;
     width: 5vw;
-    height: 4vh;
+    height: 5vh;
 }
 
 .export-button:hover {
