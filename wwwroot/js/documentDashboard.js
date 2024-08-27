@@ -666,8 +666,9 @@ async function viewDocument()
     {
         var namespace = sessionStorage.getItem('sessionNamespace');
         var fileName = sessionStorage.getItem('selectedFile');
+        var encodedFileName = encodeURIComponent(fileName);
         var version = 0;
-        const url = `https://strive-api.azurewebsites.net/api/mongodb/getdocumentcontent?collectionName=${namespace}&fileName=${fileName}&version=${version}`;
+        const url = `https://strive-api.azurewebsites.net/api/mongodb/getdocumentcontent?collectionName=${namespace}&fileName=${encodedFileName}&version=${version}`;
         const response = await fetch(url,{
             method: 'GET',
             headers: {
