@@ -31,7 +31,7 @@
         <div class="row page-row h-85">
             <div class="col-lg-8 upload-container bg-light">
                 <h1>File Upload</h1>
-                <p>Only PDF and DOCX File Types</p>
+                <p>Only PDF File Type</p>
                 <button class="btn btn-primary btn-lg file-upload-button" type="button" id="upload-button"
                         onclick="uploadDocumentToApplication()">
                     Browse Files
@@ -60,11 +60,11 @@
                 </button>
                 <div class="description-input">
                     <label for="documentName" class="description-label text-dark">Document Name</label>
-                    <input type="text" id="documentName" class="form-control" required>
+                    <input type="text" id="documentName" class="form-control" onchange="checkNextFunctionality();" required>
                 </div>
                 <div class="description-input">
                     <label for="documentType" class="description-label text-dark">Category</label>
-                    <select id="documentType" class="form-select" required>
+                    <select id="documentType" class="form-select" onchange="checkNextFunctionality();" required>
                         <option value="">Select Document Type</option>
                         <option value="legal">Legal</option>
                         <option value="presentation">Financial</option>
@@ -74,7 +74,7 @@
                 </div>
                 <div class="description-input">
                     <label for="documentDescription" class="description-label text-dark">Brief Description</label>
-                    <textarea id="documentDescription" rows="5" class="form-control" required></textarea>
+                    <textarea id="documentDescription" rows="5" class="form-control" onchange="checkNextFunctionality();" required></textarea>
                 </div>
             </div>
         </div>
