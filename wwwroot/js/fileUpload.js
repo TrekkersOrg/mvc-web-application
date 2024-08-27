@@ -178,7 +178,7 @@ async function uploadDocumentToApplication()
         const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
         if (!allowedExtensions.includes(fileExtension))
         {
-            alert("Only PDF, DOCX, DOC files are allowed.");
+            alert("Only PDF files are allowed.");
             return;
         }
         sessionStorage.setItem('selectedFile',selectedFile.name);
