@@ -24,7 +24,7 @@
                 </div>
                 <h4 class="RAText">Risk Analysis</h4>
                 <canvas class="spiderChart" id="spiderChart" width="350 !important" height="350 !important"></canvas>
-                <div class="suggested-steps-container">
+                @* <div class="suggested-steps-container">
                     <div class="steps-title-row">
                         <div class="suggested-steps-text">
                             <h4>Simulations</h4>
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> *@
             </div>
             <div class="col-md-4 d-flex flex-column">
                 <div class="scores-container d-flex flex-column">
@@ -83,7 +83,7 @@
                                 <span data-title="Document Title"></span>
                             </div>
                             <div class="view-file-container">
-                                <button class="view-file-button" onclick="toggleIconColor()">
+                                <button class="view-file-button" onclick="toggleIconColor();viewDocument();">
                                     <svg class="view-file-icon" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 128 128">
                                         <path

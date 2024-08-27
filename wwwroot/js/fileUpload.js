@@ -11,6 +11,38 @@ function validateFiles()
     nextButton.disabled = uploadedFiles.length === 0;
 }
 
+function checkNextActivation()
+{
+    if (sessionStorage.getItem('selectedFile'))
+    {
+        const documentName = document.getElementById('documentName');
+        const documentType = document.getElementById('documentType');
+        const documentDescription = document.getElementById('documentDescription');
+
+        const isDocumentNameFilled = documentName && documentName.value.trim();
+        const isDocumentTypeFilled = documentType && documentType.value.trim();
+        const isDocumentDescriptionFilled = documentDescription && documentDescription.value.trim();
+
+        // Check if all fields are filled or all are empty
+        if (
+            (isDocumentNameFilled && isDocumentTypeFilled && isDocumentDescriptionFilled) ||
+            (!isDocumentNameFilled && !isDocumentTypeFilled && !isDocumentDescriptionFilled)
+        )
+        {
+            console.log('Enabled.');
+            nextButton.disabled = false;
+        } else
+        {
+            console.log('Disabled.');
+            nextButton.disabled = true;
+        }
+    } else
+    {
+        console.log('Disabled.');
+        nextButton.disabled = true;
+    }
+}
+
 async function validateFileExistence()
 {
     var namespace = sessionStorage.getItem('sessionNamespace');
@@ -67,6 +99,7 @@ function validateForm()
     const documentDescription = documentDescriptionInput.value.trim();
 
     nextButton.disabled = !(documentName && documentType && documentDescription);
+    checkNextActivation();
 }
 
 validateForm();
@@ -141,11 +174,11 @@ async function uploadDocumentToApplication()
     fileInput.addEventListener("change",async (event) =>
     {
         const selectedFile = event.target.files[0];
-        const allowedExtensions = ['pdf','docx','doc'];
+        const allowedExtensions = ['pdf'];
         const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
         if (!allowedExtensions.includes(fileExtension))
         {
-            alert("Only PDF, DOCX, DOC files are allowed.");
+            alert("Only PDF files are allowed.");
             return;
         }
         sessionStorage.setItem('selectedFile',selectedFile.name);
@@ -168,6 +201,7 @@ async function uploadDocumentToApplication()
         deleteButton.addEventListener('click',() =>
         {
             deleteFileFromMongo(selectedFile.name,sessionStorage.getItem('sessionNamespace'),tableRow);
+            sessionStorage.removeItem('selectedFile');
             //deleteFile(selectedFile.name,tableRow);
         });
         actionsCell.appendChild(deleteButton);
@@ -264,10 +298,18 @@ async function populateUploadedFilesList()
         selectRadio.name = 'selectedFile';
         selectRadio.value = fileName;
         selectRadio.classList.add('large-radio-button');
+        if (sessionStorage.getItem('selectedFile') == fileName)
+        {
+            selectRadio.checked = true;
+        }
         selectRadio.addEventListener('change',async () =>
         {
-            sessionStorage.setItem('selectedFile',fileName);
-            await customKeyword();
+            if (selectRadio.checked)
+            {
+                sessionStorage.setItem('selectedFile',fileName);
+                await customKeyword();
+                checkNextActivation();
+            }
         });
         selectCell.appendChild(selectRadio);
         statusCell.textContent = 'Uploaded';
@@ -414,4 +456,9 @@ async function deleteFileFromMongo(fileName,collectionName,tableRow)
 
 }
 
-window.addEventListener('load',populateUploadedFilesList);
+window.addEventListener('load',function ()
+{
+    sessionStorage.removeItem('selectedFile');
+    populateUploadedFilesList();
+    checkNextActivation(); 
+});
