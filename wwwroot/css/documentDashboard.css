@@ -15,15 +15,232 @@ html {
     padding: 20px;
 }
 
+/* Page container styling to center elements */
 .page-container {
-    width: 100%;
-    height: 100%;
     opacity: 0.5;
     z-index: 999;
     position: absolute;
     background: #f5f5f5;
     top: 0;
-    left: 0;
+    left: -2vw;
+    /* Align with the sidebar */
+    right: 3vw;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 62vh;
+    /* Adjust the width */
+    height: 60vh;
+}
+
+/* Scores Container */
+.scores-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* margin-bottom: 20px; */
+    display: flex;
+    flex-direction: column;
+    height: 45vh;
+    width: 40vw;
+    border: 1px solid black;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+}
+
+.breakdowns-container {
+    height: 75%;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.metrics-container {
+    height: 25%;
+    width: 100%;
+}
+
+.metric-1,
+.metric-2,
+.metric-3,
+.metric-4 {
+    height: 100%;
+    width: 25%;
+    /* border-left: 1px solid black; */
+}
+
+.metric-1 {
+    border-left: none;
+    /* Remove border from the first metric */
+}
+
+.metric-1-title-container,
+.metric-2-title-container,
+.metric-3-title-container,
+.metric-4-title-container {
+    height: 15%;
+    width: 100%;
+    padding: 15px;
+    /* border: 1px solid black; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1vh;
+}
+
+/* Small Risk Meter */
+.small-risk-meter {
+    width: 80%;
+    height: 20px;
+    background: #f1f1f1;
+    border-radius: 10px;
+    margin: 10px auto;
+    position: relative;
+}
+
+.small-risk-meter-fill {
+    height: 100%;
+    background: #003f5c;
+    border-radius: 10px 0 0 10px;
+}
+
+.title-file-container {
+    height: 25%;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+}
+
+.title-container {
+    height: 100%;
+    width: 70%;
+    /* Fixed width, adjust as needed */
+    border-right: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    padding-left: 1vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 2.5vw;
+    /* Start with a large size, then adjust */
+    font-weight: 600;
+}
+
+/* Dynamically adjust font size based on container width */
+.title-container span {
+    display: inline-block;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: calc(2.5vw + 1vh);
+    line-height: 1.2em;
+}
+
+.title-container span:before {
+    content: attr(data-title);
+    visibility: hidden;
+    white-space: nowrap;
+}
+
+.title-container span {
+    font-size: calc(16px + 0.5vw);
+    /* Responsive font size */
+}
+
+@media screen and (max-width: 768px) {
+    .title-container {
+        font-size: 1.5vw;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .title-container {
+        font-size: 3vw;
+    }
+}
+
+#document-title {
+    width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.view-file-container {
+    height: 100%;
+    width: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-file-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.view-file-icon {
+    width: 100%;
+    height: 100%;
+}
+
+.view-file-icon path {
+    fill: black;
+}
+
+.view-file-icon.active path {
+    fill: blue;
+}
+
+.meter-summary-container {
+    height: 90%;
+    width: 100%;
+}
+
+.injected-summary-container {
+    font-size: small;
+}
+
+.meter-container {
+    height: 100%;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+}
+
+.label-container {
+    height: 15%;
+    width: 100%;
+    padding: 15px;
+    /* margin-top: 3vh; */
+    margin-left: 1vw;
+}
+
+.o-meter-container {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3vh;
+}
+
+.summary-container {
+    height: 25vh;
+    overflow-y: auto;
+    padding: 10px;
+    background: #fff;
+    /* Background similar to steps-container */
+    border-radius: 8px;
 }
 
 /* Chat Container */
@@ -31,36 +248,53 @@ html {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    padding: 15px;
+    margin-bottom: 10px;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    width: calc(100% - 60px);
-    margin-left: 50px;
-    transition: width 0.3s ease, margin-left 0.3s ease;
+    height: 50vh;
+    width: 40vw;
+    border: 1px solid black;
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    z-index: 1;
+    transition: width 0.5s ease;
+    /* Smooth transition for resizing */
 }
 
-/* Chat Window */
-#chat-window {
-    max-height: 60vh;
-    height: 100vw;
+.chat-inner-container {
+    /* background: #e0e0e0; */
+    border-radius: 8px;
+    padding: 10px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    overflow-y: auto;
+}
+
+/* Response Container */
+#response-container {
+    flex-grow: 1;
     overflow-y: scroll;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;
     background: #f9f9f9;
     margin-bottom: 10px;
-    display: flex;
-    flex-direction: column;
+    height: 100%;
 }
 
 /* Input Group and Form Controls */
-.input-group {
+.input-container {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
     width: 100%;
+    /* background: #e0e0e0; */
+    bottom: 0;
+    border-radius: 0 0 8px 8px;
 }
 
 .form-control {
@@ -68,7 +302,6 @@ html {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    width: 100%;
 }
 
 .input-group-append,
@@ -77,22 +310,22 @@ html {
     align-items: stretch;
 }
 
-    .input-group-append button,
-    .input-group-prepend button {
-        background: #3a516a;
-        color: #fff;
-        border: none;
-        padding: 10px 15px;
-        cursor: pointer;
-        border-radius: 4px;
-        margin-left: 5px;
-    }
+.input-group-append button,
+.input-group-prepend button {
+    background: #3a516a;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 5px;
+}
 
-        .input-group-append button:disabled,
-        .input-group-prepend button:disabled {
-            background: #bbb;
-            cursor: not-allowed;
-        }
+.input-group-append button:disabled,
+.input-group-prepend button:disabled {
+    background: #bbb;
+    cursor: not-allowed;
+}
 
 /* Chat Messages */
 .chat-output {
@@ -103,13 +336,77 @@ html {
     color: black;
     width: 100%;
     box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
-    .chat-output.darker {
-        background: #3a516a;
-        color: white;
-        align-self: flex-end;
-    }
+.chat-output.darker {
+    background: #3a516a;
+    color: white;
+    align-self: flex-end;
+}
+
+.bubble-text {
+    width: max-content;
+    margin: 0;
+}
+
+.edit-button {
+    right: 10px;
+    background-color: #0066cc;
+    background: burlywood;
+    transform: scale(-1, 1);
+}
+
+.save-button,
+.cancel-button {
+    display: none;
+}
+
+.save-button {
+    right: 45px;
+    background-color: #28a745;
+    margin-right: 10px;
+    background: #bcffd3;
+}
+
+.cancel-button {
+    right: 10px;
+    background-color: #dc3545;
+    background: #fc6464;
+}
+
+.edit-button:hover,
+.save-button:hover,
+.cancel-button:hover {
+    background-color: #555;
+}
+
+.editable {
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 4px;
+    background: #fff;
+    color: #000;
+    outline: none;
+}
+
+.edit-button,
+.save-button,
+.cancel-button {
+    cursor: pointer;
+    border: none;
+    padding: 5px;
+    font-size: 14px;
+    color: black;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    float: right;
+    width: 30px;
+    height: 30px;
+}
 
 /* Chart Container */
 .chart-container {
@@ -120,18 +417,31 @@ html {
     margin-bottom: 20px;
 }
 
+/* Chart container styling */
 .chart-col {
     position: relative;
+    min-height: 300px;
+    height: calc(100vh - 340px);
+    /* width: calc(100% - 80px); */
+    /* Adjust the width to fit within the container */
+    margin-left: 2vw;
+    left: 4vw;
+    /* Align the chart correctly */
 }
 
 /* Risk Meter */
 #riskMeter {
-    width: 100%;
+    width: calc(100% - 1vw);
+    /* Ensure the width includes the 1vw margin */
     height: 50px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background: #f1f1f1;
     position: relative;
+    margin-left: 1vw;
+    /* Ensure there's a 1vw margin on the left side */
+    transition: width 0.5s ease;
+    /* Smooth transition for resizing */
 }
 
 #riskMeterFill {
@@ -139,7 +449,7 @@ html {
     height: 100%;
     background: #ff6b6b;
     border-radius: 8px 0 0 8px;
-    transition: width 0.3s ease;
+    transition: width 0.5s ease;
 }
 
 #riskMeterLabel {
@@ -151,29 +461,69 @@ html {
     color: #333;
 }
 
-/* Loader Spinner */
+/* Base styles */
 .loader-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38vw;
+    height: 60vh;
+    max-width: 400px;
+    max-height: 400px;
+    margin: 0 auto;
 }
 
 .loader {
-    width: 7vw;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    border: 0.75vw solid;
-    border-color: #000 #0000;
-    animation: l1 1s infinite;
-    position: relative;
-    top: 40%;
-    left: 40%;
+    font-size: 25px;
 }
 
-@keyframes l1 {
-    to {
-        transform: rotate(.5turn);
+.loader .dot {
+    animation: blink 1.4s infinite both;
+    margin: 0 4px;
+}
+
+.loader .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Media queries for different screen sizes */
+@media screen and (max-width: 768px) {
+    .loader-spinner {
+        width: 50vw;
+        height: 50vh;
+    }
+
+    .loader {
+        font-size: 22px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .loader-spinner {
+        width: 80vw;
+        height: 40vh;
+    }
+
+    .loader {
+        font-size: 20px;
     }
 }
 
@@ -188,23 +538,13 @@ html {
     align-items: center !important;
 }
 
-    .new-upload:hover {
+.new-upload:hover {
     background-color: gray;
 }
+
 .new-upload-container {
     display: flex;
     align-items: center;
-}
-
-.page-container {
-    width: 100%;
-    height: 100%;
-    opacity: 0.5;
-    z-index: 999;
-    position: absolute;
-    background: #f5f5f5;
-    top: 0;
-    left: 0;
 }
 
 .typing {
@@ -248,19 +588,18 @@ html {
 
 .input-container {
     flex-grow: 1;
-    height: 50px;
-    width: calc(100% - 75px);
+    height: 5vh;
+    outline: none;
 }
 
 #queryInput {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+    outline: none;
 }
 
 .sendButton-container {
-    height: 50px;
-    width: 75px;
     display: flex;
     align-items: center;
     margin-left: 5px;
@@ -274,19 +613,22 @@ html {
     justify-content: center;
     padding: 10px 15px;
     box-sizing: border-box;
-    }
+}
+
+/* Error Container */
 .error-background {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1000;
+    /* Ensure the error container is on top */
     padding-top: 100px;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .error-container {
@@ -305,12 +647,12 @@ html {
     font-weight: bold;
 }
 
-    .error-close:hover,
-    .error-close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-    }
+.error-close:hover,
+.error-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 .error-title {
     color: red;
@@ -320,4 +662,213 @@ html {
     to {
         transform: rotate(.5turn)
     }
+}
+
+/* Suggested steps container adjustments */
+.suggested-steps-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 50vh;
+    width: 53vw;
+    /* Adjust width to match sidebar */
+    border: 1px solid black;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    top: -6.8vh;
+    margin-top: 2.9vh;
+    margin-left: -15.5vw;
+    /* Align the steps with the sidebar */
+}
+
+.steps-title-row {
+    height: 6vh;
+    width: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.suggested-steps-text,
+.suggested-steps-number,
+.suggested-steps-etc {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.suggested-steps-text {
+    margin-left: -4.5vw;
+    margin-top: 1vh;
+}
+
+.steps-body-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #eee;
+    border-radius: 8px;
+    height: 44vh;
+}
+
+.step-container {
+    height: 150px;
+    /* Adjust height as needed */
+    width: 100%;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    background: #f9f9f9;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.risk-container {
+    flex: 2;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.simulate-change-container {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f1f1f1;
+}
+
+.simulate-button-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+}
+
+.simulate-change-button {
+    border: none;
+    border-radius: 20px;
+    background-color: #3a516a;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+    padding: 7px;
+    height:5vh !important;
+}
+
+.simulate-change-button:hover {
+    background-color: #2e3d4f;
+}
+
+.risk-container,
+.simulate-change-container {
+    height: 50%;
+    /* Each container takes up 50% of the step-container */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+}
+
+.simulate-change-container {
+    background: #f1f1f1;
+    /* Optional different background color */
+    display: flex;
+    justify-content: center;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+}
+
+.simulate-change-button {
+    border: none;
+    border-radius: 20px;
+    /* Rounded button */
+    background-color: #3a516a;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+    margin-left: 35vw !important;
+    padding: 5px;
+    height: 4vh;
+    width: 5vw;
+}
+
+.simulate-change-button:hover {
+    background-color: #2e3d4f;
+}
+
+.export-button {
+    border: none;
+    border-radius: 20px;
+    /* Rounded button */
+    background-color: #3a516a;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+    padding: 5px;
+    margin-left: 11vw;
+    width: 5vw;
+    height: 5vh;
+}
+
+.export-button:hover {
+    background-color: #2e3d4f;
+}
+
+.modification,
+.vulnerability {
+    padding: 15px;
+    margin: 0;
+}
+
+.modification {
+    margin-top: -5.5vh !important;
+}
+
+/* .spiderChart {
+    margin-left: 175px;
+} */
+
+/* Spider chart alignment */
+#spiderChart {
+    height: 60vh !important;
+    width: 60vh !important;
+    margin-left: -6vh;
+    /* Center the chart horizontally */
+    margin-top: -4vh;
+}
+
+.RAText {
+    margin-left: -15vw;
+}
+
+.hover-tooltip {
+    position: absolute;
+    background-color: black;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    top: -25px;
+    /* Position it above the meter */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    white-space: nowrap;
 }

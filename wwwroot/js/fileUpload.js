@@ -10,6 +10,58 @@ function validateFiles()
     const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
     nextButton.disabled = uploadedFiles.length === 0;
 }
+
+function checkNextActivation()
+{
+    if (sessionStorage.getItem('selectedFile'))
+    {
+        const documentName = document.getElementById('documentName');
+        const documentType = document.getElementById('documentType');
+        const documentDescription = document.getElementById('documentDescription');
+
+        const isDocumentNameFilled = documentName && documentName.value.trim();
+        const isDocumentTypeFilled = documentType && documentType.value.trim();
+        const isDocumentDescriptionFilled = documentDescription && documentDescription.value.trim();
+
+        // Check if all fields are filled or all are empty
+        if (
+            (isDocumentNameFilled && isDocumentTypeFilled && isDocumentDescriptionFilled) ||
+            (!isDocumentNameFilled && !isDocumentTypeFilled && !isDocumentDescriptionFilled)
+        )
+        {
+            console.log('Enabled.');
+            nextButton.disabled = false;
+        } else
+        {
+            console.log('Disabled.');
+            nextButton.disabled = true;
+        }
+    } else
+    {
+        console.log('Disabled.');
+        nextButton.disabled = true;
+    }
+}
+
+async function validateFileExistence()
+{
+    var namespace = sessionStorage.getItem('sessionNamespace');
+    var fileName = sessionStorage.getItem('selectedFile');
+    const url = `https://strive-api.azurewebsites.net/api/MongoDB/getdocument?collectionName=${namespace}&fileName=${fileName}&version=0`;
+
+    const response = await fetch(url,{
+        method: 'GET'
+    });
+
+    if (!response.ok)
+    {
+        displayError('Failed to upload file.');
+        throw new Error('Failed to upload file to MongoDB collection.');
+    }
+
+    const data = await response.json();
+    return data.data.fileExists;
+}
 function displayError(errorMessage)
 {
     var errorBackground = document.getElementById("error-background");
@@ -47,6 +99,7 @@ function validateForm()
     const documentDescription = documentDescriptionInput.value.trim();
 
     nextButton.disabled = !(documentName && documentType && documentDescription);
+    checkNextActivation();
 }
 
 validateForm();
@@ -76,7 +129,7 @@ async function customKeyword()
         file_name: fileName
     };
     showLoader();
-    await fetch("https://strive-ml-api.azurewebsites.net/keywordsModel",{
+    await fetch("https://strive-core.azurewebsites.net/keywordsModel",{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -121,15 +174,20 @@ async function uploadDocumentToApplication()
     fileInput.addEventListener("change",async (event) =>
     {
         const selectedFile = event.target.files[0];
-        const allowedExtensions = ['pdf','docx','doc'];
+        const allowedExtensions = ['pdf'];
         const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
-
         if (!allowedExtensions.includes(fileExtension))
         {
-            alert("Only PDF, DOCX, DOC files are allowed.");
+            alert("Only PDF files are allowed.");
             return;
         }
-
+        sessionStorage.setItem('selectedFile',selectedFile.name);
+        var fileExists = await validateFileExistence();
+        if (fileExists)
+        {
+            displayError('File already exists.');
+            return;
+        }
         const tableBody = document.getElementById('uploadedFilesTableBody');
         const tableRow = document.createElement('tr');
 
@@ -142,7 +200,9 @@ async function uploadDocumentToApplication()
         deleteButton.classList.add('btn','btn-danger');
         deleteButton.addEventListener('click',() =>
         {
-            deleteFile(selectedFile.name,tableRow);
+            deleteFileFromMongo(selectedFile.name,sessionStorage.getItem('sessionNamespace'),tableRow);
+            sessionStorage.removeItem('selectedFile');
+            //deleteFile(selectedFile.name,tableRow);
         });
         actionsCell.appendChild(deleteButton);
 
@@ -169,14 +229,14 @@ async function uploadDocumentToApplication()
 
         try
         {
+            showLoader();
             await sendFileToMongoDB(selectedFile);
             const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
             uploadedFiles.push(selectedFile.name);
             sessionStorage.setItem('uploadedFiles',JSON.stringify(uploadedFiles));
             sessionStorage.setItem('selectedFile',selectedFile.name);
-            populateUploadedFilesList(); // Call new function to populate list
             await customKeyword();
-            statusCell.textContent = 'Uploaded';
+            await populateUploadedFilesList();
             validateFiles();
             hideLoader();
         } catch (error)
@@ -191,7 +251,24 @@ async function uploadDocumentToApplication()
 
 async function populateUploadedFilesList()
 {
-    const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
+    const namespace = sessionStorage.getItem('sessionNamespace');
+    const response = await fetch(`https://strive-api.azurewebsites.net/api/MongoDB/GetAllDocuments?collectionName=${namespace}`,{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    var responseData = await response.json();
+    const uploadedFiles = [];
+    responseData.data.forEach(document =>
+    {
+        if (document.fileExists)
+        {
+            uploadedFiles.push(document.fileName);
+        }
+    });
+
+    //const uploadedFiles = JSON.parse(sessionStorage.getItem('uploadedFiles')) || [];
     const uploadedFilesTableBody = document.getElementById('uploadedFilesTableBody');
     uploadedFilesTableBody.innerHTML = ""; // Clear existing entries
 
@@ -210,7 +287,8 @@ async function populateUploadedFilesList()
         deleteButton.classList.add('btn','btn-danger');
         deleteButton.addEventListener('click',() =>
         {
-            deleteFile(fileName,tableRow);
+            deleteFileFromMongo(fileName,sessionStorage.getItem('sessionNamespace'),tableRow);
+            //deleteFile(fileName,tableRow);
         });
         actionsCell.appendChild(deleteButton);
 
@@ -220,10 +298,18 @@ async function populateUploadedFilesList()
         selectRadio.name = 'selectedFile';
         selectRadio.value = fileName;
         selectRadio.classList.add('large-radio-button');
+        if (sessionStorage.getItem('selectedFile') == fileName)
+        {
+            selectRadio.checked = true;
+        }
         selectRadio.addEventListener('change',async () =>
         {
-            sessionStorage.setItem('selectedFile',fileName);
-            await customKeyword();
+            if (selectRadio.checked)
+            {
+                sessionStorage.setItem('selectedFile',fileName);
+                await customKeyword();
+                checkNextActivation();
+            }
         });
         selectCell.appendChild(selectRadio);
         statusCell.textContent = 'Uploaded';
@@ -231,7 +317,7 @@ async function populateUploadedFilesList()
         tableRow.appendChild(fileNameCell);
         tableRow.appendChild(actionsCell);
         tableRow.appendChild(selectCell);
-        uploadedFilesTableBody.appendChild(tableRow);
+        uploadedFilesTableBody.insertBefore(tableRow,uploadedFilesTableBody.firstChild);
     }
     validateFiles();
 }
@@ -263,94 +349,53 @@ async function sendFileToMongoDB(selectedFile)
     const data = await response.json();
 }
 
-async function uploadDocumentToPinecone()
+async function routeToDocumentAnalysis()
 {
-    storeDocumentDescription();
-    const requestBody = {
-        namespace: sessionStorage.getItem("sessionNamespace"),
-        fileName: sessionStorage.getItem("selectedFile")
-    };
-    await fetch("https://strive-ml-api.azurewebsites.net/embedder",{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Headers': '*'
-        },
-        body: JSON.stringify(requestBody)
-    })
-        .then(response =>
-        {
-            console.log(response);
-            if (!response.ok)
-            {
-                hideLoader();
-                alert("System is under maintenance. Please try again later.");
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return Promise.resolve();
-        })
-        .catch(error =>
-        {
-            hideLoader();
-            alert("System is under maintenance. Please try again later.");
-            console.error('Fetch error:',error);
-        });
+    var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
+    window.location.href = documentAnalysisUrl;
 }
 
-async function purgePinecone()
-{
-    var sessionNamespace = sessionStorage.getItem('sessionNamespace');
-    try
-    {
-        document.getElementById('upload-button').disabled = true;
-        const url = `https://strive-api.azurewebsites.net/api/pinecone/purgePinecone`;
-        const pineconeResponse = await fetch(url,{
+async function deleteConversationMemory() {
+    try {
+        const response = await fetch('https://strive-core.azurewebsites.net/deleteConversationMemory', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                namespace: sessionNamespace
+                namespace: sessionStorage.getItem('sessionNamespace')
             })
         });
-        var data = await pineconeResponse.json();
-        return Promise.resolve();
-    } catch (error)
-    {
-        displayError('Failed to process file.');
-        document.getElementById('upload-button').disabled = false;
-        return Promise.reject(error);
+
+        // Check if the response is OK
+        if (!response.ok) {
+            if (response.status === 500) {
+                // Handle 500 error by logging or performing an alternative action
+                console.error('Error 500: Internal Server Error. Continuing execution.');
+                return; // Or you can return some default value or null
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Parse and return JSON if no error occurred
+        return response.json();
+    } catch (error) {
+        console.error('An error occurred:', error);
+        // Continue execution by returning null or an alternative value
+        return null;
     }
-}
 
-async function processPinecone()
-{
-    await purgePinecone();  // Wait for this function to complete
-    await uploadDocumentToPinecone();  // Then wait for this function to complete
-}
-
-async function routeToDocumentAnalysis()
-{
-    var documentAnalysisUrl = window.location.protocol + "//" + window.location.host + '/Home/DocumentDashboard';
-    window.location.href = documentAnalysisUrl;
-    return Promise.resolve();
 }
 
 async function uploadFileFlow()
 {
-    showLoader();
     var fileUploadButtons = document.getElementsByClassName('file-upload-button');
     for (let btn of fileUploadButtons)
     {
         btn.disabled = true;
     }
-    await processPinecone()
-        .then(() => console.log("All operations completed"))
-        .catch((error) => console.error("An error occurred:",error));
-    hideLoader();
+    storeDocumentDescription();
+    await deleteConversationMemory();
     await routeToDocumentAnalysis();
     localStorage.setItem('showDocumentDashboardWidget','true');
 }
@@ -374,4 +419,46 @@ async function deleteFile(fileName,tableRow)
     validateFiles();
 }
 
-window.addEventListener('load',populateUploadedFilesList);
+async function deleteFileFromMongo(fileName,collectionName,tableRow)
+{
+    try
+    {
+        const sessionName = sessionStorage.getItem('sessionNamespace');
+        var url = `https://strive-api.azurewebsites.net/api/MongoDB/DeleteAllVersions?fileName=${fileName}&collectionName=${sessionName}`;
+        const response = await fetch(url,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // Check if the response is OK
+        if (!response.ok)
+        {
+            if (response.status === 500)
+            {
+                // Handle 500 error by logging or performing an alternative action
+                console.error('Error 500: Internal Server Error. Continuing execution.');
+                return; // Or you can return some default value or null
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Parse and return JSON if no error occurred
+        tableRow.remove();
+        return response.json();
+    } catch (error)
+    {
+        console.error('An error occurred:',error);
+        // Continue execution by returning null or an alternative value
+        return null;
+    }
+
+}
+
+window.addEventListener('load',function ()
+{
+    sessionStorage.removeItem('selectedFile');
+    populateUploadedFilesList();
+    checkNextActivation(); 
+});
