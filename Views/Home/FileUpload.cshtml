@@ -2,10 +2,13 @@
     ViewData["Title"] = "File Upload";
     Layout = "~/Views/Shared/_HamburgerBar.cshtml";
 }
-
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @using System.Security.Cryptography;
 @using System.Text;
-@{
+@if (User.Identity.IsAuthenticated)
+{
     string username = User?.Identity?.Name ?? "Unknown";
     using (SHA256 sha256 = SHA256.Create())
     {
@@ -16,72 +19,79 @@
             sessionStorage.setItem("sessionNamespace","@hashedUsername");
         </script>
     }
+    <link rel="stylesheet" href="~/css/fileUpload.css">
+    <body>
+        <div class="error-background" id="error-background">
+            <div class="error-container">
+                <span class="error-close" id="error-close">&times;</span>
+                <h2 class="error-title">Error</h2>
+                <p id="error-message"></p>
+            </div>
+        </div>
+        <div class="container site-container p-0">
+            <div class="row page-row h-85">
+                <div class="col-lg-8 upload-container bg-light">
+                    <h1>File Upload</h1>
+                    <p>Only PDF File Type</p>
+                    <button class="btn btn-primary btn-lg file-upload-button" type="button" id="upload-button"
+                            onclick="uploadDocumentToApplication()">
+                        Browse Files
+                    </button>
+                    <div id="uploadStatus"></div>
+                    <div class="uploadStatus-table">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>File Name</th>
+                                    <th>Actions</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody id="uploadedFilesTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-white border description-container">
+                    <h1 class="text-dark">For More Context</h1>
+                    <button type="button" onclick="uploadFileFlow()"
+                            class="btn btn-primary next-button mt-3 file-upload-button" disabled id="nextButton">
+                        Next
+                    </button>
+                    <div class="description-input">
+                        <label for="documentName" class="description-label text-dark">Document Name</label>
+                        <input type="text" id="documentName" class="form-control" onchange="checkNextFunctionality();" required>
+                    </div>
+                    <div class="description-input">
+                        <label for="documentType" class="description-label text-dark">Category</label>
+                        <select id="documentType" class="form-select" onchange="checkNextFunctionality();" required>
+                            <option value="">Select Document Type</option>
+                            <option value="legal">Legal</option>
+                            <option value="presentation">Financial</option>
+                            <option value="operational">Operational</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="description-input">
+                        <label for="documentDescription" class="description-label text-dark">Brief Description</label>
+                        <textarea id="documentDescription" rows="5" class="form-control" onchange="checkNextFunctionality();" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div id="page-container" class="page-container">
+                <div id="loader" class="loader"></div>
+            </div>
+        </div>
+
+        <script src="~/js/fileUpload.js"></script>
+    </body>
+
+}
+else
+{
+    <script>
+        window.location.href = "/Identity/Account/Login";
+    </script>
 }
 
-<link rel="stylesheet" href="~/css/fileUpload.css">
-<body>
-    <div class="error-background" id="error-background">
-        <div class="error-container">
-            <span class="error-close" id="error-close">&times;</span>
-            <h2 class="error-title">Error</h2>
-            <p id="error-message"></p>
-        </div>
-    </div>
-    <div class="container site-container p-0">
-        <div class="row page-row h-85">
-            <div class="col-lg-8 upload-container bg-light">
-                <h1>File Upload</h1>
-                <p>Only PDF File Type</p>
-                <button class="btn btn-primary btn-lg file-upload-button" type="button" id="upload-button"
-                        onclick="uploadDocumentToApplication()">
-                    Browse Files
-                </button>
-                <div id="uploadStatus"></div>
-                <div class="uploadStatus-table">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Status</th>
-                                <th>File Name</th>
-                                <th>Actions</th>
-                                <th>Select</th>
-                            </tr>
-                        </thead>
-                        <tbody id="uploadedFilesTableBody">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-lg-4 text-white border description-container">
-                <h1 class="text-dark">For More Context</h1>
-                <button type="button" onclick="uploadFileFlow()"
-                        class="btn btn-primary next-button mt-3 file-upload-button" disabled id="nextButton">
-                    Next
-                </button>
-                <div class="description-input">
-                    <label for="documentName" class="description-label text-dark">Document Name</label>
-                    <input type="text" id="documentName" class="form-control" onchange="checkNextFunctionality();" required>
-                </div>
-                <div class="description-input">
-                    <label for="documentType" class="description-label text-dark">Category</label>
-                    <select id="documentType" class="form-select" onchange="checkNextFunctionality();" required>
-                        <option value="">Select Document Type</option>
-                        <option value="legal">Legal</option>
-                        <option value="presentation">Financial</option>
-                        <option value="operational">Operational</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                <div class="description-input">
-                    <label for="documentDescription" class="description-label text-dark">Brief Description</label>
-                    <textarea id="documentDescription" rows="5" class="form-control" onchange="checkNextFunctionality();" required></textarea>
-                </div>
-            </div>
-        </div>
-        <div id="page-container" class="page-container">
-            <div id="loader" class="loader"></div>
-        </div>
-    </div>
-
-    <script src="~/js/fileUpload.js"></script>
-</body>
