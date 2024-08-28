@@ -2,8 +2,12 @@
     ViewData["Title"] = "Service Dashboard";
     @* Layout = "~/Views/Shared/_HamburgerBar.cshtml"; *@
 }
-
-<link rel="stylesheet" href="~/css/serviceDashboard.css">
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@if (User.Identity.IsAuthenticated)
+{
+    <link rel="stylesheet" href="~/css/serviceDashboard.css">
 <div class="container-fluid d-flex align-items-center justify-content-center dashboard-container">
     <div class="row justify-content-center">
         <div class="col-md-3 d-flex justify-content-end mb-4">
@@ -29,3 +33,10 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js"></script>
 <script src="~/js/serviceDashboard.js"></script>
+}
+else
+{
+    <script>
+        window.location.href = "/Identity/Account/Login";
+    </script>
+}
